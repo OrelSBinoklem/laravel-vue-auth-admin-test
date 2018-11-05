@@ -44,6 +44,9 @@ class OAuthController extends Controller
      * @param  string $driver
      * @return \Illuminate\Http\Response
      */
+
+    //Этот метод нашёл только в тестах
+
     public function handleProviderCallback($provider)
     {
         $user = Socialite::driver($provider)->stateless()->user();

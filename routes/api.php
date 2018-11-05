@@ -17,11 +17,20 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('logout', 'Auth\LoginController@logout');
 
     Route::get('/user', function (Request $request) {
-        return $request->user();
+        $user = $request->user();
+
+        if(config('services.github.client_id')) {
+            $user->oauth = !!$user->oauthProviders()->count();
+        }
+
+        return $user;
     });
 
     Route::patch('settings/profile', 'Settings\ProfileController@update');
     Route::patch('settings/password', 'Settings\PasswordController@update');
+
+    Route::get('email/verify/{id}', 'Auth\VerificationController@verify')->name('verification.verify');
+    Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 });
 
 Route::group(['middleware' => 'guest:api'], function () {

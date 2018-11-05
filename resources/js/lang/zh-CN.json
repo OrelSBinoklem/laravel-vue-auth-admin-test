@@ -30,5 +30,15 @@
   "password_updated": "您的密码已经更新!",
   "new_password": "新密码",
   "login_with": "登录",
-  "register_with": "注册"
+  "register_with": "注册",
+
+  "verify_email": "确认你的邮件地址",
+  "fresh_verification_link": "新的验证链接已发送到您的电子邮件地址。",
+  "error_fresh_verification_link": "错误！ 验证链接尚未发送。",
+  "check_your_email": "在继续之前，请检查您的电子邮件以获取验证链接。",
+  "not_email": "如果您没有收到电子邮件",
+  "email_resend_link": "重新发送链接",
+  "verified_processed": "已验证已处理",
+  "email_verified": "您的电子邮件地址已经过验",
+  "email_not_verified": "错误！ 电子邮件尚未经过验证"
 }

@@ -1,43 +1,48 @@
 <template>
-  <button :type="nativeType" :disabled="loading" :class="{
+    <button @click="onPress" :type="nativeType" :disabled="loading" :class="{
     [`btn-${type}`]: true,
     'btn-block': block,
     'btn-lg': large,
     'btn-loading': loading
   }" class="btn">
-    <slot/>
-  </button>
+        <slot/>
+    </button>
 </template>
 
 <script>
-export default {
-  name: 'VButton',
+    export default {
+        name: 'VButton',
 
-  props: {
-    type: {
-      type: String,
-      default: 'primary'
-    },
+        props: {
+            type: {
+                type: String,
+                default: 'primary'
+            },
 
-    nativeType: {
-      type: String,
-      default: 'submit'
-    },
+            nativeType: {
+                type: String,
+                default: 'submit'
+            },
 
-    loading: {
-      type: Boolean,
-      default: false
-    },
+            loading: {
+                type: Boolean,
+                default: false
+            },
 
-    block: {
-      type: Boolean,
-      default: false
-    },
+            block: {
+                type: Boolean,
+                default: false
+            },
 
-    large: {
-      type: Boolean,
-      default: false
+            large: {
+                type: Boolean,
+                default: false
+            }
+        },
+        methods: {
+            onPress () {
+                this.$emit('press')
+            }
+        }
     }
-  }
-}
 </script>

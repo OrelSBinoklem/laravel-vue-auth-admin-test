@@ -30,5 +30,15 @@
   "password_updated": "Your password has been updated!",
   "new_password": "New Password",
   "login_with": "Login with",
-  "register_with": "Register with"
+  "register_with": "Register with",
+
+  "verify_email": "Verify Your Email Address",
+  "fresh_verification_link": "A fresh verification link has been sent to your email address.",
+  "error_fresh_verification_link": "Error! Verification link has not been sent.",
+  "check_your_email": "Before proceeding, please check your email for a verification link.",
+  "not_email": "If you did not receive the email",
+  "email_resend_link": "Resend Link",
+  "verified_processed": "Verified processed",
+  "email_verified": "Your email address is verified",
+  "email_not_verified": "Error! Email has not been verified"
 }

@@ -1,6 +1,8 @@
 const Welcome = () => import('~/pages/welcome').then(m => m.default || m)
 const Login = () => import('~/pages/auth/login').then(m => m.default || m)
 const Register = () => import('~/pages/auth/register').then(m => m.default || m)
+const EmailSend = () => import('~/pages/auth/email/send').then(m => m.default || m)
+const EmailVerify = () => import('~/pages/auth/email/verify').then(m => m.default || m)
 const PasswordEmail = () => import('~/pages/auth/password/email').then(m => m.default || m)
 const PasswordReset = () => import('~/pages/auth/password/reset').then(m => m.default || m)
 const NotFound = () => import('~/pages/errors/404').then(m => m.default || m)
@@ -15,6 +17,8 @@ export default [
 
   { path: '/login', name: 'login', component: Login },
   { path: '/register', name: 'register', component: Register },
+  { path: '/email/send', name: 'email.resend', component: EmailSend },
+  { path: '/email/verify/:id', name: 'email.verify', component: EmailVerify },
   { path: '/password/reset', name: 'password.request', component: PasswordEmail },
   { path: '/password/reset/:token', name: 'password.reset', component: PasswordReset },
 
