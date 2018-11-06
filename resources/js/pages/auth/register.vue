@@ -2,7 +2,8 @@
   <div class="row">
     <div class="col-lg-8 m-auto">
       <card :title="$t('register')">
-        <form @submit.prevent="register" @keydown="form.onKeydown($event)">
+        <form @submit.prevent="register" @keydown="form.onKeydown($event)" action="" method="post">
+
           <!-- Name -->
           <div class="form-group row">
             <label class="col-md-3 col-form-label text-md-right">{{ $t('name') }}</label>
@@ -39,6 +40,16 @@
             </div>
           </div>
 
+          <!-- Check a robot -->
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label text-md-right">{{ $t('captcha') }}</label>
+            <div class="col-md-7">
+              <Recaptcha :sitekey="sitekey" :callback="onCaptcha"></Recaptcha>
+              <span class="form-control is-invalid d-none"></span>
+              <has-error :form="form" field="g-recaptcha-response"/>
+            </div>
+          </div>
+
           <div class="form-group row">
             <div class="col-md-7 offset-md-3 d-flex">
               <!-- Submit Button -->
@@ -59,11 +70,13 @@
 <script>
 import Form from 'vform'
 import LoginWithGithub from '~/components/LoginWithGithub'
+import Recaptcha from '~/components/Recaptcha'
 
 export default {
   middleware: 'guest',
 
   components: {
+    Recaptcha,
     LoginWithGithub
   },
 
@@ -72,11 +85,13 @@ export default {
   },
 
   data: () => ({
+    sitekey: '6LeOy3gUAAAAAIfjc5xXKAmEOAcGgW_cDQXR2myE',
     form: new Form({
       name: '',
       email: '',
       password: '',
-      password_confirmation: ''
+      password_confirmation: '',
+      'g-recaptcha-response': ''
     })
   }),
 
@@ -96,6 +111,10 @@ export default {
 
       // Redirect home.
       this.$router.push({ name: 'home' })
+    },
+
+    onCaptcha(token) {
+      this.form['g-recaptcha-response'] = token
     }
   }
 }

@@ -82,7 +82,12 @@ return [
     | specify a specific custom language line for a given attribute rule.
     |
     */
-    'custom' => [],
+    'custom' => [
+        'g-recaptcha-response' => [
+            'required' => '请确认您不是机器人。',
+            'captcha' => '验证错误！ 稍后再试或联系网站管理员。',
+        ],
+    ],
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes

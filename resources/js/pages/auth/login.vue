@@ -21,6 +21,16 @@
             </div>
           </div>
 
+          <!-- Check a robot -->
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label text-md-right">{{ $t('captcha') }}</label>
+            <div class="col-md-7">
+              <Recaptcha :sitekey="sitekey" :callback="onCaptcha"></Recaptcha>
+              <span class="form-control is-invalid d-none"></span>
+              <has-error :form="form" field="g-recaptcha-response"/>
+            </div>
+          </div>
+
           <!-- Remember Me -->
           <div class="form-group row">
             <div class="col-md-3"/>
@@ -55,11 +65,13 @@
 <script>
 import Form from 'vform'
 import LoginWithGithub from '~/components/LoginWithGithub'
+import Recaptcha from '~/components/Recaptcha'
 
 export default {
   middleware: 'guest',
 
   components: {
+    Recaptcha,
     LoginWithGithub
   },
 
@@ -68,9 +80,11 @@ export default {
   },
 
   data: () => ({
+    sitekey: '6LeOy3gUAAAAAIfjc5xXKAmEOAcGgW_cDQXR2myE',
     form: new Form({
       email: '',
-      password: ''
+      password: '',
+      'g-recaptcha-response': ''
     }),
     remember: false
   }),
@@ -91,6 +105,10 @@ export default {
 
       // Redirect home.
       this.$router.push({ name: 'home' })
+    },
+
+    onCaptcha(token) {
+      this.form['g-recaptcha-response'] = token
     }
   }
 }

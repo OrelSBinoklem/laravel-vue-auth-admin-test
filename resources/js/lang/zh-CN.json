@@ -40,5 +40,7 @@
   "email_resend_link": "重新发送链接",
   "verified_processed": "已验证已处理",
   "email_verified": "您的电子邮件地址已经过验",
-  "email_not_verified": "错误！ 电子邮件尚未经过验证"
+  "email_not_verified": "错误！ 电子邮件尚未经过验证",
+
+  "captcha": "验证码"
 }

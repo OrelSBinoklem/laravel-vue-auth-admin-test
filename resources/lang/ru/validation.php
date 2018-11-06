@@ -136,6 +136,10 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'g-recaptcha-response' => [
+            'required' => 'Подтвердите, что вы не робот.',
+            'captcha' => 'Ошибка проверки Captcha! повторите попытку позже или свяжитесь с администратором сайта.',
+        ],
     ],
 
     /*

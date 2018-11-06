@@ -40,5 +40,7 @@
   "email_resend_link": "Отправить новую ссылку",
   "verified_processed": "Проверяем ссылку подтверждения",
   "email_verified": "Ваш email адрес подтверждён",
-  "email_not_verified": "Ошибка! Ваш email не подтверждён"
+  "email_not_verified": "Ошибка! Ваш email не подтверждён",
+
+  "captcha": "Каптча"
 }
