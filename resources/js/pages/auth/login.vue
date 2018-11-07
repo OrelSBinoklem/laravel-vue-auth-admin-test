@@ -80,6 +80,7 @@ export default {
   },
 
   data: () => ({
+    recaptchaId: 0,
     sitekey: '6LeOy3gUAAAAAIfjc5xXKAmEOAcGgW_cDQXR2myE',
     form: new Form({
       email: '',
@@ -92,7 +93,17 @@ export default {
   methods: {
     async login () {
       // Submit the form.
-      const { data } = await this.form.post('/api/login')
+      const { data } = await new Promise((resolve, reject) => {
+        this.form.post('/api/login')
+          .then(response => {resolve(response)})
+          .catch(error => {
+            if (this.form['g-recaptcha-response'] != '') {
+              this.form['g-recaptcha-response'] = ''
+              window.grecaptcha.reset(this.recaptchaId)
+            }
+            reject(error)
+          })
+      })
 
       // Save the token.
       this.$store.dispatch('auth/saveToken', {
@@ -107,8 +118,9 @@ export default {
       this.$router.push({ name: 'home' })
     },
 
-    onCaptcha(token) {
+    onCaptcha(token, recaptchaId) {
       this.form['g-recaptcha-response'] = token
+      this.recaptchaId = recaptchaId
     }
   }
 }

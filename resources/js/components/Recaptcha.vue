@@ -72,8 +72,8 @@
             },
             getToken (token) {
                 if (typeof window === 'undefined') return
-                this.recaptchaId = token
-                this.callback(token)
+                //this.recaptchaId = token
+                this.callback(token, this.recaptchaId)
             }
         }
     }

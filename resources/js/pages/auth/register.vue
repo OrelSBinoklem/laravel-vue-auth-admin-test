@@ -85,6 +85,7 @@ export default {
   },
 
   data: () => ({
+    recaptchaId: 0,
     sitekey: '6LeOy3gUAAAAAIfjc5xXKAmEOAcGgW_cDQXR2myE',
     form: new Form({
       name: '',
@@ -98,7 +99,17 @@ export default {
   methods: {
     async register () {
       // Register the user.
-      const { data } = await this.form.post('/api/register')
+      const { data } = await new Promise((resolve, reject) => {
+        this.form.post('/api/register')
+          .then(response => {resolve(response)})
+          .catch(error => {
+            if (this.form['g-recaptcha-response'] != '') {
+              this.form['g-recaptcha-response'] = ''
+              window.grecaptcha.reset(this.recaptchaId)
+            }
+            reject(error)
+          })
+      })
 
       // Log in the user.
       const { data: { token } } = await this.form.post('/api/login')
@@ -113,8 +124,9 @@ export default {
       this.$router.push({ name: 'home' })
     },
 
-    onCaptcha(token) {
+    onCaptcha(token, recaptchaId) {
       this.form['g-recaptcha-response'] = token
+      this.recaptchaId = recaptchaId
     }
   }
 }
