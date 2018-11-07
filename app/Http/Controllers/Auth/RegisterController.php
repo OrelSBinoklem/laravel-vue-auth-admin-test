@@ -50,6 +50,8 @@ class RegisterController extends Controller
      */
     protected function registered(Request $request, $user)
     {
+        $user->oauth = $user->isOAuth();
+
         return $user;
     }
 

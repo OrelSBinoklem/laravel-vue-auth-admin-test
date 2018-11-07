@@ -16,15 +16,7 @@ use Illuminate\Http\Request;
 Route::group(['middleware' => 'auth:api'], function () {
     Route::post('logout', 'Auth\LoginController@logout');
 
-    Route::get('/user', function (Request $request) {
-        $user = $request->user();
-
-        if(config('services.github.client_id')) {
-            $user->oauth = !!$user->oauthProviders()->count();
-        }
-
-        return $user;
-    });
+    Route::get('/user', 'UserController@get');
 
     Route::patch('settings/profile', 'Settings\ProfileController@update');
     Route::patch('settings/password', 'Settings\PasswordController@update');

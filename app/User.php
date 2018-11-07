@@ -91,4 +91,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         $this->notify(new VerifyEmailNotification);
     }
+
+    public function isOAuth()
+    {
+        return !!$this->oauthProviders()->count();
+    }
 }
