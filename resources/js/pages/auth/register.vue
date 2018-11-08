@@ -92,7 +92,8 @@ export default {
       email: '',
       password: '',
       password_confirmation: '',
-      'g-recaptcha-response': ''
+      'g-recaptcha-response': '',
+      recaptcha_verified: false
     })
   }),
 
@@ -110,6 +111,7 @@ export default {
             reject(error)
           })
       })
+      this.form.recaptcha_verified = true;
 
       // Log in the user.
       const { data: { token } } = await this.form.post('/api/login')

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -46,11 +48,14 @@ class LoginController extends Controller
      */
     protected function validateLogin(Request $request)
     {
-        $this->validate($request, [
+        $rules = [
             $this->username() => 'required|string',
             'password' => 'required|string',
-            'g-recaptcha-response' => 'required|captcha',
-        ]);
+        ];
+        if(!(boolean)$request->input('recaptcha_verified') || !(boolean)Cache::pull($this->throttleCapthaKey($request))) {
+            $rules['g-recaptcha-response'] = 'required|captcha';
+        }
+        $this->validate($request, $rules);
     }
 
     /**
@@ -101,5 +106,26 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $this->guard()->logout();
+    }
+
+    /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    public function username()
+    {
+        return 'email';
+    }
+
+    /**
+     * Get the throttle key for the given request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return string
+     */
+    protected function throttleCapthaKey(Request $request)
+    {
+        return Str::lower('captha|'.$request->input($this->username())).'|'.$request->ip();
     }
 }
