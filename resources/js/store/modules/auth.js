@@ -13,7 +13,8 @@ export const getters = {
   user: state => state.user,
   token: state => state.token,
   check: state => state.user !== null,
-  checkVerified: state => state.user === null ? null : state.user.email_verified_at !== null
+  checkVerified: state => state.user === null ? null : state.user.email_verified_at !== null,
+  checkOAuth: state => state.user === null ? null : state.user.oauth
 }
 
 // mutations

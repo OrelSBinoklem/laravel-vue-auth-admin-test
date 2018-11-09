@@ -65,6 +65,11 @@ export default {
       const { data } = await this.form.patch('/api/settings/profile')
 
       this.$store.dispatch('auth/updateUser', { user: data })
+
+      if(this.$store.getters['auth/checkVerified'] === false &&
+        this.$store.getters['auth/checkOAuth'] === false) {
+        this.$router.push({ name: 'email.resend' })
+      }
     }
   }
 }

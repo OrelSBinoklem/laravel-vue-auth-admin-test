@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Settings;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Events\ChangeEmail;
 
 class ProfileController extends Controller
 {
@@ -22,6 +24,25 @@ class ProfileController extends Controller
             'email' => 'required|email|unique:users,email,'.$user->id,
         ]);
 
-        return tap($user)->update($request->only('name', 'email'));
+        if ($user instanceof MustVerifyEmail &&
+            ! $user->isOAuth() &&
+            $request->input('email') !== $user->email) {
+
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
+            $user->email_verified_at = null;
+            $user->save();
+
+            event(new ChangeEmail($user));
+
+            $user->oauth = $user->isOAuth();
+            return $user;
+
+        }
+
+
+        tap($user)->update($request->only('name', 'email'));
+        $user->oauth = $user->isOAuth();
+        return $user;
     }
 }

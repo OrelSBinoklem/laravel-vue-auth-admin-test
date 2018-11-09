@@ -18,8 +18,10 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('/user', 'UserController@get');
 
-    Route::patch('settings/profile', 'Settings\ProfileController@update');
-    Route::patch('settings/password', 'Settings\PasswordController@update');
+    Route::group(['middleware' => 'verified'], function () {
+        Route::patch('settings/profile', 'Settings\ProfileController@update');
+        Route::patch('settings/password', 'Settings\PasswordController@update');
+    });
 
     Route::get('email/verify/{id}', 'Auth\VerificationController@verify')->name('verification.verify');
     Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
