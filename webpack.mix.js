@@ -35,6 +35,7 @@ if (mix.inProduction()) {
         'vue-meta',
         'js-cookie',
         'bootstrap',
+        'bootstrap-vue',
         'vue-router',
         'sweetalert2',
         'vuex-router-sync',
