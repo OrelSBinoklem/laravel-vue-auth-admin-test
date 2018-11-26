@@ -8,3 +8,6 @@ export const UPDATE_USER = 'UPDATE_USER'
 
 // lang.js
 export const SET_LOCALE = 'SET_LOCALE'
+
+// interface.js
+export const SET_MENU_COLLAPSED = 'SET_MENU_COLLAPSED'
