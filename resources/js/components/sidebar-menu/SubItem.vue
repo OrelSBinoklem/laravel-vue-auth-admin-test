@@ -4,28 +4,28 @@
             <template v-if="isRouterLink">
                 <router-link class="vsm-link" :to="item.href">
                     <i v-if="item.icon" class="vsm-icon"><fa :icon="item.icon" fixed-width/></i>
-                    <span class="vsm-title">{{item.title}}</span>
+                    <span class="vsm-title">{{item.title.translate ? $t(item.title.translate) : item.title}}</span>
                 </router-link>
             </template>
             <template v-else>
                 <a class="vsm-link" :href="item.href">
                     <i v-if="item.icon" class="vsm-icon"><fa :icon="item.icon" fixed-width/></i>
-                    <span class="vsm-title">{{item.title}}</span>
+                    <span class="vsm-title">{{item.title.translate ? $t(item.title.translate) : item.title}}</span>
                 </a>
             </template>
         </template>
         <template v-else>
             <div class="vsm-link" @click="toggleDropdown">
                 <i v-if="item.icon" class="vsm-icon"><fa :icon="item.icon" fixed-width/></i>
-                <span class="vsm-title">{{item.title}}</span>
+                <span class="vsm-title">{{item.title.translate ? $t(item.title.translate) : item.title}}</span>
                 <i class="vsm-arrow" :class="{'open-arrow' : show}"><fa icon="angle-right" fixed-width/></i>
             </div>
             <div class="vsm-dropdown">
-                <transition name="show-animation">
+                <!--<transition name="show-animation">-->
                     <div class="vsm-list" v-if="show">
                         <item v-for="(subItem, index) in item.child" :item="subItem" :key="index" />
                     </div>
-                </transition>
+                <!--</transition>-->
             </div>
         </template>
     </div>

@@ -42,5 +42,9 @@
   "email_verified": "Your email address is verified",
   "email_not_verified": "Error! Email has not been verified",
 
-  "captcha": "Captcha"
+  "captcha": "Captcha",
+
+  "dashboard": "Dashboard",
+  "users": "Users",
+  "content": "Content"
 }

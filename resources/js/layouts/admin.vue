@@ -24,86 +24,20 @@
     data: () => ({
       menu: [
         {
-          href: {name: 'admin.index'},
-          title: 'Dashboard',
+          href: {name: 'admin.dashboard'},
+          title: {translate: 'dashboard'},
+          icon: 'tachometer-alt'
+        },
+        {
+          href: {name: 'admin.users'},
+          title: {translate: 'users'},
           icon: 'user'
         },
         {
-          href: 'dd',
-          title: 'Dashboard',
-          icon: 'user',
-          disabled: true
+          href: {name: 'admin.content'},
+          title: {translate: 'content'},
+          icon: 'user'
         },
-        {
-          href: {name: 'home'},
-          title: 'Dashboard',
-          icon: 'user',
-          disabled: true
-        },
-        {
-          href: {name: 'home'},
-          title: 'Dashboard',
-          icon: 'user',
-          disabled: true
-        },
-        {
-          href: {name: 'home'},
-          title: 'Dashboard',
-          icon: 'user',
-          disabled: true
-        },
-        {
-          href: {name: 'home'},
-          title: 'Dashboard',
-          icon: 'user',
-          disabled: true
-        },
-        {
-          href: {name: 'home'},
-          title: 'Dashboard',
-          icon: 'user',
-          disabled: true
-        },
-        {
-          title: 'Charts',
-          icon: 'chart-area',
-          child: [
-            {
-              href: {name: 'settings.profile'},
-              title: 'Dashboard2'
-            },
-            {
-              href: {name: 'settings.profile'},
-              title: 'Dashboard2'
-            },
-            {
-              href: {name: 'settings.profile'},
-              title: 'Dashboard2'
-            },
-            {
-              href: {name: 'settings.profile'},
-              title: 'Dashboard2'
-            },
-            {
-              href: {name: 'settings.profile'},
-              title: 'Dashboard2',
-              child: [
-                {
-                  href: {name: 'settings.profile'},
-                  title: 'Dashboard2'
-                },
-                {
-                  href: {name: 'settings.profile'},
-                  title: 'Dashboard2'
-                },
-                {
-                  href: {name: 'settings.profile'},
-                  title: 'Dashboard2'
-                }
-              ]
-            }
-          ]
-        }
       ]
     }),
 

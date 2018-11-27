@@ -42,5 +42,9 @@
   "email_verified": "您的电子邮件地址已经过验",
   "email_not_verified": "错误！ 电子邮件尚未经过验证",
 
-  "captcha": "验证码"
+  "captcha": "验证码",
+
+  "dashboard": "仪表板",
+  "users": "用户",
+  "content": "内容"
 }

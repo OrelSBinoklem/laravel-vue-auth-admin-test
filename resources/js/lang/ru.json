@@ -42,5 +42,9 @@
   "email_verified": "Ваш email адрес подтверждён",
   "email_not_verified": "Ошибка! Ваш email не подтверждён",
 
-  "captcha": "Каптча"
+  "captcha": "Каптча",
+
+  "dashboard": "Приборная доска",
+  "users": "Пользователи",
+  "content": "Контент"
 }

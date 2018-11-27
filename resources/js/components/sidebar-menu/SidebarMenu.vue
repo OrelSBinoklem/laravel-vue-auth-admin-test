@@ -5,7 +5,7 @@
       <vue-scroll :ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}">
         <template v-for="(item, index) in menu">
            <template v-if="item.header">
-             <div v-if="!isCollapsed" :key="index" class="vsm-header">{{item.title}}</div>
+             <div v-if="!isCollapsed" :key="index" class="vsm-header">{{item.title.translate ? $t(item.title.translate) : item.title}}</div>
            </template>
            <item v-else :key="index" :item="item" :firstItem="true" :isCollapsed="isCollapsed" v-on:mouse-enter-item="mouseEnterItem" />
         </template>
@@ -13,16 +13,16 @@
     </div>
     <div v-if="isCollapsed" :style="[{'position' : 'absolute'}, {'top' : `${mobileItemPos}px`}, {'left' : '0px'}, {'padding-left' : sidebarWidth}, {'width' : width}]">
       <mobile-item :item="mobileItem" />
-      <transition name="slide-animation">
+      <!--<transition name="slide-animation">-->
         <div class="vsm-mobile-bg" v-if="mobileItem" :style="[{'position' : 'absolute'}, {'left' : '0px'}, {'right' : '0px'}, {'top' : '0px'}, {'height' : `${mobileItemHeight}px`}]"></div>
-      </transition>
+      <!--</transition>-->
       <div class="vsm-dropdown" :style="[{'position' : 'absolute'}, {'top' : `${mobileItemHeight}px`}, {'left' : sidebarWidth}, {'right' : '0px'}, {'height' : mobileDropdownHeight != 'auto' ? `${mobileDropdownHeight}px` : 'auto'}, {'max-height' : `calc(100vh - ${mobileItemPos + mobileItemHeight}px)`}]">
         <vue-scroll :ops="{bar: {background: '#4285f4'}}">
-          <transition name="show-animation">
+          <!--<transition name="show-animation">-->
             <div class="vsm-list" ref="vsmList" v-if="mobileItem && mobileItem.child">
               <sub-item v-for="(subItem, index) in mobileItem.child" :item="subItem" :key="index"/>
             </div>
-          </transition>
+          <!--</transition>-->
         </vue-scroll>
       </div>
     </div>

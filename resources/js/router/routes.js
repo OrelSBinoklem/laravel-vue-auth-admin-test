@@ -13,6 +13,8 @@ const SettingsProfile = () => import('~/pages/settings/profile').then(m => m.def
 const SettingsPassword = () => import('~/pages/settings/password').then(m => m.default || m)
 
 const Admin = () => import('~/pages/admin/index').then(m => m.default || m)
+const AdminUsers = () => import('~/pages/admin/users').then(m => m.default || m)
+const AdminContent = () => import('~/pages/admin/content').then(m => m.default || m)
 
 export default [
   { path: '/', name: 'welcome', component: Welcome },
@@ -33,7 +35,9 @@ export default [
       { path: 'password', name: 'settings.password', component: SettingsPassword }
     ] },
 
-  { path: '/admin', name: 'admin.index', component: Admin },
+  { path: '/admin', name: 'admin.dashboard', component: Admin },
+  { path: '/admin/users', name: 'admin.users', component: AdminUsers },
+  { path: '/admin/content', name: 'admin.content', component: AdminContent },
 
   { path: '*', component: NotFound }
 ]
