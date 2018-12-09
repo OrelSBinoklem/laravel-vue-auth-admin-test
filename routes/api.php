@@ -25,6 +25,14 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('email/verify/{id}', 'Auth\VerificationController@verify')->name('verification.verify');
     Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
+
+    Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'verified'], function () {
+        Route::get('users/get-table', 'UsersController@getTableData');
+        Route::resource('users', 'UsersController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
+
+        Route::get('roles/get-table', 'UsersController@getTableData');
+        Route::resource('roles', 'RolesController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
+    });
 });
 
 Route::group(['middleware' => 'guest:api'], function () {

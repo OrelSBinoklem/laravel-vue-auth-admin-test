@@ -46,5 +46,7 @@
 
   "dashboard": "仪表板",
   "users": "用户",
-  "content": "内容"
+  "content": "内容",
+
+  "roles_user": "用户角色"
 }

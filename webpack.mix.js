@@ -40,7 +40,10 @@ if (mix.inProduction()) {
         'sweetalert2',
         'vuex-router-sync',
         '@fortawesome/fontawesome',
-        '@fortawesome/vue-fontawesome'
+        '@fortawesome/vue-fontawesome',
+        'vue-tables-2',
+        'vuetable-2',
+        'glyphicons-only-bootstrap'
     ])
 }
 

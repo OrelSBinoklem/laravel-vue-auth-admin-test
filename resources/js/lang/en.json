@@ -46,5 +46,7 @@
 
   "dashboard": "Dashboard",
   "users": "Users",
-  "content": "Content"
+  "content": "Content",
+
+  "roles_user": "User roles"
 }

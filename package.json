@@ -19,6 +19,7 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.1.1",
     "bootstrap-vue": "^2.0.0-rc.11",
+    "glyphicons-only-bootstrap": "^1.0.1",
     "jquery": "^3.3.1",
     "js-cookie": "^2.2.0",
     "popper.js": "^1.14.3",
@@ -29,7 +30,9 @@
     "vue-meta": "^1.5.0",
     "vue-router": "^3.0.1",
     "vue-sidebar-menu": "^2.2.2",
+    "vue-tables-2": "^1.4.70",
     "vuescroll": "^4.9.0-beta.14",
+    "vuetable-2": "^1.7.5",
     "vuex": "^3.0.1",
     "vuex-router-sync": "^5.0.0",
     "webpack-cli": "^3.1.2"
