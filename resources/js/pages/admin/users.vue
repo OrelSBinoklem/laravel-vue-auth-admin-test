@@ -2,7 +2,18 @@
   <div class="row">
     <div class="col">
       <h1>Пользователи</h1>
-      <div class="row justify-content-end mb-3">
+      <div class="row justify-content-between mb-3">
+        <div class="col-auto">
+          <label for="users_per_page" class="mt-2">Per Page:</label>
+        </div>
+        <div class="col-auto pl-0 mr-auto">
+          <select id="users_per_page" class="form-control custom-select d-inline" v-model="perPage">
+            <option :value="10">10</option>
+            <option :value="25">25</option>
+            <option :value="50">50</option>
+            <option :value="100">100</option>
+          </select>
+        </div>
         <div class="col-auto">
           <b-button @click="onAddUser" size="lg" variant="success"><fa icon="user-plus" size="lg"/></b-button>
         </div>
@@ -13,7 +24,7 @@
                 :fields="fields"
                 :css="css"
                 :sort-order="sortOrder"
-                :per-page="10"
+                :per-page="perPage"
                 @vuetable:pagination-data="onPaginationData"
       >
 
@@ -33,10 +44,10 @@
       </vuetable>
 
       <div class="vuetable-footer justify-content-end d-flex">
-        <!--<button class="btn btn-info footer-button" @click="onGroupAction()">Group action</button>
+        <!--<button class="btn btn-info footer-button" @click="onGroupAction()">Group action</button>-->
 
         <vuetable-pagination-info ref="paginationInfo"
-        ></vuetable-pagination-info>-->
+        ></vuetable-pagination-info>
 
         <vuetable-pagination ref="pagination"
                              :css="paginationCss"
@@ -188,6 +199,7 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   import Form from 'vform'
   import axios from 'axios'
 
@@ -202,6 +214,7 @@
     data: () => ({
       curEditUser: null,
       roles: [],
+      perPage: 10,
 
       addUserForm: new Form({
         name: '',
@@ -327,7 +340,7 @@
     methods: {
       onPaginationData (paginationData) {
         this.$refs.pagination.setPaginationData(paginationData)
-        //this.$refs.paginationInfo.setPaginationData(paginationData)
+        this.$refs.paginationInfo.setPaginationData(paginationData)
       },
       onChangePage (page) {
         this.$refs.vuetable.changePage(page)
@@ -395,6 +408,12 @@
         return roles.map(function callback(role) {
           return role.id
         })
+      }
+    },
+
+    watch: {
+      perPage: function() {
+        Vue.nextTick( () => this.$refs.vuetable.refresh())
       }
     }
   }
