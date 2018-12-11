@@ -14,6 +14,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 class UsersRepository extends VueTableRepository
 {
 	protected $with = 'roles';
+    protected $fieldsFilter = ['name', 'email'];
     
 	public function __construct(User $user) {
 		$this->model  = $user;

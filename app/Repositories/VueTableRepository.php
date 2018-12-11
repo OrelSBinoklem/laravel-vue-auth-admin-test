@@ -8,6 +8,7 @@ use Carbon\Carbon;
 class VueTableRepository extends Repository
 {
     protected $with = null;
+    protected $fieldsFilter = null;
 
     public function getTableData() {
         $request = request();
@@ -31,8 +32,12 @@ class VueTableRepository extends Repository
         if ($request->exists('filter')) {
             $query->where(function($q) use($request) {
                 $value = "%{$request->filter}%";
-                $q->where('name', 'like', $value)
-                    ->orWhere('email', 'like', $value);
+                $q->where($this->fieldsFilter[0], 'like', $value);
+                if(count($this->fieldsFilter) > 1) {
+                    for($i = 1; $i < count($this->fieldsFilter); $i++) {
+                        $q->orWhere($this->fieldsFilter[$i], 'like', $value);
+                    }
+                }
             });
         }
 

@@ -4,6 +4,18 @@
       <h1>Пользователи</h1>
       <div class="row justify-content-between mb-3">
         <div class="col-auto">
+          <label for="users_filter" class="mt-2">Search for:</label>
+        </div>
+        <div class="col-auto pl-0">
+          <div class="input-group">
+            <input id="users_filter" type="text" v-model="filterText" class="form-control" @keyup.enter="doFilter" placeholder="name or email">
+            <div class="input-group-append" id="button-addon4">
+              <button class="btn btn-outline-secondary" type="button" @click="doFilter">Go</button>
+              <button class="btn btn-outline-secondary" type="button" @click="resetFilter">Reset</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-auto">
           <label for="users_per_page" class="mt-2">Per Page:</label>
         </div>
         <div class="col-auto pl-0 mr-auto">
@@ -26,6 +38,7 @@
                 :sort-order="sortOrder"
                 :per-page="perPage"
                 @vuetable:pagination-data="onPaginationData"
+                :append-params="moreParams"
       >
 
         <template slot="actions" slot-scope="props">
@@ -214,7 +227,9 @@
     data: () => ({
       curEditUser: null,
       roles: [],
+      filterText: '',
       perPage: 10,
+      moreParams: {},
 
       addUserForm: new Form({
         name: '',
@@ -402,6 +417,18 @@
       // Footer button action
       onGroupAction() {
         console.log('Group action. Selected rows: ', this.$refs.vuetable.selectedTo.join(', '));
+      },
+
+      doFilter () {
+        this.moreParams = {
+          filter: this.filterText
+        }
+        Vue.nextTick( () => this.$refs.vuetable.refresh())
+      },
+      resetFilter () {
+        this.filterText = ''
+        this.moreParams = {}
+        Vue.nextTick( () => this.$refs.vuetable.refresh())
       },
 
       __getKeysRoles (roles) {
