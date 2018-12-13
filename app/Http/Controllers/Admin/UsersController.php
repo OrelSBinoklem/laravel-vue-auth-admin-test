@@ -52,11 +52,6 @@ class UsersController extends AdminController
         return ['status' => 'Пользователь добавлен'];
     }
 
-    public function show($id)
-    {
-        //
-    }
-
     public function update(Request $request, User $user)
     {
 		$this->us_rep->update($request, $user);

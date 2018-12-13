@@ -28,10 +28,10 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'verified'], function () {
         Route::get('users/get-table', 'UsersController@getTableData');
-        Route::resource('users', 'UsersController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
+        Route::resource('users', 'UsersController', ['only' => ['index', 'store', 'update', 'destroy']]);
 
         Route::get('roles/get-table', 'UsersController@getTableData');
-        Route::resource('roles', 'RolesController', ['only' => ['index', 'show', 'store', 'update', 'destroy']]);
+        Route::resource('roles', 'RolesController', ['only' => ['index', 'store', 'update', 'destroy']]);
     });
 });
 

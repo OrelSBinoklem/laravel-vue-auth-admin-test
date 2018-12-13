@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import axios from 'axios'
 import store from '~/store'
 import router from '~/router'
@@ -22,7 +23,71 @@ axios.interceptors.request.use(request => {
 })
 
 // Response interceptor
-axios.interceptors.response.use(response => response, error => {
+var $eventBus = new Vue();
+Vue.prototype.$eventHub = $eventBus;
+
+Vue.component('notifications', {
+  template: '<div><vue-snotify></vue-snotify></div>',
+  created() {
+    this.$eventHub.$on('open-modal', ({
+      type,
+      title,
+      message
+    }) => {
+      const conf = {
+        timeout: 5000,
+        showProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true
+      }
+      if(!type) {
+        throw new Error("Not given type")
+      }
+
+      if(!/^(simple|success|info|warning|error)$/gi.test(type)) {
+        throw new Error("Supported types \"simple, success, info, warning, error\" given:" + type)
+      }
+
+      if(title) {
+        this.$snotify[type](message, title, conf);
+      } else {
+        this.$snotify[type](message, conf);
+      }
+    });
+  },
+  beforeDestroy() {
+    this.$eventHub.$off('open-modal');
+  },
+});
+axios.interceptors.response.use(response => {
+  if(/^\/admin\/?/gi.test(router.currentRoute.fullPath)) {
+    if(response.data.notification) {
+      $eventBus.$emit('open-modal', {
+        type: response.data.notification.type ? response.data.notification.type : 'success',
+        title: response.data.notification.title ? response.data.notification.title : null,
+        message: response.data.notification.message
+      });
+    }
+
+    if(response.data.status) {
+      $eventBus.$emit('open-modal', {
+        type: 'success',
+        title: null,
+        message: response.data.status
+      });
+    }
+
+    if(response.data.error) {
+      $eventBus.$emit('open-modal', {
+        type: 'error',
+        title: null,
+        message: response.data.error
+      });
+    }
+  }
+
+  return response
+}, error => {
   const { status } = error.response
 
   if (status >= 500) {

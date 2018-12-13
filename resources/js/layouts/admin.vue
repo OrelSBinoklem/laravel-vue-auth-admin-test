@@ -6,6 +6,7 @@
     <div class="container mt-4">
       <child/>
     </div>
+    <notifications></notifications>
   </div>
 </template>
 

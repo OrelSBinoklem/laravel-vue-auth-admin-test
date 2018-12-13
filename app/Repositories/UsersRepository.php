@@ -38,8 +38,6 @@ class UsersRepository extends VueTableRepository
 		if($user) {
 			$user->roles()->sync($data['roles_ids']);
 		}
-		
-		return $user;
 	}
 	
 	

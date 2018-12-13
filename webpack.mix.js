@@ -42,7 +42,8 @@ if (mix.inProduction()) {
         '@fortawesome/fontawesome',
         '@fortawesome/vue-fontawesome',
         'vuetable-2',
-        'glyphicons-only-bootstrap'
+        'glyphicons-only-bootstrap',
+        'snotify'
     ])
 }
 
