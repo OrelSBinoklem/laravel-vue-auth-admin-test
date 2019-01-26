@@ -10,6 +10,16 @@ class RolesRepository extends VueTableRepository {
 		$this->model = $role;
 	}
 
+    public function getTableData() {
+        $data = parent::getTableData();
+
+        return response()->json(
+            $data
+        )
+            ->header('Access-Control-Allow-Origin', '*')
+            ->header('Access-Control-Allow-Methods', 'GET');
+    }
+
     public function add($request) {
 
 

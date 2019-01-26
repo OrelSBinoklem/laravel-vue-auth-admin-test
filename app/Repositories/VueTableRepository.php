@@ -2,8 +2,6 @@
 
 namespace App\Repositories;
 
-use Carbon\Carbon;
-
 
 class VueTableRepository extends Repository
 {
@@ -14,7 +12,9 @@ class VueTableRepository extends Repository
         $request = request();
         $query = $this->model->newQuery();
         if(!empty($this->with)) {
-            $query = $query->with($this->with);
+            foreach ($this->with as $with) {
+                $query = $query->with($with);
+            }
         }
         //$query = $this->model->newQuery();
         // handle sort option
@@ -53,10 +53,6 @@ class VueTableRepository extends Repository
         // are to allow you to call this from any domain (see CORS for more info).
         // This is for local testing only. You should not do this in production server,
         // unless you know what it means.
-        return response()->json(
-            $pagination
-        )
-            ->header('Access-Control-Allow-Origin', '*')
-            ->header('Access-Control-Allow-Methods', 'GET');
+        return $pagination;
     }
 }

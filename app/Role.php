@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Helpers\Contracts\BelongsToUsers;
 
-class Role extends Model
+class Role extends Model implements BelongsToUsers
 {
     //
     
@@ -52,4 +52,8 @@ class Role extends Model
 		
 		return TRUE;
 	}
+
+    public function BelongsToUsers() {
+        return $this->users;
+    }
 }

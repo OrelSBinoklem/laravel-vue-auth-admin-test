@@ -2,9 +2,9 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Helpers\Contracts\BelongsToUsers;
 
-class OAuthProvider extends Model
+class OAuthProvider extends Model implements BelongsToUsers
 {
     /**
      * The table associated with the model.
@@ -35,5 +35,9 @@ class OAuthProvider extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function BelongsToUsers() {
+        return $this->user;
     }
 }

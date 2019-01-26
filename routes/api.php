@@ -28,6 +28,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => 'verified'], function () {
         Route::get('users/get-table', 'UsersController@getTableData');
+        Route::patch('users/group-ban', 'UsersController@groupBan');
+        Route::patch('users/group-delete', 'UsersController@groupDelete');
         Route::resource('users', 'UsersController', ['only' => ['index', 'store', 'update', 'destroy']]);
 
         Route::get('roles/get-table', 'UsersController@getTableData');

@@ -32,11 +32,12 @@
       </div>
       <vuetable ref="vuetable"
                 api-url="/api/admin/users/get-table"
-                pagination-path=""
+                pagination-path="pagination"
                 :fields="fields"
                 :css="css"
                 :sort-order="sortOrder"
                 :per-page="perPage"
+                data-path="mydata"
                 @vuetable:pagination-data="onPaginationData"
                 :append-params="moreParams"
       >
@@ -57,7 +58,17 @@
       </vuetable>
 
       <div class="vuetable-footer justify-content-end d-flex">
-        <!--<button class="btn btn-info footer-button" @click="onGroupAction()">Group action</button>-->
+<!--        <b-dropdown id="ddown1" text="Бан" class="m-md-2">
+          <b-dropdown-item @click="onGroupBan()">5 мин</b-dropdown-item>
+          <b-dropdown-item @click="onGroupBan()">15 мин</b-dropdown-item>
+          <b-dropdown-item @click="onGroupBan()">День</b-dropdown-item>
+          <b-dropdown-item @click="onGroupBan()">Неделя</b-dropdown-item>
+          <b-dropdown-item @click="onGroupBan()">Перманент</b-dropdown-item>
+        </b-dropdown>-->
+        <b-button-group>
+          <button class="btn btn-info footer-button" @click="onGroupBan()">Group bans</button>
+          <button class="btn btn-info footer-button" @click="onGroupDelete()">Group delete</button>
+        </b-button-group>
 
         <vuetable-pagination-info ref="paginationInfo"
         ></vuetable-pagination-info>
@@ -132,7 +143,7 @@
           <div class="form-group row">
             <div class="col-md-7 offset-md-3 d-flex">
               <!-- Submit Button -->
-              <v-button :loading="addUserForm.busy">
+              <v-button block :loading="addUserForm.busy">
                 Добавить юзера
               </v-button>
             </div>
@@ -195,15 +206,81 @@
             </div>
           </div>
 
+          <!-- Ban -->
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label text-md-right">{{ $t('ban_user') }}</label>
+            <div class="col-md-7">
+              <div class="input-group">
+                <vue-ctk-date-time-picker
+                        v-if="typeof updateUserForm.bans_expired_at != 'boolean'"
+                        v-model="updateUserForm.bans_expired_at"
+                        :minute-interval="5"
+                        :min-date="__getCurDateTimeMoment().format('YYYY-MM-DD')"
+                        format="DD-MM-YYYY HH:mmZ"
+                        formatted="DD-MM-YYYY HH:mmZ"
+                        time-format='HH:mm'
+                        :error-hint="updateUserForm.errors.has('bans_expired_at')"
+                        :locale="language"
+                ></vue-ctk-date-time-picker>
+              </div>
+              <div class="btn-group btn-group-justified mt-1">
+                  <button class="btn btn-outline-primary" :class="{active: updateUserForm.bans_expired_at === false}" type="button" @click="updateUserForm.bans_expired_at = false">Нету</button>
+                  <button class="btn btn-outline-primary" :class="{active: typeof updateUserForm.bans_expired_at != 'boolean'}" type="button" @click="updateUserForm.bans_expired_at = __getCurDateTime()"><fa icon="calendar-alt"/></button>
+                  <button class="btn btn-outline-primary" :class="{active: updateUserForm.bans_expired_at === true}" type="button" @click="updateUserForm.bans_expired_at = true">Перманент</button>
+              </div>
+              <div class="form-control is-invalid d-none"></div>
+              <has-error :form="updateUserForm" field="bans_expired_at"/>
+            </div>
+          </div>
+
           <div class="form-group row">
             <div class="col-md-7 offset-md-3 d-flex">
               <!-- Submit Button -->
-              <v-button :loading="updateUserForm.busy">
+              <v-button block :loading="updateUserForm.busy">
                 Обновить юзера
               </v-button>
             </div>
           </div>
         </form>
+        <template slot="modal-cancel">Нет</template>
+        <template slot="modal-ok">Да</template>
+      </b-modal>
+      <b-modal id="modal-ban-group-users"
+               ref="modal-ban-group-users"
+               title="Забанить юзеров"
+               @ok="groupBan">
+        <!-- Ban -->
+        <div class="form-group row">
+          <label class="col-md-3 col-form-label text-md-right">{{ $t('ban_user') }}</label>
+          <div class="col-md-7">
+            <div class="input-group">
+              <!--но надо и по времени минимум(((-->
+              <vue-ctk-date-time-picker
+                      v-if="typeof dateTimeBanUsers != 'boolean'"
+                      v-model="dateTimeBanUsers"
+                      :minute-interval="5"
+                      :min-date="__getCurDateTimeMoment().format('YYYY-MM-DD')"
+                      format="DD-MM-YYYY HH:mmZ"
+                      formatted="DD-MM-YYYY HH:mmZ"
+                      time-format='HH:mm'
+                      :error-hint="!__timeIsFuture(dateTimeBanUsers)"
+                      :locale="language"
+              ></vue-ctk-date-time-picker>
+              <div class="btn-group btn-group-justified mt-1">
+                <button class="btn btn-outline-primary" :class="{active: dateTimeBanUsers === false}" type="button" @click="dateTimeBanUsers = false">Нету</button>
+                <button class="btn btn-outline-primary" :class="{active: typeof dateTimeBanUsers != 'boolean'}" type="button" @click="dateTimeBanUsers = __getCurDateTime()"><fa icon="calendar-alt"/></button>
+                <button class="btn btn-outline-primary" :class="{active: dateTimeBanUsers === true}" type="button" @click="dateTimeBanUsers = true">Перманент</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <template slot="modal-cancel">Отмена</template>
+        <template slot="modal-ok">Применить</template>
+      </b-modal>
+      <b-modal id="modal-delete-group-users"
+               ref="modal-delete-group-users"
+               title="Точно удалить юзеров?"
+               @ok="groupDelete">
         <template slot="modal-cancel">Нет</template>
         <template slot="modal-ok">Да</template>
       </b-modal>
@@ -215,6 +292,8 @@
   import Vue from 'vue'
   import Form from 'vform'
   import axios from 'axios'
+  import moment from 'moment'
+  import { mapGetters } from 'vuex'
 
   export default {
     layout: 'admin',
@@ -244,8 +323,11 @@
         email: '',
         password: '',
         password_confirmation: '',
-        roles_ids: []
+        roles_ids: [],
+        bans_expired_at: false
       }),
+
+      dateTimeBanUsers: null,
 
       css: {
         tableClass: 'table table-striped table-bordered',
@@ -318,6 +400,14 @@
           sortField: 'email'
         },
         {
+          name: 'ban_duration',
+          title: 'Banned',
+          titleClass: 'text-center',
+          dataClass: 'text-right',
+          callback: 'bannedLabel',
+          //sortField: 'email_verified_at'
+        },
+        {
           name: 'email_verified_at',
           title: 'Verified',
           titleClass: 'text-center',
@@ -330,6 +420,7 @@
           title: 'Created',
           titleClass: 'text-center',
           dataClass: 'text-right',
+          callback: 'createdAtLabel',
           sortField: 'created_at'
         },
         {
@@ -349,10 +440,63 @@
     }),
 
     computed: {
-
+      ...mapGetters({
+        language: 'lang/locale'
+      })
     },
 
     methods: {
+      transform: function(data) {
+        var transformed = {}
+        var pag = data.pagination
+
+        transformed.pagination = {
+          total: pag.total,
+          per_page: pag.per_page,
+          current_page: pag.current_page,
+          last_page: pag.last_page,
+          next_page_url: pag.next_page_url,
+          prev_page_url: pag.prev_page_url,
+          from: pag.from,
+          to: pag.to
+        }
+
+        transformed.mydata = []
+
+        transformed.mydata = pag.data
+
+        for (var i = 0; i < pag.data.length; i++) {
+          let ban_expired_at = false
+          let user = pag.data[i]
+          for(let ban of user.bans) {
+            if(ban.expired_at === null) {
+              ban_expired_at = true
+              break
+            }
+            let date_expired = moment(ban.expired_at)
+            if(ban_expired_at === false) {
+              ban_expired_at = date_expired
+            } else if(date_expired.isAfter(ban_expired_at)) {
+              ban_expired_at = date_expired
+            }
+          }
+          user.ban_expired_at = ban_expired_at
+          user.ban_duration = false
+          user.is_banned = false
+
+          if(typeof ban_expired_at != 'boolean' && user.banned_at !== null && ban_expired_at.isAfter(data.current_date)) {
+            user.ban_duration = moment.duration(moment(user.banned_at).diff(ban_expired_at)).humanize()
+            user.is_banned = true
+          }
+          if(ban_expired_at === true) {
+            user.ban_duration = true
+            user.is_banned = true
+          }
+        }
+
+        return transformed
+      },
+
       onPaginationData (paginationData) {
         this.$refs.pagination.setPaginationData(paginationData)
         this.$refs.paginationInfo.setPaginationData(paginationData)
@@ -367,10 +511,20 @@
         })
           .join(", ")
       },
+      bannedLabel (value) {
+        if(value === true) {
+          return '<span class="badge badge-danger">Permanent</span>'
+        } else if (value !== false) {
+          return '<span class="badge badge-danger">' + value + '</span>'
+        }
+      },
       verifiedLabel (value) {
         return value === null
-          ? '<span class="badge badge-warning">No</span>'
-          : '<span class="badge badge-success">Verified</span>'
+          ? '<span class="badge badge-warning">No</span>' : ''
+          //: '<span class="badge badge-success">Verified</span>'
+      },
+      createdAtLabel (value) {
+        return moment(value).format("DD-MM-YYYY HH:mm")
       },
       // Row button action handler
       async onAction (action, data, index) {
@@ -383,6 +537,7 @@
           this.updateUserForm.reset()
           this.updateUserForm.name = data.name
           this.updateUserForm.email = data.email
+          this.updateUserForm.bans_expired_at = data.is_banned === true && data.ban_expired_at !== true ? data.ban_expired_at.format("DD-MM-YYYY HH:mmZ") : data.is_banned
           this.updateUserForm.roles_ids = this.__getKeysRoles(data.roles)
           this.$root.$emit('bv::show::modal','modal-update-user')
           var res = await axios.get('/api/admin/roles')
@@ -415,8 +570,28 @@
       },
 
       // Footer button action
-      onGroupAction() {
-        console.log('Group action. Selected rows: ', this.$refs.vuetable.selectedTo.join(', '));
+      onGroupBan() {
+        this.dateTimeBanUsers = moment().add(1, 'minutes').format('DD-MM-YYYY HH:mmZ')
+        this.$root.$emit('bv::show::modal','modal-ban-group-users')
+      },
+
+      onGroupDelete() {
+        this.$root.$emit('bv::show::modal','modal-delete-group-users')
+      },
+
+      async groupBan() {
+        await axios.patch('/api/admin/users/group-ban', {
+          ids: this.$refs.vuetable.selectedTo,
+          expired_at: this.dateTimeBanUsers
+        })
+        this.$refs.vuetable.reload()
+      },
+
+      async groupDelete() {
+        await axios.patch('/api/admin/users/group-delete', {
+          ids: this.$refs.vuetable.selectedTo
+        })
+        this.$refs.vuetable.reload()
       },
 
       doFilter () {
@@ -435,11 +610,26 @@
         return roles.map(function callback(role) {
           return role.id
         })
+      },
+
+      __getCurDateTimeMoment() {
+        return moment()
+      },
+
+      __getCurDateTime () {
+        return moment().format('DD-MM-YYYY HH:mmZ')
+      },
+
+      __timeIsFuture(time) {
+        return moment(time, 'DD-MM-YYYY HH:mmZ').isSameOrAfter(moment())
       }
     },
 
     watch: {
       perPage: function() {
+        Vue.nextTick( () => this.$refs.vuetable.refresh())
+      },
+      language: function() {
         Vue.nextTick( () => this.$refs.vuetable.refresh())
       }
     }
@@ -474,11 +664,14 @@
   .vuetable th#_email {
     width: 200px;
   }
+  .vuetable th#_ban_duration {
+    width: 100px;
+  }
   .vuetable th#_email_verified_at {
     width: 80px;
   }
   .vuetable th#_created_at{
-    width: 200px;
+    width: 150px;
   }
   .vuetable .vuetable-th-slot-actions {
     width: 100px;

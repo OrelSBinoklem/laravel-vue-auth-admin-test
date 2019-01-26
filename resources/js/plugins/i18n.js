@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import store from '~/store'
 import VueI18n from 'vue-i18n'
+import moment from 'moment'
 
 Vue.use(VueI18n)
 
@@ -17,6 +18,8 @@ export async function loadMessages (locale) {
     const messages = await import(/* webpackChunkName: "lang-[request]" */ `~/lang/${locale}`)
     i18n.setLocaleMessage(locale, messages)
   }
+
+  moment.locale(locale);
 
   if (i18n.locale !== locale) {
     i18n.locale = locale

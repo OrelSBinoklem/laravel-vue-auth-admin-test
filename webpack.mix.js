@@ -43,7 +43,8 @@ if (mix.inProduction()) {
         '@fortawesome/vue-fontawesome',
         'vuetable-2',
         'glyphicons-only-bootstrap',
-        'snotify'
+        'snotify',
+        'vue-ctk-date-time-picker'
     ])
 }
 

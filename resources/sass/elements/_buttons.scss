@@ -23,3 +23,11 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(359deg); }
 }
+
+.btn-group.btn-group-justified {
+  display: flex;
+}
+
+.btn-group-justified .btn {
+  flex: 1
+}
