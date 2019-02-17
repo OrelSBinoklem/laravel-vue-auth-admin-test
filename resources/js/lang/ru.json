@@ -49,5 +49,7 @@
   "content": "Контент",
 
   "roles_user": "Роли юзера",
-  "ban_user": "Бан юзера"
+  "ban_user": "Бан юзера",
+
+  "permissions": "Права"
 }

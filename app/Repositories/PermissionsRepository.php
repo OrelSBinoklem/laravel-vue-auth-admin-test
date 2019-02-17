@@ -1,16 +1,15 @@
 <?php
 
-namespace Corp\Repositories;
+namespace App\Repositories;
 
-use Corp\Permission;
+use App\Permission;
 
 use Gate;
 
-class PermissionsRepository extends Repository {
+class PermissionsRepository extends VueTableRepository {
 	
 	protected $rol_rep;
-	
-	
+
 	public function __construct(Permission $permission, RolesRepository $rol_rep) {
 		$this->model = $permission;
 		

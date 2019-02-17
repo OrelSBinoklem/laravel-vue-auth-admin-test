@@ -49,5 +49,7 @@
   "content": "内容",
 
   "roles_user": "用户角色",
-  "ban_user": "用户禁令"
+  "ban_user": "用户禁令",
+
+  "permissions": "权限"
 }

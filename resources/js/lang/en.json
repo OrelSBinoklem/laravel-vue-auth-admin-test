@@ -49,5 +49,7 @@
   "content": "Content",
 
   "roles_user": "User roles",
-  "ban_user": "User ban"
+  "ban_user": "User ban",
+
+  "permissions": "Permissions"
 }

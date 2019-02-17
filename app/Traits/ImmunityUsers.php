@@ -56,7 +56,7 @@ trait ImmunityUsers
         return  $require;
     }
 
-    public function immunityIsHigherForAccessToModel($permissions, Model $model, $require = FALSE, $equal = TRUE) {
+    public function immunityIsHigherForAccessToModel($permissions, Model $model, $require = FALSE, $equal = FALSE) {
         if($model instanceof BelongsToUsers) {
             return $this->immunityIsHigherForPermission($permissions, $model->BelongsToUsers(), $require, $equal);
         } else {
@@ -69,13 +69,13 @@ trait ImmunityUsers
         if($users instanceof Collection) {
             $roles = (new Collection(
                 $users->load("roles")->pluck('roles')->collapse()->unique('id')
-            ))->load('perms');
+            ))->load('permissions');
         } else if($users instanceof User) {
             $roles = $users->roles;
         }
         foreach($roles as $role) {
             $immunity = $role->immunity ? $role->immunity : 0;
-            foreach($role->perms as $perm) {
+            foreach($role->permissions as $perm) {
                 if(isset($max_immunity[$perm->name])) {
                     if($max_immunity[$perm->name] < $immunity) {
                         $max_immunity[$perm->name] = $immunity;

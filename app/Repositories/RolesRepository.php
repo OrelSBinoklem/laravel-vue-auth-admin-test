@@ -21,8 +21,6 @@ class RolesRepository extends VueTableRepository {
     }
 
     public function add($request) {
-
-
         if (Gate::denies('create',$this->model)) {
             abort(403);
         }
@@ -43,7 +41,6 @@ class RolesRepository extends VueTableRepository {
         return ['status' => 'Пользователь добавлен'];
 
     }
-
 
     public function update($request, $user) {
         if (Gate::denies('edit',$this->model)) {

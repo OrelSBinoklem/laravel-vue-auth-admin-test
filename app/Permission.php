@@ -9,7 +9,7 @@ class Permission extends Model implements BelongsToUsers
     //
     
     public function roles() {
-		return $this->belongsToMany('Corp\Role','permission_role');
+		return $this->belongsToMany('App\Role','permission_role');
 	}
 
     public function BelongsToUsers() {

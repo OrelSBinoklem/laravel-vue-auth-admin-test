@@ -40,12 +40,9 @@ class UsersController extends AdminController
 
     public function getTableData()
     {
-        return $this->us_rep->getTableData();
-    }
+        debug(Auth::user()->isSuperAdmin());
 
-    public function index()
-    {
-        return $this->us_rep->get();
+        return $this->us_rep->getTableData();
     }
 
     public function store(Request $request)

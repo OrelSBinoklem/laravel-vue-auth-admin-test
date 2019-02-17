@@ -12,7 +12,7 @@ class Role extends Model implements BelongsToUsers
 		return $this->belongsToMany('App\User','role_user');
 	}
 	
-	public function perms() {
+	public function permissions() {
 		return $this->belongsToMany('App\Permission','permission_role');
 	}
 	
@@ -31,7 +31,7 @@ class Role extends Model implements BelongsToUsers
             }
             return $require;
         } else {
-            foreach ($this->perms as $permission) {
+            foreach ($this->permissions as $permission) {
                 if ($permission->name == $name) {
                     return true;
                 }
@@ -44,10 +44,10 @@ class Role extends Model implements BelongsToUsers
     public function savePermissions($inputPermissions) {
 		
 		if(!empty($inputPermissions)) {
-			$this->perms()->sync($inputPermissions);
+			$this->permissions()->sync($inputPermissions);
 		}
 		else {
-			$this->perms()->detach();
+			$this->permissions()->detach();
 		}
 		
 		return TRUE;

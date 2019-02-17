@@ -1,0 +1,23 @@
+.table-matrix-checkboxes {
+  margin-bottom: 0;
+  td {
+    padding: 0;
+  }
+  td label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0;
+    cursor: pointer;
+  }
+  td label > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  td .custom-checkbox {
+    margin-right: 0;
+    padding-left: 2rem;
+    min-height: 31px;
+  }
+}

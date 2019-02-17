@@ -14,6 +14,7 @@ const SettingsPassword = () => import('~/pages/settings/password').then(m => m.d
 
 const Admin = () => import('~/pages/admin/index').then(m => m.default || m)
 const AdminUsers = () => import('~/pages/admin/users').then(m => m.default || m)
+const AdminPermissions = () => import('~/pages/admin/permissions').then(m => m.default || m)
 const AdminContent = () => import('~/pages/admin/content').then(m => m.default || m)
 
 export default [
@@ -37,6 +38,7 @@ export default [
 
   { path: '/admin', name: 'admin.dashboard', component: Admin },
   { path: '/admin/users', name: 'admin.users', component: AdminUsers },
+  { path: '/admin/permissions', name: 'admin.permissions', component: AdminPermissions },
   { path: '/admin/content', name: 'admin.content', component: AdminContent },
 
   { path: '*', component: NotFound }

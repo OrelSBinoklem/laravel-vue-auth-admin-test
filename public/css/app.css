@@ -13488,6 +13488,46 @@ body.swal2-no-backdrop .swal2-shown.swal2-bottom-right {
           transform-origin: 50% 50%;
 }
 
+.table-matrix-checkboxes {
+  margin-bottom: 0;
+}
+
+.table-matrix-checkboxes td {
+  padding: 0;
+}
+
+.table-matrix-checkboxes td label {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-bottom: 0;
+  cursor: pointer;
+}
+
+.table-matrix-checkboxes td label > div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.table-matrix-checkboxes td .custom-checkbox {
+  margin-right: 0;
+  padding-left: 2rem;
+  min-height: 31px;
+}
+
 .card {
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
           box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);

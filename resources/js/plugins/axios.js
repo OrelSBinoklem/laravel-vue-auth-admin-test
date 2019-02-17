@@ -99,9 +99,7 @@ axios.interceptors.response.use(response => {
       confirmButtonText: i18n.t('ok'),
       cancelButtonText: i18n.t('cancel')
     })
-  }
-
-  if (status === 401 && store.getters['auth/check']) {
+  } else if (status === 401 && store.getters['auth/check']) {
     swal({
       type: 'warning',
       title: i18n.t('token_expired_alert_title'),
@@ -114,6 +112,12 @@ axios.interceptors.response.use(response => {
 
       router.push({ name: 'login' })
     })
+  } else {
+    $eventBus.$emit('open-modal', {
+      type: 'error',
+      title: null,
+      message: error.response.data.message
+    });
   }
 
   return Promise.reject(error)

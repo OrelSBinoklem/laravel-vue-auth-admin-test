@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col">
-      <h1>Пользователи</h1>
+      <h1>{{$t('users')}}</h1>
       <div class="row justify-content-between mb-3">
         <div class="col-auto">
           <label for="users_filter" class="mt-2">Search for:</label>

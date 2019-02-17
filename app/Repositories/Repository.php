@@ -35,6 +35,13 @@ abstract class Repository {
             ->header('Access-Control-Allow-Origin', '*')
             ->header('Access-Control-Allow-Methods', 'GET');
 	}
+
+	public function getAll($with) {
+	    if($with) {
+            return $this->model->with($with)->get();
+        }
+        return $this->model->get();
+    }
 	
 	/*protected function check($result) {
 		

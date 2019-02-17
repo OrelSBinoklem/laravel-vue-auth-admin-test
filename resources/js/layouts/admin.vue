@@ -35,6 +35,11 @@
           icon: 'user'
         },
         {
+          href: {name: 'admin.permissions'},
+          title: {translate: 'permissions'},
+          icon: 'user-tie'
+        },
+        {
           href: {name: 'admin.content'},
           title: {translate: 'content'},
           icon: 'user'

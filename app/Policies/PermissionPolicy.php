@@ -23,6 +23,6 @@ class PermissionPolicy
     public function change(User $user) {
     	
     	//EDIT_PERMISSIONS
-		return $user->canDo('EDIT_USERS');
+		return $user->canDo('EDIT_PERMISSIONS');
 	}
 }

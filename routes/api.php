@@ -30,10 +30,12 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('users/get-table', 'UsersController@getTableData');
         Route::patch('users/group-ban', 'UsersController@groupBan');
         Route::patch('users/group-delete', 'UsersController@groupDelete');
-        Route::resource('users', 'UsersController', ['only' => ['index', 'store', 'update', 'destroy']]);
+        Route::resource('users', 'UsersController', ['only' => ['store', 'update', 'destroy']]);
 
-        Route::get('roles/get-table', 'UsersController@getTableData');
-        Route::resource('roles', 'RolesController', ['only' => ['index', 'store', 'update', 'destroy']]);
+        Route::get('roles/get-table', 'RolesController@getTableData');
+        Route::get('roles/get-permission-role-table', 'RolesController@getPermissionRoleTableData');
+        Route::patch('roles/change-permission-role', 'RolesController@changePermissionRole');
+        Route::resource('roles', 'RolesController', ['only' => ['store', 'update', 'destroy']]);
     });
 });
 
