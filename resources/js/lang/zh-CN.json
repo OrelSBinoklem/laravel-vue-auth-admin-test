@@ -51,5 +51,7 @@
   "roles_user": "用户角色",
   "ban_user": "用户禁令",
 
-  "permissions": "权限"
+  "permissions": "权限",
+  "roles": "角色",
+  "immunity": "免疫"
 }

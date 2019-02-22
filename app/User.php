@@ -171,7 +171,13 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail, Banna
     }
 
     public function isSuperAdmin() {
-        return !!$this->roles->where('id', 1)->count();
+        return !!$this->roles->where('id',
+            config('auth.roles.superadmin.id')
+            )->count();
+    }
+
+    public function isRoleSuperAdmin(Role $role) {
+        return $role->id === config('auth.roles.superadmin.id');
     }
 
     public function isBannedOptimizedFunction() {

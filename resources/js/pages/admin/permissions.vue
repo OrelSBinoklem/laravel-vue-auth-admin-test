@@ -3,12 +3,15 @@
     <div class="col">
       <h1>{{$t('permissions')}}</h1>
       <crud-table-permissions-roles></crud-table-permissions-roles>
+      <h1>{{$t('roles')}}</h1>
+      <crud-table-roles></crud-table-roles>
     </div>
   </div>
 </template>
 
 <script>
   import PermissionsRoles from "../../components/crud-tables/PermissionsRoles";
+  import Roles from "../../components/crud-tables/Roles";
 
   export default {
     layout: 'admin',
@@ -19,7 +22,8 @@
     },
 
     components: {
-      'crud-table-permissions-roles': PermissionsRoles
+      'crud-table-permissions-roles': PermissionsRoles,
+      'crud-table-roles': Roles
     },
 
     data: () => ({

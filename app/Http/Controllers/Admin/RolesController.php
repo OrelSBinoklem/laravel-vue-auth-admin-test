@@ -89,23 +89,59 @@ class RolesController extends AdminController
         return $this->rol_rep->get();
     }
 
-    public function store(UserRequest $request)
+    public function store(Request $request)
     {
-		return $this->rol_rep->add($request);
+        $immunityMaxRolesUser = Auth::user()->roles->max('immunity');
+
+        //исключение - $permission->name == 'EDIT_PERMISSIONS' && Auth::user()->isSuperAdmin()
+        if(Gate::denies('EDIT_PERMISSIONS')) {
+            abort(403, 'Недостаточно прав');
+        }
+
+        if ($immunityMaxRolesUser < (int)$request->input("immunity")) {
+            abort(403, 'Роль неможет иметь иммунитет выше чем ваш: ' . $immunityMaxRolesUser);
+        }
+
+        return $this->rol_rep->add($request);
     }
 
-    public function show($id)
+    public function update(Request $request, Role $role)
     {
-        //
+        $immunityMaxRolesUser = Auth::user()->roles->max('immunity');
+
+        if(Gate::denies('EDIT_PERMISSIONS')) {
+            abort(403, 'Недостаточно прав');
+        }
+
+        //Иммунитет должен быть выше исключение - Auth::user()->isSuperAdmin() - иммунитет может быть равен
+        if ($immunityMaxRolesUser <= $role->immunity && !($immunityMaxRolesUser == $role->immunity && Auth::user()->isSuperAdmin())) {
+            abort(403, 'Роль нельзя редактировать если её иммуниетет выше или равен вашему, исключение Superadmin (его роль может быть равна). Ваш иммунитет: ' . $immunityMaxRolesUser);
+        }
+
+        //Запрет на выдачу иммунитета выше вашего
+        if ($request->input('immunity') > $immunityMaxRolesUser && !Auth::user()->isSuperAdmin()) {
+            abort(403, 'Нельзя устанавливать иммунитет выше вашего, исключение Superadmin. Ваш иммунитет: ' . $immunityMaxRolesUser);
+        }
+
+		return $this->rol_rep->update($request, $role);
     }
 
-    public function update(Request $request, User $user)
+    public function destroy(Role $role)
     {
-		return $this->rol_rep->update($request,$user);
-    }
+        $immunityMaxRolesUser = Auth::user()->roles->max('immunity');
 
-    public function destroy(User $user)
-    {
-        return $this->rol_rep->delete($user);
+        if(Gate::denies('EDIT_PERMISSIONS')) {
+            abort(403, 'Недостаточно прав');
+        }
+
+        if(Auth::user()->isRoleSuperAdmin($role)) {
+            abort(403, 'Роль Superadmin нельзя удалять!');
+        }
+
+        if ($immunityMaxRolesUser <= $role->immunity) {
+            abort(403, 'Роль нельзя удалять если её иммуниетет выше или равен вашему. Ваш иммунитет: ' . $immunityMaxRolesUser);
+        }
+
+        return $this->rol_rep->delete($role);
     }
 }

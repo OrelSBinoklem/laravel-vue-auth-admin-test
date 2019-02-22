@@ -4,6 +4,9 @@ namespace App\Repositories;
 
 use App\Role;
 
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
+
 class RolesRepository extends VueTableRepository {
 	
 	public function __construct(Role $role) {
@@ -27,56 +30,59 @@ class RolesRepository extends VueTableRepository {
 
         $data = $request->all();
 
+        $this->validatorCreate($data)->validate();
+
         $user = $this->model->create([
             'name' => $data['name'],
-            'login' => $data['login'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
+            'immunity' => $data['immunity'],
         ]);
 
-        if($user) {
-            $user->roles()->attach($data['role_id']);
-        }
-
-        return ['status' => 'Пользователь добавлен'];
+        return ['status' => 'Роль добавлена'];
 
     }
 
-    public function update($request, $user) {
+    public function update($request, $role) {
         if (Gate::denies('edit',$this->model)) {
             abort(403);
         }
 
         $data = $request->all();
 
-        $this->validatorUpdate($data)->validate();
+        $this->validatorUpdate($data, $role)->validate();
 
-        if(isset($data['password'])) {
-            $data['password'] = bcrypt($data['password']);
-        }
+        $role->fill($data)->update();
 
-        $user->fill($data)->update();
-        $user->roles()->sync([$data['role_id']]);
-
-        return ['status' => 'Пользователь изменен'];
+        return ['status' => 'Роль изменена'];
 
     }
 
-    public function delete($user) {
+    public function delete($role) {
 
         if (Gate::denies('edit',$this->model)) {
             abort(403);
         }
 
-        $t_name = $user->name;
+        $t_name = $role->name;
 
-        $user->oauthProviders()->delete();
-
-        $user->roles()->detach();
-
-        if($user->delete()) {
-            return ['status' => 'Пользователь ' . $t_name . ' удален'];
+        if($role->delete()) {
+            return ['status' => 'Роль ' . $t_name . ' удалена'];
         }
+    }
+
+    protected function validatorCreate(array $data)
+    {
+        return Validator::make($data, [
+            'name' => 'required|string|max:255|unique:roles',
+            'immunity' => 'required|integer|between:0,100'
+        ]);
+    }
+
+    protected function validatorUpdate(array $data, Role $role)
+    {
+        return Validator::make($data, [
+            'name' => 'required|string|max:255|unique:roles,name,' . $role->id,
+            'immunity' => 'required|integer|between:0,100'
+        ]);
     }
 }
 

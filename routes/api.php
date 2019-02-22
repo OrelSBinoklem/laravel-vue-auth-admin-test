@@ -35,7 +35,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('roles/get-table', 'RolesController@getTableData');
         Route::get('roles/get-permission-role-table', 'RolesController@getPermissionRoleTableData');
         Route::patch('roles/change-permission-role', 'RolesController@changePermissionRole');
-        Route::resource('roles', 'RolesController', ['only' => ['store', 'update', 'destroy']]);
+        Route::resource('roles', 'RolesController', ['only' => ['index', 'store', 'update', 'destroy']]);
     });
 });
 

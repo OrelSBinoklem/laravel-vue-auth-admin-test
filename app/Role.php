@@ -7,6 +7,10 @@ use App\Helpers\Contracts\BelongsToUsers;
 class Role extends Model implements BelongsToUsers
 {
     //
+
+    protected $fillable = [
+        'name', 'immunity',
+    ];
     
     public function users() {
 		return $this->belongsToMany('App\User','role_user');

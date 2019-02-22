@@ -51,5 +51,7 @@
   "roles_user": "User roles",
   "ban_user": "User ban",
 
-  "permissions": "Permissions"
+  "permissions": "Permissions",
+  "roles": "Roles",
+  "immunity": "Иммунитет"
 }
