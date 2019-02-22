@@ -3,7 +3,7 @@
     <div class="col">
       <div class="row justify-content-between mb-3">
         <div class="col-auto">
-          <b-button @click="onAddRole" size="lg" variant="success"><fa icon="user-plus" size="lg"/></b-button>
+          <b-button @click="onAddRole" size="lg" variant="success"><fa icon="user-tie" size="lg"/>+</b-button>
         </div>
       </div>
       <div class="vuetable-roles">
@@ -205,7 +205,7 @@
           name: 'immunity',
           title: 'Immunity',
           titleClass: 'text-center',
-          dataClass: 'text-left',
+          dataClass: 'text-right',
           sortField: 'immunity'
         },
         {
@@ -328,7 +328,7 @@
     width: 120px;
   }*/
   .vuetable th#_immunity {
-    width: 50px;
+    width: 80px;
   }
   .vuetable th#_created_at{
     width: 150px;

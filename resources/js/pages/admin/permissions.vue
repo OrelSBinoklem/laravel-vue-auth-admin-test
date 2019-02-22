@@ -4,7 +4,11 @@
       <h1>{{$t('permissions')}}</h1>
       <crud-table-permissions-roles></crud-table-permissions-roles>
       <h1>{{$t('roles')}}</h1>
-      <crud-table-roles></crud-table-roles>
+      <div class="row">
+        <div class="col-12 col-lg-8 col-xl-6">
+          <crud-table-roles></crud-table-roles>
+        </div>
+      </div>
     </div>
   </div>
 </template>
