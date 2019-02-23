@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col">
       <div class="row justify-content-between mb-3">
-        <div class="col-auto">
+        <div class="col-auto ml-auto">
           <b-button @click="onAddRole" size="lg" variant="success"><fa icon="user-tie" size="lg"/>+</b-button>
         </div>
       </div>
@@ -52,7 +52,7 @@
       </b-modal>
       <b-modal id="modal-create-role"
                ref="modal-create-role"
-               title="Добавить юзера"
+               title="Добавить роль"
                hide-footer>
         <form @submit.prevent="addRole" @keydown="addRoleForm.onKeydown($event)" action="" method="post">
 
@@ -78,7 +78,7 @@
             <div class="col-md-7 offset-md-3 d-flex">
               <!-- Submit Button -->
               <v-button block :loading="addRoleForm.busy">
-                Добавить юзера
+                Добавить роль
               </v-button>
             </div>
           </div>
@@ -134,7 +134,7 @@
   import { mapGetters } from 'vuex'
 
   export default {
-    name: "CrudTablePermissionsRoles",
+    name: "CrudTableRoles",
     data: () => ({
       curEditRole: null,
       perPage: 10,

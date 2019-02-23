@@ -19,6 +19,16 @@ class PermissionPolicy
     {
         //
     }
+
+    public function create(User $user)
+    {
+        return $user->can('EDIT_PERMISSIONS');
+    }
+
+    public function edit(User $user)
+    {
+        return $user->can('EDIT_PERMISSIONS');
+    }
     
     public function change(User $user) {
     	

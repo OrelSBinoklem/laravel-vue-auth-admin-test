@@ -62,6 +62,8 @@ class RolesRepository extends VueTableRepository {
             abort(403);
         }
 
+        $role->permissions()->detach();
+
         $t_name = $role->name;
 
         if($role->delete()) {

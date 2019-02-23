@@ -1,139 +1,81 @@
 <?php
 
-namespace Corp\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 
-use Corp\Http\Requests;
-use Corp\Http\Controllers\Controller;
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
 
-use Corp\Repositories\PermissionsRepository;
-use Corp\Repositories\RolesRepository;
+use App\Repositories\PermissionsRepository;
 
 use Gate;
+
+use App\Permission;
 
 class PermissionsController extends AdminController
 {
     
     protected $per_rep;
-    protected $rol_rep;
-    
-    public function __construct(PermissionsRepository $per_rep, RolesRepository $rol_rep)
-    {
+
+    public function __construct(PermissionsRepository $perm_rep) {
         parent::__construct();
-        
-        if(Gate::denies('EDIT_USERS')) {
-			abort(403);
-		}
-        
-        $this->per_rep = $per_rep;
-        $this->rol_rep = $rol_rep;
-        
-        $this->template = config('settings.theme').'.admin.permissions';
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-        
-        $this->title = "Менеджер прав пользователей";
-        
-        $roles = $this->getRoles();
-        $permissions = $this->getPermissions();
-        
-        $this->content = view(config('settings.theme').'.admin.permissions_content')->with(['roles'=>$roles,'priv' => $permissions])->render();      
-        
-        return $this->renderOutput();
-    }
-    
-    public function getRoles()
-    {
-        $roles = $this->rol_rep->get();
-        
-        return $roles;
-    }
-    
-    public function getPermissions()
-    {
-        $permissions = $this->per_rep->get();
-        
-        return $permissions;
+
+        /*if (Gate::denies('EDIT_USERS')) {
+            abort(403);
+        }*/
+
+        $this->perm_rep = $perm_rep;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function getTableData()
     {
-        //
+        return $this->perm_rep->getTableData();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
-		$result = $this->per_rep->changePermissions($request);
-		
-		if(is_array($result) && !empty($result['error'])) {
-			return back()->with($result);
-		}
-		
-		return back()->with($result);
+        $immunityMaxRolesUser = Auth::user()->roles->max('immunity');
+
+        //исключение - $permission->name == 'EDIT_PERMISSIONS' && Auth::user()->isSuperAdmin()
+        if(Gate::denies('EDIT_PERMISSIONS')) {
+            abort(403, 'Недостаточно прав');
+        }
+
+        return $this->perm_rep->add($request);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function update(Request $request, Permission $permission)
     {
-        //
+        if(Gate::denies('EDIT_PERMISSIONS')) {
+            abort(403, 'Недостаточно прав');
+        }
+
+        if(!Auth::user()->isSuperAdmin()) {
+            abort(403, 'Редактировать права может только Superadmin');
+        }
+
+        if($permission->name == "EDIT_PERMISSIONS") {
+            abort(403, 'Право EDIT_PERMISSIONS нельзя редактировать!');
+        }
+
+        return $this->perm_rep->update($request, $permission);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function destroy(Permission $permission)
     {
-        //
-    }
+        if(Gate::denies('EDIT_PERMISSIONS')) {
+            abort(403, 'Недостаточно прав');
+        }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+        if(!Auth::user()->isSuperAdmin()) {
+            abort(403, 'Удалять права может только Superadmin');
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        if($permission->name == "EDIT_PERMISSIONS") {
+            abort(403, 'Право EDIT_PERMISSIONS нельзя удалять!');
+        }
+
+        return $this->perm_rep->delete($permission);
     }
 }
