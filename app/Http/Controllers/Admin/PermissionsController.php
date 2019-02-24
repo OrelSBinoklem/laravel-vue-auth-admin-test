@@ -35,8 +35,6 @@ class PermissionsController extends AdminController
 
     public function store(Request $request)
     {
-        $immunityMaxRolesUser = Auth::user()->roles->max('immunity');
-
         //исключение - $permission->name == 'EDIT_PERMISSIONS' && Auth::user()->isSuperAdmin()
         if(Gate::denies('EDIT_PERMISSIONS')) {
             abort(403, 'Недостаточно прав');

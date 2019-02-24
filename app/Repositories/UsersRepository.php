@@ -68,7 +68,7 @@ class UsersRepository extends VueTableRepository
         $this->validatorUpdate($data, $user)->validate();
 		
 		if(isset($data['password'])) {
-			$data['password'] = Hash::make($data['password']);
+            $user->password = Hash::make($data['password']);
 		}
 
         $user->banSync($data['bans_expired_at']);
@@ -81,8 +81,12 @@ class UsersRepository extends VueTableRepository
         ) {
             $data['email_verified_at'] = null;
         }
-		
-		$user->fill($data)->update();
+
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+
+		$user->save();
+		//$user->fill($data)->update();
 		$user->roles()->sync($data['roles_ids']);
 	}
 	

@@ -9,6 +9,7 @@ use App\Repositories\RolesRepository;
 
 use Illuminate\Support\Facades\Gate;
 use App\User;
+use App\Role;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 
@@ -45,6 +46,17 @@ class UsersController extends AdminController
 
     public function store(Request $request)
     {
+        if(Gate::denies('EDIT_USERS')) {
+            abort(403, 'Недостаточно прав создавать юзеров');
+        }
+
+        $immunityAuthUser = Auth::user()->roles->max('immunity');
+        $immunityNewUser= Role::whereIn('id', $request->input('roles_ids'))->get()->max('immunity');
+
+        if($immunityAuthUser < $immunityNewUser) {
+            abort(403, 'Нельзя создавать юзера с более высоким иммунитетом чем ваш. Ваш иммунитет: ' . $immunityAuthUser . ' Нового юзера: ' . $immunityNewUser);
+        }
+
 		$user = $this->us_rep->add($request);
 
         event(new Registered($user));
@@ -55,12 +67,21 @@ class UsersController extends AdminController
     public function update(Request $request, User $user)
     {
         if(Gate::denies('EDIT_USERS')) {
-            return ['error' => 'Недостаточно прав редактировать юзера'];
+            abort(403, 'Недостаточно прав редактировать юзера');
         }
-        if (!Auth::user()->immunityIsHigherForAccessToModel(['EDIT_USERS'], $user)) {
-            //abort(403);
-            return ['error' => 'Недостаточно иммунитета редактировать юзера'];
+
+        $immunityAuthUser = Auth::user()->roles->max('immunity');
+        $immunityUpdateUser= $user->roles->max('immunity');
+        $immunityNewRoles= Role::whereIn('id', $request->input('roles_ids'))->get()->max('immunity');
+
+        if ($immunityAuthUser <= $immunityUpdateUser) {
+            abort(403, 'Ваш иммунитет должен быть выше редактируемого юзера. Ваш иммунитет: ' . $immunityAuthUser . ' Редактируемого юзера: ' . $immunityUpdateUser);
         }
+
+        if($immunityAuthUser < $immunityNewRoles) {
+            abort(403, 'Нельзя выдавать роли с большим иммунитетом чем ваш. Ваш иммунитет: ' . $immunityAuthUser . ' Выданных ролей: ' . $immunityNewRoles);
+        }
+
 		$this->us_rep->update($request, $user);
 
         if(
@@ -78,8 +99,7 @@ class UsersController extends AdminController
     public function destroy(User $user)
     {
         if (!Auth::user()->immunityIsHigherForAccessToModel(['EDIT_USERS'], $user)) {
-            //abort(403);
-            return ['error' => 'Недостаточно иммунитета удалить юзера'];
+            abort(403, 'Недостаточно иммунитета удалить юзера');
         }
         return $this->us_rep->delete($user);
     }
@@ -88,15 +108,15 @@ class UsersController extends AdminController
         $users = User::whereIn('id', $request->input('ids'))->get();
 
         if(!$users->count()) {
-            return ['error' => 'Вы пытаетесь редактировать 0 юзеров'];
+            abort(403, 'Вы пытаетесь редактировать 0 юзеров');
         }
 
         if(Gate::denies('EDIT_USERS')) {
-            return ['error' => 'Недостаточно прав редактировать юзеров'];
+            abort(403, 'Недостаточно прав редактировать юзеров');
         }
 
         if (!Auth::user()->immunityIsHigherForPermission(['EDIT_USERS'], $users)) {
-            return ['error' => 'Недостаточно иммунитета редактировать юзеров'];
+            abort(403, 'Недостаточно иммунитета редактировать юзеров');
         }
 
         $this->us_rep->banGroup($users, $request->input('expired_at'));
@@ -113,15 +133,15 @@ class UsersController extends AdminController
         $users = User::whereIn('id', $request->input('ids'))->get();
 
         if(!$users->count()) {
-            return ['error' => 'Вы пытаетесь удалить 0 юзеров'];
+            abort(403, 'Вы пытаетесь удалить 0 юзеров');
         }
 
         if(Gate::denies('EDIT_USERS')) {
-            return ['error' => 'Недостаточно прав удалять юзеров'];
+            abort(403, 'Недостаточно прав удалять юзеров');
         }
 
         if (!Auth::user()->immunityIsHigherForPermission(['EDIT_USERS'], $users)) {
-            return ['error' => 'Недостаточно иммунитета удалять юзеров'];
+            abort(403, 'Недостаточно иммунитета удалять юзеров');
         }
 
         $this->us_rep->deleteGroup($users);
