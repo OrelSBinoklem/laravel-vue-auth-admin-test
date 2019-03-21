@@ -18,6 +18,8 @@ class AuthServiceProvider extends ServiceProvider
         'App\User' => 'App\Policies\UserPolicy',
         'App\Role' => 'App\Policies\RolePolicy',
         'App\Permission' => 'App\Policies\PermissionPolicy',
+        'App\Menu' => 'App\Policies\MenuPolicy',
+        'App\MenuItems' => 'App\Policies\MenuItemPolicy',
     ];
 
     /**
@@ -35,6 +37,10 @@ class AuthServiceProvider extends ServiceProvider
 
         $gate->define('EDIT_PERMISSIONS', function ($user) {
             return $user->canDo('EDIT_PERMISSIONS', FALSE);
+        });
+
+        $gate->define('EDIT_MENU', function ($user) {
+            return $user->canDo('EDIT_MENU', FALSE);
         });
     }
 }

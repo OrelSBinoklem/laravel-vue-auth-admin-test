@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-white">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white pl-5 ml-3">
     <router-link :to="{ name: user ? 'home' : 'welcome' }" class="navbar-brand">
       {{ appName }}
     </router-link>

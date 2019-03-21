@@ -3,7 +3,7 @@
     <navbar-full-width/>
     <sidebar-menu :menu="menu" :collapsed="menuCollapsed" @collapse="menuCollapse" />
 
-    <div class="container mt-4">
+    <div class="mt-4">
       <child/>
     </div>
     <notifications></notifications>
@@ -38,6 +38,11 @@
           href: {name: 'admin.permissions'},
           title: {translate: 'permissions'},
           icon: 'user-tie'
+        },
+        {
+          href: {name: 'admin.menu', params: { slug: "gg" }},
+          title: {translate: 'menus'},
+          icon: 'list-alt'
         },
         {
           href: {name: 'admin.content'},

@@ -53,5 +53,13 @@
 
   "permissions": "Права",
   "roles": "Роли",
-  "immunity": "Immunity"
+  "immunity": "Immunity",
+
+  "menus": "Меню",
+
+  "slug": "Слаг",
+
+  "path": "Путь",
+
+  "publish": "Опубликован"
 }

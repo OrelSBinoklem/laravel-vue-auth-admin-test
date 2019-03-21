@@ -39,6 +39,14 @@ Route::group(['middleware' => 'auth:api'], function () {
 
         Route::get('permissions/get-table', 'PermissionsController@getTableData');
         Route::resource('permissions', 'PermissionsController', ['only' => ['store', 'update', 'destroy']]);
+
+        Route::resource('menus', 'MenusController', ['only' => ['index', 'store', 'update', 'destroy']]);
+        Route::get('menus/{id_menu}/items', 'MenusController@getItems')->where('id_menu', '[0-9]+');
+        Route::post('menus/{id_menu}/items', 'MenusController@storeItem')->where('id_menu', '[0-9]+');
+        Route::put('menus/{id_menu}/items/{id_item}', 'MenusController@updateItem')->where(['id_menu' => '[0-9]+', 'id_item' => '[0-9]+']);
+        Route::put('menus/{id_menu}/items-update-tree', 'MenusController@updateTreeItems')->where('id_menu', '[0-9]+');
+        Route::delete('menus/{id_menu}/items/{id_item}', 'MenusController@deleteItem')->where(['id_menu' => '[0-9]+', 'id_item' => '[0-9]+']);
+
     });
 });
 

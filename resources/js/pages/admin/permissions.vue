@@ -1,16 +1,18 @@
 <template>
-  <div class="row">
-    <div class="col">
-      <h1>{{$t('roles')}} / {{$t('permissions')}}</h1>
-      <crud-table-permissions-roles></crud-table-permissions-roles>
-      <div class="row">
-        <div class="col-12 col-xl-6">
-          <h1>{{$t('roles')}}</h1>
-          <crud-table-roles></crud-table-roles>
-        </div>
-        <div class="col-12 col-xl-6">
-          <h1>{{$t('permissions')}}</h1>
-          <crud-table-permissions></crud-table-permissions>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h1>{{$t('roles')}} / {{$t('permissions')}}</h1>
+        <crud-table-permissions-roles></crud-table-permissions-roles>
+        <div class="row">
+          <div class="col-12 col-xl-6">
+            <h1>{{$t('roles')}}</h1>
+            <crud-table-roles></crud-table-roles>
+          </div>
+          <div class="col-12 col-xl-6">
+            <h1>{{$t('permissions')}}</h1>
+            <crud-table-permissions></crud-table-permissions>
+          </div>
         </div>
       </div>
     </div>

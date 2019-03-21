@@ -2,7 +2,11 @@ import Vue from 'vue'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
-  faUser, faLock, faSignOutAlt, faCog, faChartArea, faAngleRight, faBars, faTachometerAlt, faUserPlus, faCalendarAlt, faUserTie, faFileContract
+  faEdit, faTrashAlt, faSave
+} from '@fortawesome/free-regular-svg-icons'
+import {
+  faUser, faLock, faSignOutAlt, faCog, faChartArea, faAngleRight, faBars, faTachometerAlt, faUserPlus, faCalendarAlt, faUserTie, faFileContract,
+  faListAlt, faPlus, faCaretDown
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -14,7 +18,9 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(
+  faEdit, faTrashAlt, faSave,
   faUser, faLock, faSignOutAlt, faCog, faChartArea, faAngleRight, faBars, faTachometerAlt, faUserPlus, faCalendarAlt, faUserTie, faFileContract,
+  faListAlt, faPlus, faCaretDown,
   faGithub
 )
 

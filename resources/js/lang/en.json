@@ -53,5 +53,13 @@
 
   "permissions": "Permissions",
   "roles": "Roles",
-  "immunity": "Иммунитет"
+  "immunity": "Immunity",
+
+  "menus": "Menus",
+
+  "slug": "Slug",
+
+  "path": "Path",
+
+  "publish": "Publish"
 }

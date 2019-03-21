@@ -44,7 +44,8 @@ if (mix.inProduction()) {
         'vuetable-2',
         'glyphicons-only-bootstrap',
         'snotify',
-        'vue-ctk-date-time-picker'
+        'vue-ctk-date-time-picker',
+        'vue-draggable-nested-tree'
     ])
 }
 

@@ -53,5 +53,13 @@
 
   "permissions": "权限",
   "roles": "角色",
-  "immunity": "免疫"
+  "immunity": "免疫",
+
+  "menus": "菜单",
+
+  "slug": "金属块",
+
+  "path": "路径",
+
+  "publish": "发布"
 }
