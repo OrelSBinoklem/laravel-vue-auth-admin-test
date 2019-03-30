@@ -33,7 +33,6 @@
     },
     // computed: {},
     // watch: {},
-    ////////////////////////////////////this.$emit('update:title', newTitle)
     methods: {
       onStore () {
         this.$emit('store')

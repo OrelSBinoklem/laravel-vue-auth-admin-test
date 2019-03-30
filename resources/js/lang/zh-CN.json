@@ -61,5 +61,7 @@
 
   "path": "路径",
 
-  "publish": "发布"
+  "publish": "发布",
+
+  "js-plugin": "Javascript插件"
 }

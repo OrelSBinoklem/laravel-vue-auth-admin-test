@@ -40,14 +40,14 @@
           icon: 'user-tie'
         },
         {
-          href: {name: 'admin.menu', params: { slug: "gg" }},
+          href: {name: 'admin.menu'},
           title: {translate: 'menus'},
           icon: 'list-alt'
         },
         {
           href: {name: 'admin.content'},
           title: {translate: 'content'},
-          icon: 'user'
+          icon: 'copy'
         },
       ]
     }),

@@ -61,5 +61,7 @@
 
   "path": "Path",
 
-  "publish": "Publish"
+  "publish": "Publish",
+
+  "js-plugin": "Javascript plugin"
 }

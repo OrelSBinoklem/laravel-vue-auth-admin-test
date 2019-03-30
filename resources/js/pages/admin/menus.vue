@@ -82,7 +82,7 @@
     </b-modal>
     <b-modal id="modal-update-menu"
              ref="modal-update-menu"
-             :title="'Обновить право &quot;' + (this.currentMenu ? this.currentMenu.name : '') + '&quot;?'"
+             :title="'Обновить меню &quot;' + (this.currentMenu ? this.currentMenu.name : '') + '&quot;?'"
              hide-footer>
       <form @submit.prevent="updateMenu" @keydown="updateMenuForm.onKeydown($event)" action="" method="post">
 
@@ -99,7 +99,7 @@
         <div class="form-group row">
           <label class="col-md-3 col-form-label text-md-right">{{ $t('slug') }}</label>
           <div class="col-md-7">
-            <input v-model="updateMenuForm.slug" :class="{ 'is-invalid': updateMenuForm.errors.has('slug') }" class="form-control" type="text" name="slug">
+            <input v-model="updateMenuForm.slug" disabled :class="{ 'is-invalid': updateMenuForm.errors.has('slug') }" class="form-control" type="text" name="slug">
             <has-error :form="updateMenuForm" field="slug"/>
           </div>
         </div>

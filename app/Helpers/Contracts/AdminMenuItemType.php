@@ -13,6 +13,7 @@ abstract class AdminMenuItemType
     }
 
     abstract public function validatorCreateItem(array $data);
+    abstract public function validatorUpdateItem(array $data);
 
     abstract public function setMetaFields(MenuItems $model, array $data);
 }

@@ -17,12 +17,12 @@ export const itemMixin = {
         isLinkActive(item) {
             if ( this.$route ) {
                 if(this.$route.name && item.href.name) {
-                  return item.href.name == this.$route.name
+                  return this.$route.name.indexOf(item.href.name) === 0
                 } else {
-                  return item.href == this.$route.path
+                  return this.$route.path.indexOf(item.href) === 0
                 }
             } else {
-                return item.href == window.location.pathname
+                return window.location.pathname.indexOf(item.href) === 0
             }
         },
         isChildActive(child) {

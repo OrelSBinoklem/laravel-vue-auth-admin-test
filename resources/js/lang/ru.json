@@ -61,5 +61,7 @@
 
   "path": "Путь",
 
-  "publish": "Опубликован"
+  "publish": "Опубликован",
+
+  "js-plugin": "Javascript плагин"
 }

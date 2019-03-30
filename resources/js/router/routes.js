@@ -43,6 +43,9 @@ export default [
   { path: '/admin/menu', name: 'admin.menu', component: AdminMenus },
   { path: '/admin/menu/:slug', name: 'admin.menu.slug', component: AdminMenus },
   { path: '/admin/content', name: 'admin.content', component: AdminContent },
+  { path: '/admin/content/:type', name: 'admin.content.type', component: AdminContent },
+  { path: '/admin/content/:type/create', name: 'admin.content.create', component: AdminContent },
+  { path: '/admin/content/:type/update/:id', name: 'admin.content.update', component: AdminContent },
 
   { path: '*', component: NotFound }
 ]

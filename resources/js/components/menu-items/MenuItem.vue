@@ -25,7 +25,7 @@
                 .form-group.row
                   label.col-12 {{ $t('slug') }}
                   .col-12
-                    input.form-control.form-control-sm(v-model='form.slug', :class="{ 'is-invalid': form.errors.has('slug') }", type='text', name='slug')
+                    input.form-control.form-control-sm(v-model='form.slug', :disabled="edit", :class="{ 'is-invalid': form.errors.has('slug') }", type='text', name='slug')
                     has-error(:form='form', field='slug')
               .col-6
                 // Path
@@ -40,6 +40,7 @@
                   label.col-12 {{ $t('publish') }}
                   .col-12
                     b-form-checkbox(switch v-model='form.publish' name='publish')
+                    div(:class="{ 'is-invalid': form.errors.has('publish') }")
                     has-error(:form='form', field='publish')
             component(v-bind:is="component" v-bind="{data: data, edit: edit, form: form}")
           .card-footer

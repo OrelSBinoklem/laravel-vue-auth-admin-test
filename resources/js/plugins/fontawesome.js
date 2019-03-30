@@ -6,7 +6,7 @@ import {
 } from '@fortawesome/free-regular-svg-icons'
 import {
   faUser, faLock, faSignOutAlt, faCog, faChartArea, faAngleRight, faBars, faTachometerAlt, faUserPlus, faCalendarAlt, faUserTie, faFileContract,
-  faListAlt, faPlus, faCaretDown
+  faListAlt, faPlus, faCaretDown, faCopy
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -20,7 +20,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(
   faEdit, faTrashAlt, faSave,
   faUser, faLock, faSignOutAlt, faCog, faChartArea, faAngleRight, faBars, faTachometerAlt, faUserPlus, faCalendarAlt, faUserTie, faFileContract,
-  faListAlt, faPlus, faCaretDown,
+  faListAlt, faPlus, faCaretDown, faCopy,
   faGithub
 )
 

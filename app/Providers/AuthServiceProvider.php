@@ -20,6 +20,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Permission' => 'App\Policies\PermissionPolicy',
         'App\Menu' => 'App\Policies\MenuPolicy',
         'App\MenuItems' => 'App\Policies\MenuItemPolicy',
+        'App\ContentJSPlugin' => 'App\Policies\ContentJSPluginPolicy',
     ];
 
     /**
@@ -41,6 +42,14 @@ class AuthServiceProvider extends ServiceProvider
 
         $gate->define('EDIT_MENU', function ($user) {
             return $user->canDo('EDIT_MENU', FALSE);
+        });
+
+        $gate->define('EDIT_JS_PLUGIN', function ($user) {
+            return $user->canDo('EDIT_JS_PLUGIN', FALSE);
+        });
+
+        $gate->define('EDIT_JS_PLUGIN_ONLY_MY', function ($user) {
+            return $user->canDo('EDIT_JS_PLUGIN_ONLY_MY', FALSE);
         });
     }
 }

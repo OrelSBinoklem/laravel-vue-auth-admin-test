@@ -67,7 +67,7 @@ class MenusRepository extends VueTableRepository
         $this->validatorUpdate($data, $menu)->validate();
 
         $menu->name = $data['name'];
-        $menu->slug = $data['slug'];
+        //$menu->slug = $data['slug']; слаг лучше неменять иначе теряеться его смысл
 
         $menu->save();
 
@@ -94,7 +94,7 @@ class MenusRepository extends VueTableRepository
     {
         $rules = [
             'name' => 'required|string|max:255|unique:menus,name,' . $menu->id,
-            'slug' => 'required|alpha_dash|max:255|unique:menus,slug,' . $menu->id
+            //'slug' => 'required|alpha_dash|max:255|unique:menus,slug,' . $menu->id
         ];
 
         return Validator::make($data, $rules);
@@ -186,7 +186,7 @@ class MenusRepository extends VueTableRepository
 
         $menuItem->fill([
             'name' => $data['name'],
-            'slug' => $data['slug'],
+            //'slug' => $data['slug'], слаг лучше неменять иначе теряеться его смысл
             'path' => $data['path'],
             'publish' => $data['publish']
         ]);
@@ -311,7 +311,7 @@ class MenusRepository extends VueTableRepository
     {
         return Validator::make($data, [
             'name' => 'required|string|max:255',
-            'slug' => 'required|alpha_dash|max:255|unique:menu_items,slug,' . $item->id,
+            //'slug' => 'required|alpha_dash|max:255|unique:menu_items,slug,' . $item->id,
             'path' => 'required|max:255',
             'publish' => 'required|integer|between:0,1',
             'type_id' => 'required|integer|between:1,100'
