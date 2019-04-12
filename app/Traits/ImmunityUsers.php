@@ -72,6 +72,8 @@ trait ImmunityUsers
             ))->load('permissions');
         } else if($users instanceof User) {
             $roles = $users->roles;
+        } else {
+            throw new Exception('Передан неправельный тип. Юзер может быть моделью User либо коллекцией моделей');
         }
         foreach($roles as $role) {
             $immunity = $role->immunity ? $role->immunity : 0;

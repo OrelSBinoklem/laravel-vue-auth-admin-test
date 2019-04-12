@@ -6,8 +6,24 @@ use App\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class CategoryController extends Controller
+use App\Repositories\TaxonomyRepository;
+
+use Illuminate\Support\Facades\Gate;
+
+class CategoryController extends AdminController
 {
+    protected $rep;
+
+    public function __construct(TaxonomyRepository $rep) {
+        parent::__construct();
+
+        /*if (Gate::denies('EDIT_USERS')) {
+            abort(403);
+        }*/
+
+        $this->rep = $rep;
+        $this->rep->setIsCategory(true);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,17 +31,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $this->rep->getAll([]);
     }
 
     /**
@@ -36,29 +42,16 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        if(
+            Gate::denies('EDIT_TAXONOMY')
+            && Gate::denies('EDIT_CATEGORIES')
+            && Gate::denies('EDIT_TAXONOMY_ONLY_MY')
+            && Gate::denies('EDIT_CATEGORIES_ONLY_MY')
+        ) {
+            abort(403, 'Недостаточно прав');
+        }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Category $category)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Category $category)
-    {
-        //
+        return $this->rep->add($request);
     }
 
     /**
@@ -70,7 +63,34 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        if(Gate::denies('EDIT_TAXONOMY') && Gate::denies('EDIT_CATEGORIES')) {
+            if(Gate::denies('EDIT_TAXONOMY_ONLY_MY') && Gate::denies('EDIT_CATEGORIES_ONLY_MY')) {
+                abort(403, 'Недостаточно прав');
+            } else {
+                if(Auth::user()->id !== (int)$category->created_by) {
+                    abort(403, 'Вы не являетесь автором категории');
+                }
+            }
+        }
+
+        return $this->rep->update($request, $category);
+    }
+
+    public function updateTreeItems(Request $request)
+    {
+        //Может облегчить права доступа к данному действию
+        if(Gate::denies('EDIT_TAXONOMY') && Gate::denies('EDIT_CATEGORIES')) {
+            abort(403, 'Недостаточно прав');
+            /*if(Gate::denies('EDIT_TAXONOMY_ONLY_MY') && Gate::denies('EDIT_CATEGORIES_ONLY_MY')) {
+                abort(403, 'Недостаточно прав');
+            } else {
+                if(Auth::user()->id !== (int)$category->created_by) {
+                    abort(403, 'Вы не являетесь автором категории');
+                }
+            }*/
+        }
+
+        return $this->rep->updateTreeItems($request, Category::all());
     }
 
     /**
@@ -79,8 +99,18 @@ class CategoryController extends Controller
      * @param  \App\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Request $request, Category $category)
     {
-        //
+        if(Gate::denies('EDIT_TAXONOMY') && Gate::denies('EDIT_CATEGORIES')) {
+            if(Gate::denies('EDIT_TAXONOMY_ONLY_MY') && Gate::denies('EDIT_CATEGORIES_ONLY_MY')) {
+                abort(403, 'Недостаточно прав');
+            } else {
+                if(Auth::user()->id !== (int)$category->created_by) {
+                    abort(403, 'Вы не являетесь автором категории');
+                }
+            }
+        }
+
+        return $this->rep->delete($request, $category);
     }
 }

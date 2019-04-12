@@ -17,6 +17,7 @@ const AdminUsers = () => import('~/pages/admin/users').then(m => m.default || m)
 const AdminPermissions = () => import('~/pages/admin/permissions').then(m => m.default || m)
 const AdminMenus = () => import('~/pages/admin/menus').then(m => m.default || m)
 const AdminContent = () => import('~/pages/admin/content').then(m => m.default || m)
+const AdminTaxonomy = () => import('~/pages/admin/taxonomy').then(m => m.default || m)
 
 export default [
   { path: '/', name: 'welcome', component: Welcome },
@@ -42,6 +43,7 @@ export default [
   { path: '/admin/permissions', name: 'admin.permissions', component: AdminPermissions },
   { path: '/admin/menu', name: 'admin.menu', component: AdminMenus },
   { path: '/admin/menu/:slug', name: 'admin.menu.slug', component: AdminMenus },
+  { path: '/admin/taxonomy', name: 'admin.taxonomy', component: AdminTaxonomy },
   { path: '/admin/content', name: 'admin.content', component: AdminContent },
   { path: '/admin/content/:type', name: 'admin.content.type', component: AdminContent },
   { path: '/admin/content/:type/create', name: 'admin.content.create', component: AdminContent },

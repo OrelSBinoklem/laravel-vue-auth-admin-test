@@ -118,6 +118,7 @@
             }
           })
           this.$root.$emit('bv::hide::modal', 'modal-delete-menu-item')
+          this.$emit('delete')
         }
       },
 

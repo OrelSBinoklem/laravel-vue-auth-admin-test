@@ -15,4 +15,12 @@ class ContentJSPlugin extends Model
     {
         return 'plugin_id'; // The parent foreign key
     }
+
+    public function categories() {
+        return $this->morphToMany('App\Category', 'categoryable');
+    }
+
+    public function tags() {
+        return $this->morphToMany('App\Tag', 'tagable');
+    }
 }

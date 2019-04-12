@@ -47,6 +47,10 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('menus/{id_menu}/items-update-tree', 'MenusController@updateTreeItems')->where('id_menu', '[0-9]+');
         Route::delete('menus/{id_menu}/items/{id_item}', 'MenusController@deleteItem')->where(['id_menu' => '[0-9]+', 'id_item' => '[0-9]+']);
 
+        Route::put('categories/items-update-tree', 'CategoryController@updateTreeItems');
+        Route::resource('categories', 'CategoryController', ['only' => ['index', 'store', 'update', 'destroy']]);
+        Route::resource('tags', 'TagsController', ['only' => ['index', 'store', 'update', 'destroy']]);
+
         Route::group(['prefix' => 'content'], function () {
             Route::get('js-plugin/get-table', 'ContentJSPluginController@getTableData');
             Route::get('js-plugin/get-one', 'ContentJSPluginController@getOne');

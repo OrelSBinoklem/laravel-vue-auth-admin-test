@@ -20,7 +20,7 @@
         >
           <template slot="actions" slot-scope="props">
             <div class="custom-actions">
-              <button class="btn btn-default btn-sm"
+              <button class="btn btn-warning btn-sm"
                       @click="onAction('edit-item', props.rowData, props.rowIndex)">
                 <span class="glyphicon glyphicon-pencil"></span>
               </button>
@@ -111,6 +111,22 @@
           sortField: 'viewed'
         },
         {
+          name: 'categories',
+          title: 'Категории',
+          titleClass: 'text-center',
+          dataClass: 'text-left',
+          callback: '__arrJoinQuotes',
+          //sortField: 'roles'
+        },
+        {
+          name: 'tags',
+          title: 'Тэги',
+          titleClass: 'text-center',
+          dataClass: 'text-left',
+          callback: '__arrJoinQuotes',
+          //sortField: 'roles'
+        },
+        {
           name: 'created_at',
           title: 'Created',
           titleClass: 'text-center',
@@ -190,11 +206,11 @@
   .vuetable th#_id {
     width: 50px;
   }
-  /*.vuetable th#_name {
-    width: 120px;
-  }*/
   .vuetable th#_published {
     width: 80px;
+  }
+  .vuetable th#_viewed {
+    width: 100px;
   }
   .vuetable th#_created_at{
     width: 150px;

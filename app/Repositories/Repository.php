@@ -4,11 +4,15 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\Config;
 
+use App\Orel\Languages\SpatieTranslatableFuncExt;
+
 abstract class Repository {
+
+    use SpatieTranslatableFuncExt;
 	
 	protected $model = FALSE;
 	
-	
+
 	public function get($select = '*',$take = FALSE,$pagination = FALSE, $where = FALSE) {
 		
 		$builder = $this->model->select($select);
@@ -38,9 +42,13 @@ abstract class Repository {
 
 	public function getAll($with) {
 	    if($with) {
-            return $this->model->with($with)->get();
+            $models = $this->model->with($with)->get();
+        } else {
+            $models = $this->model->get();
         }
-        return $this->model->get();
+
+	    $this->touchGetters($models);
+	    return $models;
     }
 	
 	/*protected function check($result) {

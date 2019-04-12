@@ -30,6 +30,12 @@ class VueTableRepository extends Repository
         }
 
         if ($request->exists('filter')) {
+            if(property_exists($this->model, 'translatable')) {
+                $this->fieldsFilter = $this->fieldsToLangFields($this->model, $this->fieldsFilter);
+            }
+
+            debug($this->fieldsFilter);
+
             $query->where(function($q) use($request) {
                 $value = "%{$request->filter}%";
                 $q->where($this->fieldsFilter[0], 'like', $value);

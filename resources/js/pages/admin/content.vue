@@ -88,6 +88,7 @@
       show: true,
       editData: null,
       currentType: null,
+      categories: [],
       contentTypes: [
         {
           name: 'JS плагин',

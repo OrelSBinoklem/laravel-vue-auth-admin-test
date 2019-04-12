@@ -45,6 +45,11 @@
           icon: 'list-alt'
         },
         {
+          href: {name: 'admin.taxonomy'},
+          title: {translate: 'taxonomy'},
+          icon: 'folder'
+        },
+        {
           href: {name: 'admin.content'},
           title: {translate: 'content'},
           icon: 'copy'

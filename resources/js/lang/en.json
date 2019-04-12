@@ -63,5 +63,7 @@
 
   "publish": "Publish",
 
-  "js-plugin": "Javascript plugin"
+  "js-plugin": "Javascript plugin",
+
+  "taxonomy": "Taxonomy"
 }

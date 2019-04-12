@@ -45,7 +45,7 @@
 
           <template slot="actions" slot-scope="props">
             <div class="custom-actions">
-              <button class="btn btn-default btn-sm"
+              <button class="btn btn-warning btn-sm"
                       @click="onAction('edit-item', props.rowData, props.rowIndex)">
                 <span class="glyphicon glyphicon-pencil"></span>
               </button>

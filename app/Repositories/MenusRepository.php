@@ -109,13 +109,12 @@ class MenusRepository extends VueTableRepository
     }
 
     public function get_items(Menu $menu) {
+        $menuItems = $menu->menuItems()->with(['metas'])->get();
 
-        if (Gate::denies('edit',$this->model)) {
-            abort(403);
-        }
+        $this->touchGetters($menuItems);
 
         return response()->json(
-            $menu->menuItems()->with(['metas'])->get()
+            $menuItems
         )
             ->header('Access-Control-Allow-Origin', '*')
             ->header('Access-Control-Allow-Methods', 'GET');
@@ -213,7 +212,7 @@ class MenusRepository extends VueTableRepository
         $index = 0;
         $success = TRUE;
         $not_recursion_error = TRUE;
-        $menu->menuItems->sortBy('id')->map(function ($item, $key) use (&$index, $sortedNewLocation) {
+        $menu->menuItems->sortBy('id')->map(function ($item, $key) use (&$index, $sortedNewLocation, &$success, &$not_recursion_error) {
             if($sortedNewLocation[$index]['id'] != $item->id) {
                 $success = FALSE;
             } else if($sortedNewLocation[$index]['id'] == $sortedNewLocation[$index]['parent_id']) {
@@ -265,7 +264,7 @@ class MenusRepository extends VueTableRepository
             recursion([$menuItem->id],$collectionsLevelsNested);
 
             foreach(array_reverse($collectionsLevelsNested, TRUE) as $key => $value) {
-                $value->map(function ($item, $key) use ($success_nested) {
+                $value->map(function ($item, $key) use (&$success_nested) {
                     if(!$item->delete()) {
                         $success_nested = FALSE;
                     }

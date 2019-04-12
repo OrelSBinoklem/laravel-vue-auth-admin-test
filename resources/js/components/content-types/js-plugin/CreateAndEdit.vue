@@ -85,7 +85,22 @@
               </div>
             </div>
           </div>
-
+          <div class="col-6">
+            <!-- Категории -->
+            <div class="row tax" @click="onSelectCategories">
+              <div class="col-4 text-right">Категории</div>
+              <div class="col-8" v-if="form.categories_ids.length" v-html="__arrJoinQuotes(__findByIds(categories, form.categories_ids))"></div>
+              <div class="col-8" v-else><b>Выберите категории</b></div>
+            </div>
+          </div>
+          <div class="col-6">
+            <!-- Тэги -->
+            <div class="row tax" @click="onSelectTags">
+              <div class="col-4 text-md-right">Тэги</div>
+              <div class="col-8" v-if="form.tags_ids.length" v-html="__arrJoinQuotes(__findByIds(tags, form.tags_ids))"></div>
+              <div class="col-8" v-else><b>Выберите тэги</b></div>
+            </div>
+          </div>
 
           <div class="col-12">
             <!-- Недочёты и предупреждения -->
@@ -125,6 +140,48 @@
         </div>
       </form>
     </div>
+    <b-modal id="modal-select-categories"
+             ref="modal-select-categories"
+             title="Выберите категории"
+             hide-footer>
+      <div>
+        <!-- Категории -->
+        <div class="row">
+          <div class="col">
+            <div v-for="(cat, index) in categories" :key="cat.id">
+              <label :style="{paddingLeft: (cat.indent * 30) + 'px'}">
+                <b-form-checkbox-group v-model="form.categories_ids" >
+                  <b-form-checkbox :value="cat.id">{{ cat.title }}</b-form-checkbox>
+                </b-form-checkbox-group>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <template slot="modal-cancel">Нет</template>
+      <template slot="modal-ok">Да</template>
+    </b-modal>
+    <b-modal id="modal-select-tags"
+             ref="modal-select-tags"
+             title="Выберите тэги"
+             hide-footer>
+      <div>
+        <!-- Категории -->
+        <div class="row">
+          <div class="col">
+            <div v-for="(tag, index) in tags" :key="tag.id">
+              <label>
+                <b-form-checkbox-group v-model="form.tags_ids" >
+                  <b-form-checkbox :value="tag.id">{{ tag.title }}</b-form-checkbox>
+                </b-form-checkbox-group>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <template slot="modal-cancel">Нет</template>
+      <template slot="modal-ok">Да</template>
+    </b-modal>
   </div>
 </template>
 
@@ -138,7 +195,7 @@
   import {mixinCreateAndEdit} from '../mixinCreateAndEdit'
 
   export default {
-    name: "CrudTableRoles",
+    name: "ContentCreateAndEdit",
 
     props: {
       edit: {
@@ -157,7 +214,7 @@
     },
 
     data: () => ({
-      curEditRole: null,
+      curEdit: null,
       perPage: 10,
       moreParams: {},
 
@@ -170,7 +227,9 @@
         meta_description: '',
         meta_keyword: '',
         published: false,
-        alerts: []
+        alerts: [],
+        categories_ids: [],
+        tags_ids: []
       })
     }),
 
@@ -204,8 +263,21 @@
         })
       },
 
+      onSelectCategories () {
+        this.$root.$emit('bv::show::modal','modal-select-categories')
+      },
+
+      onSelectTags () {
+        this.$root.$emit('bv::show::modal','modal-select-tags')
+      },
+
       __setDataForm(data) {
+        this.__reloadCategories()
+        this.__reloadTags()
+
         if(data !== null && this.edit) {
+          this.curEdit = this.data
+
           this.form.title = this.data.title
           this.form.slug = this.data.slug
           this.form.description_short = this.data.description_short
@@ -216,6 +288,8 @@
           this.form.published = !!this.data.published
 
           this.form.alerts = this.data.meta_data.alerts
+          this.form.categories_ids = this.__getIdsFromArr(data.categories)
+          this.form.tags_ids = this.__getIdsFromArr(data.tags)
         }
       }
     },
@@ -232,6 +306,7 @@
   }
 </script>
 
-<style>
-
+<style lang="sass" scoped>
+  .tax
+    cursor: pointer
 </style>

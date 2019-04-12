@@ -160,7 +160,7 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
         Cog\Laravel\Ban\Providers\BanServiceProvider::class,
-        Dimsav\Translatable\TranslatableServiceProvider::class,
+        Spatie\Translatable\TranslatableServiceProvider::class,
 
         /*
          * Application Service Providers...

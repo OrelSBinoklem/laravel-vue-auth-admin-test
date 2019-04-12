@@ -70,7 +70,13 @@ export const mixinShow = {
     async deletePlugin() {
       await axios.delete('/api/admin/content/' + this.type.slug + '/' + this.curEditPlugin.id)
       this.$refs.vuetable.reload()
-    }
+    },
+    __arrJoinQuotes (arr) {
+      return arr.map(function callback(tax) {
+        return '<span class="badge badge-primary">' + (tax.title) + '</span>'
+      })
+        .join(", ")
+    },
   },
   computed: {
     ...mapGetters({

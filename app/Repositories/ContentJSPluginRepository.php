@@ -12,7 +12,7 @@ use Auth;
 class ContentJSPluginRepository extends BaseContentRepository {
 
     public function __construct(ContentJSPlugin $contentJSPlugin) {
-        $this->with = ['metas'];
+        $this->with = ['metas', 'categories', 'tags'];
         $this->model = $contentJSPlugin;
     }
 
@@ -30,7 +30,7 @@ class ContentJSPluginRepository extends BaseContentRepository {
         $data = $request->all();
 
         return response()->json(
-            $this->model->newQuery()->with('metas')->where('id', (int)$data['id'])->first()
+            $this->model->newQuery()->with(['metas', 'categories', 'tags'])->where('id', (int)$data['id'])->first()
         )
             ->header('Access-Control-Allow-Origin', '*')
             ->header('Access-Control-Allow-Methods', 'GET');
@@ -69,6 +69,9 @@ class ContentJSPluginRepository extends BaseContentRepository {
 
         $new->save();
 
+        $new->categories()->sync($data['categories_ids']);
+        $new->tags()->sync($data['tags_ids']);
+
         return ['status' => 'Плагин добавлен'];
 
     }
@@ -100,6 +103,9 @@ class ContentJSPluginRepository extends BaseContentRepository {
 
         $plugin->save();
 
+        $plugin->categories()->sync($data['categories_ids']);
+        $plugin->tags()->sync($data['tags_ids']);
+
         return ['status' => 'Плагин изменён'];
 
     }
@@ -110,7 +116,8 @@ class ContentJSPluginRepository extends BaseContentRepository {
             abort(403);
         }
 
-        //$plugin->roles()->detach();
+        $plugin->categories()->detach();
+        $plugin->tags()->detach();
 
         $t_name = $plugin->title;
 
