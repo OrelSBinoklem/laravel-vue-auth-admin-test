@@ -12,7 +12,7 @@
       template(v-if="!__isPlaceholder()")
         b-collapse(v-model="isCollapsed", :id="edit ? 'collapse-' + data.id : 'collapse-item-edit' + data.type_id")
           .card-body(v-on:mousemove.stop="", v-on:mouseover.stop="", v-on:mouseout.stop="")
-            .row
+            .row.justify-content-end
               .col-6
                 // Name
                 .form-group.row
@@ -27,13 +27,6 @@
                   .col-12
                     input.form-control.form-control-sm(v-model='form.slug', :disabled="edit", :class="{ 'is-invalid': form.errors.has('slug') }", type='text', name='slug')
                     has-error(:form='form', field='slug')
-              .col-6
-                // Path
-                .form-group.row
-                  label.col-12 {{ $t('path') }}
-                  .col-12
-                    input.form-control.form-control-sm(v-model='form.path', :class="{ 'is-invalid': form.errors.has('path') }", type='text', name='path')
-                    has-error(:form='form', field='path')
               .col-6
                 // Publish
                 .form-group.row
@@ -60,8 +53,14 @@
   import Form from 'vform'
   import axios from 'axios'
 
+  import {types} from "./types-data"
+
   import Casual from "./casual/Casual"
   import {metaFields as casualMetaFields, setMetaFields as casualSetMetaFields} from "./casual/meta-fields"
+  import SingleMaterial from "./single-material/SingleMaterial"
+  import {metaFields as singleMaterialMetaFields, setMetaFields as singleMaterialSetMetaFields} from "./single-material/meta-fields"
+  import Category from "./category/Category"
+  import {metaFields as categoryMetaFields, setMetaFields as categorySetMetaFields} from "./category/meta-fields"
 
   export default {
     name: 'MenuItem',
@@ -87,13 +86,14 @@
 
     components: {
       'Casual': Casual,
+      'SingleMaterial': SingleMaterial,
+      'Category': Category
     },
 
     beforeMount() {
       if(this.edit && !this.__isPlaceholder()) {
         this.form.name = this.data.name
         this.form.slug = this.data.slug
-        this.form.path = this.data.path
         this.form.publish = !!this.data.publish
 
         this.__setMetaFields()
@@ -113,7 +113,6 @@
             return new Form({
               name: '',
               slug: '',
-              path: '',
               publish: true,
 
               type_id: this.data.type_id,
@@ -125,29 +124,25 @@
         isCollapsed: false
       }
     },
-    
+
     computed: {
       component: function () {
-        switch(this.data.type_id) {
-          case 1:
-            return 'Casual'
-          default:
-            throw new Error('Нет такого типа пунктов меню')
-              break
+        if(this.data.type_id in types) {
+          return types[this.data.type_id].component
+        } else {
+          throw new Error('Нет такого типа пунктов меню')
         }
       },
 
       type: function () {
-        switch(this.data.type_id) {
-          case 1:
-            return 'Ссылка'
-          default:
-            throw new Error('Нет такого типа пунктов меню')
-            break
+        if(this.data.type_id in types) {
+          return types[this.data.type_id].typeName
+        } else {
+          throw new Error('Нет такого типа пунктов меню')
         }
       }
     },
-    
+
     //watch: {},
     methods: {
       async onAddItem () {
@@ -185,6 +180,10 @@
         switch(this.data.type_id) {
           case 1:
             return casualMetaFields
+          case 2:
+            return singleMaterialMetaFields
+          case 3:
+            return categoryMetaFields
           default:
             throw new Error('Нет такого типа пунктов меню')
             break
@@ -195,6 +194,12 @@
         switch(this.data.type_id) {
           case 1:
             casualSetMetaFields(this.form, this.data)
+            break
+          case 2:
+            singleMaterialSetMetaFields(this.form, this.data)
+            break
+          case 3:
+            categorySetMetaFields(this.form, this.data)
             break
           default:
             throw new Error('Нет такого типа пунктов меню')

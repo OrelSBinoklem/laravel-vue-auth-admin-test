@@ -23,4 +23,16 @@ class ContentJSPlugin extends Model
     public function tags() {
         return $this->morphToMany('App\Tag', 'tagable');
     }
+
+    //todo-orel временное решение "какого хера грузяться metas"
+    public function toArray()
+    {
+        if (isset($this->relations['metas'])) {
+            return array_merge(parent::toArray(), [
+                'meta_data' => $this->getMeta()->toArray(),
+            ]);
+        }
+
+        return parent::toArray();
+    }
 }

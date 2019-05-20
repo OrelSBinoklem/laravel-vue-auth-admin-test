@@ -99,7 +99,7 @@ axios.interceptors.response.use(response => {
       confirmButtonText: i18n.t('ok'),
       cancelButtonText: i18n.t('cancel')
     })
-  } else if (status === 401 && store.getters['auth/check']) {
+  } else if (status === 401 && store.gtters['auth/check']) {
     swal({
       type: 'warning',
       title: i18n.t('token_expired_alert_title'),

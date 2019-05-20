@@ -72,6 +72,8 @@ return [
     ],
     'url' => ':attribute 无效的格式',
     'timezone' => ':attribute 必须个有效的时区',
+
+    'arr_uniq_field' => '字段 :field 在集合中 :attribute 具有相同的值。',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

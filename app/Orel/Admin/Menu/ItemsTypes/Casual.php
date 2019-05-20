@@ -39,6 +39,28 @@ class Casual extends AdminMenuItemType {
     }
 
     public function setMetaFields(MenuItems $model, array $data) {
-        $model->setMeta('is_router', $data['is_router'] ? 1 : 0);
+        $model->setMeta([
+            'is_router' => $data['is_router'] ? 1 : 0,
+            'path' => $data['path'],
+        ]);
+    }
+
+    public function getPublicDataItem(MenuItems $model) {
+        $data = [
+            'id' => $model->id,
+            'slug' => $model->slug,
+            'name' => $model->name,
+            'order' => $model->order,
+            'parent_id' => $model->parent_id,
+            'type_id' => $model->type_id,
+            'meta_data' => $model->getMeta()->toArray(),
+            'is_router' => $model->getMeta('is_router', 1) ? TRUE : FALSE
+        ];
+        if($model->getMeta('is_router', 1)) {
+            $data['router'] = ['name' => $model->getMeta('path')];
+        } else {
+            $data['path'] = $model->getMeta('path');
+        }
+        return $data;
     }
 }

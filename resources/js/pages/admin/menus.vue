@@ -34,10 +34,10 @@
           <div class="col-10">
             <div class="row" v-if="items !== null">
               <div class="col-6">
-                <menu-items-edit :items.sync="items" :maxLevel="3" :menuId="currentMenu.id" :openedItems="openedItems" @update="onUpdate" @delete="onDelete" @toggle="onToggle"></menu-items-edit>
+                <menu-items-edit :items.sync="items" :itemsSpecialData="itemsSpecialData" :maxLevel="4" :menuId="currentMenu.id" :openedItems="openedItems" @update="onUpdate" @delete="onDelete" @toggle="onToggle"></menu-items-edit>
               </div>
               <div class="col-6">
-                <menu-items-add :items.sync="items" :menuId="currentMenu.id" @store="onStore"></menu-items-add>
+                <menu-items-add :items.sync="items" :itemsSpecialData="itemsSpecialData" :menuId="currentMenu.id" @store="onStore"></menu-items-add>
               </div>
             </div>
           </div>
@@ -132,6 +132,7 @@
   import _ from 'lodash'
   import MenuItemsEdit from "../../components/menu-items/MenuItemsEdit";
   import MenuItemsAdd from "../../components/menu-items/MenuItemsAdd";
+  import {types} from "../../components/menu-items/types-data"
 
   export default {
     layout: 'admin',
@@ -174,6 +175,7 @@
     data: () => ({
       currentMenu: null,
       items: null,
+      itemsSpecialData: null,
       openedItems: {},
       menus: [],
 
@@ -307,6 +309,10 @@
           axios
             .get('/api/admin/menus/' + (this.currentMenu.id) + '/items')
             .then(response => {
+              for(let type in types) {
+                types[type].loadSpecialData(this.$store, response.data)
+              }
+
               var items = this.__treeSortedByOrder(this.__flatToTreeArray(response.data))
               this.__setNotPublishParent(items)
               this.items = items
@@ -335,6 +341,10 @@
           axios
             .get('/api/admin/menus/' + (menu.id) + '/items')
             .then(response => {
+              for(let type in types) {
+                types[type].loadSpecialData(this.$store, response.data)
+              }
+
               var items = this.__treeSortedByOrder(this.__flatToTreeArray(response.data))
               this.__setNotPublishParent(items)
               this.items = items

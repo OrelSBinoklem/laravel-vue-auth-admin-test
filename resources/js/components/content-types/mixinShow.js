@@ -2,81 +2,31 @@ import { mapGetters } from 'vuex'
 import axios from 'axios'
 
 export const mixinShow = {
-  props: {
-    type: {
-      type: Object,
-      required: true
+  metaInfo () {
+    return {
+      //todo-orel когда передаёш пустую строку то оно выводит в титле undefined
+      title: this.data !== null ? this.data.meta_title : ' ',
+      meta: [
+        { hid: 'description', name: 'description', content: this.data !== null ? this.data.meta_description : '' },
+        { hid: 'keywords', name: 'keywords', content: this.data !== null ? this.data.meta_keyword : '' }
+      ]
     }
+  },
+
+  props: {
+
   },
 
   data() {
     return {
-      css: {
-        tableClass: 'table table-striped table-bordered',
-        loadingClass: 'loading',
-        ascendingIcon: 'glyphicon glyphicon-chevron-up',
-        descendingIcon: 'glyphicon glyphicon-chevron-down',
-        handleIcon: 'glyphicon glyphicon-menu-hamburger',
-        pagination: {
-          infoClass: 'pull-left',
-          wrapperClass: 'vuetable-pagination pull-right',
-          activeClass: 'btn-primary',
-          disabledClass: 'disabled',
-          pageClass: 'btn btn-border',
-          linkClass: 'btn btn-border',
-          icons: {
-            first: '',
-            prev: '',
-            next: '',
-            last: '',
-          },
-        },
-      },
 
-      paginationCss: {
-        wrapperClass: 'pagination',
-        activeClass: 'btn-primary',
-        disabledClass: 'disabled',
-        pageClass: 'btn btn-border',
-        linkClass: 'btn btn-border',
-        icons: {
-          first: '',
-          prev: '',
-          next: '',
-          last: '',
-        }
-      },
     }
   },
   created() {
 
   },
   methods: {
-    onPaginationData (paginationData) {
-      this.$refs.pagination.setPaginationData(paginationData)
-      this.$refs.paginationInfo.setPaginationData(paginationData)
-    },
-    onChangePage (page) {
-      this.$refs.vuetable.changePage(page)
-    },
-    publishedLabel (value) {
-      return value == 0
-        ? '<span class="badge badge-secondary">No</span>'
-        : '<span class="badge badge-success">Yes</span>'
-    },
-    onAddContent () {
-      this.$router.push({ name: 'admin.content.create', params: { type: this.type.slug } })
-    },
-    async deletePlugin() {
-      await axios.delete('/api/admin/content/' + this.type.slug + '/' + this.curEditPlugin.id)
-      this.$refs.vuetable.reload()
-    },
-    __arrJoinQuotes (arr) {
-      return arr.map(function callback(tax) {
-        return '<span class="badge badge-primary">' + (tax.title) + '</span>'
-      })
-        .join(", ")
-    },
+
   },
   computed: {
     ...mapGetters({
@@ -84,6 +34,8 @@ export const mixinShow = {
     })
   },
   watch: {
-
+    '$route.params': function(newVal, oldVal){
+      this.__loadItem(newVal.slug)
+    },
   },
 }

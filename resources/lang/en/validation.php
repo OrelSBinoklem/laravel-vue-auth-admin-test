@@ -113,6 +113,8 @@ return [
     'uploaded'             => 'The :attribute failed to upload.',
     'url'                  => 'The :attribute format is invalid.',
 
+    'arr_uniq_field' => 'Fields :field in collection :attribute have the same values.',
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

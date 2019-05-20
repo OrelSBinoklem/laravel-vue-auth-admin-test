@@ -68,3 +68,12 @@ Route::group(['middleware' => 'guest:api'], function () {
     Route::post('oauth/{driver}', 'Auth\OAuthController@redirectToProvider');
     Route::get('oauth/{driver}/callback', 'Auth\OAuthController@handleProviderCallback')->name('oauth.callback');
 });
+
+Route::get('menus/{slug}', 'MenusController@index')->where('slug', '[0-9a-zA-Z\-\_]+');
+
+Route::group(['prefix' => 'content', 'namespace' => 'Content'], function () {
+    Route::get('/get-some-items', 'ContentController@getPublicWhereInSlug');
+    Route::get('/get-short-by-tax', 'ContentController@ShortWhereInSlugsByTax');
+
+    Route::get('js-plugin', 'ContentJSPluginController@index');
+});

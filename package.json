@@ -36,6 +36,7 @@
     "vue-router": "^3.0.1",
     "vue-sidebar-menu": "^2.2.2",
     "vue-snotify": "^3.2.1",
+    "vue2-ace-editor": "^0.0.13",
     "vuescroll": "^4.9.0-beta.14",
     "vuetable-2": "^1.7.5",
     "vuex": "^3.0.1",

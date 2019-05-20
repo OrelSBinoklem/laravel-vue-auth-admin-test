@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 
 use App\Orel\Admin\Menu\ItemsTypes\Casual as typeCasual;
+use App\Orel\Admin\Menu\ItemsTypes\SingleMaterial as typeSingleMaterial;
+use App\Orel\Admin\Menu\ItemsTypes\Category as typeCategory;
 
 use Carbon\Carbon;
 
@@ -22,11 +24,13 @@ class MenusRepository extends VueTableRepository
 
     protected $types = [];
     
-	public function __construct(Menu $menus, MenuItems $items, typeCasual $typeCasual) {
+	public function __construct(Menu $menus, MenuItems $items, typeCasual $typeCasual, typeSingleMaterial $typeSingleMaterial, typeCategory $typeCategory) {
 		$this->model = $menus;
 		$this->modelItems = $items;
 
         $this->types[] = $typeCasual;
+        $this->types[] = $typeSingleMaterial;
+        $this->types[] = $typeCategory;
 	}
 
 	public function getTableData() {
@@ -120,6 +124,75 @@ class MenusRepository extends VueTableRepository
             ->header('Access-Control-Allow-Methods', 'GET');
     }
 
+    public function get_items_for_client(Menu $menu) {
+	    //Зачем грузить дочерние нескрытые если родительский скрыт? (решаем так - если нету родителя указанного пункта то удаляем его... (но есть несколько уровней вложенности что тогда?!))
+        $menuItems = $menu
+            ->menuItems()
+            ->where('publish', 1)
+            ->with(['metas'])
+            ->get();
+
+        //$this->touchGetters($menuItems);
+
+        //удаляем дочерние имеющие скрытого родителя
+        $items_array = [];
+        $menuItems->each(function ($item, $key) use (&$items_array) {
+            $items_array[$item->id] = [
+                'id' => $item->id,
+                'parent_id' => $item->parent_id
+            ];
+        });
+
+        $filtered_items = [];
+
+        function buildTree(array &$filtered_items, array &$elements, $parentId = null) {
+            //todo алгоритм неочень эффективный - может использовать объекты?
+            $branch = array();
+
+            foreach ($elements as $element) {
+                if ($element['parent_id'] == $parentId) {
+                    $children = buildTree($filtered_items, $elements, $element['id']);
+                    if ($children) {
+                        $element['children'] = $children;
+                    }
+                    $filtered_items[$element['id']] = TRUE;
+                    $branch[$element['id']] = $element;
+                    //хоть и метод неоптимален но строчка ниже улучшает алгоритм
+                    unset($elements[$element['id']]);
+                }
+            }
+            return $branch;
+        }
+
+        buildTree($filtered_items, $items_array);
+
+        $menuItems = $menuItems->filter(function ($item, $key) use ($filtered_items) {
+            return isset($filtered_items[$item->id]);
+        });
+
+        //Получение только публичных данных для пунктов меню
+        $menuItems = $menuItems->map(function ($item, $key) {
+            return $this->types[$item['type_id'] - 1]->getPublicDataItem($item);
+        });
+
+        //Нормализация ключей массива для конвертера в json чтоб он массивы в объекты не превращал
+        $normalized_keys_array_items = [];
+        foreach($menuItems->toArray() as $k=>$v)
+        {
+            if($v['type_id'] > count($this->types) || $v['type_id'] < 1) {
+                abort(404, 'Нет такого типа пункта меню');
+            }
+            $normalized_keys_array_items[] = $v;
+        }
+
+
+        return response()->json(
+            $normalized_keys_array_items
+        )
+            ->header('Access-Control-Allow-Origin', '*')
+            ->header('Access-Control-Allow-Methods', 'GET');
+    }
+
     public function addItem(Request $request, Menu $menu) {
         if (Gate::denies('create', $this->modelItems)) {
             abort(403);
@@ -146,7 +219,6 @@ class MenusRepository extends VueTableRepository
         $new->fill([
             'name' => $data['name'],
             'slug' => $data['slug'],
-            'path' => $data['path'],
             'publish' => $data['publish'],
 
             'order' => 1,
@@ -186,7 +258,6 @@ class MenusRepository extends VueTableRepository
         $menuItem->fill([
             'name' => $data['name'],
             //'slug' => $data['slug'], слаг лучше неменять иначе теряеться его смысл
-            'path' => $data['path'],
             'publish' => $data['publish']
         ]);
 
@@ -300,7 +371,6 @@ class MenusRepository extends VueTableRepository
         return Validator::make($data, [
             'name' => 'required|string|max:255',
             'slug' => 'required|alpha_dash|max:255|unique:menu_items,slug',
-            'path' => 'required|max:255',
             'publish' => 'required|integer|between:0,1',
             'type_id' => 'required|integer|between:1,100'
         ]);
@@ -311,7 +381,6 @@ class MenusRepository extends VueTableRepository
         return Validator::make($data, [
             'name' => 'required|string|max:255',
             //'slug' => 'required|alpha_dash|max:255|unique:menu_items,slug,' . $item->id,
-            'path' => 'required|max:255',
             'publish' => 'required|integer|between:0,1',
             'type_id' => 'required|integer|between:1,100'
         ]);

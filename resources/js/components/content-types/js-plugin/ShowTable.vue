@@ -61,12 +61,12 @@
   import axios from 'axios'
   import moment from 'moment'
 
-  import {mixinShow} from '../mixinShow'
+  import {mixinShowTable} from '../mixinShowTable'
 
   export default {
-    name: "CrudTableRoles",
+    name: "ShowTable",
 
-    mixins: [mixinShow],
+    mixins: [mixinShowTable],
 
     data: () => ({
       curEditPlugin: null,
@@ -93,7 +93,7 @@
           title: 'Slug',
           titleClass: 'text-center',
           dataClass: 'text-right',
-          sortField: 'immunity'
+          sortField: 'slug'
         },
         {
           name: 'published',

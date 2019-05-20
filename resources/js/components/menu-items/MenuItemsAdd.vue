@@ -1,6 +1,6 @@
 <template lang="pug">
   div
-    div(v-for="(item, index) in Array(1)")
+    div.list-menu-item(v-for="(item, index) in Array(3)")
       menu-item(:data="{type_id: index + 1}" :edit="false" :menuId="menuId" @store="onStore")
 </template>
 
@@ -43,6 +43,7 @@
   }
 </script>
 
-<style lang="sass">
-
+<style lang="sass" scoped>
+  .list-menu-item
+    margin-bottom: 5px
 </style>

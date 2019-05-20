@@ -19,6 +19,8 @@ const AdminMenus = () => import('~/pages/admin/menus').then(m => m.default || m)
 const AdminContent = () => import('~/pages/admin/content').then(m => m.default || m)
 const AdminTaxonomy = () => import('~/pages/admin/taxonomy').then(m => m.default || m)
 
+const ContentJsPlugin = () => import('~/pages/content/js-plugin').then(m => m.default || m)
+
 export default [
   { path: '/', name: 'welcome', component: Welcome },
 
@@ -48,6 +50,9 @@ export default [
   { path: '/admin/content/:type', name: 'admin.content.type', component: AdminContent },
   { path: '/admin/content/:type/create', name: 'admin.content.create', component: AdminContent },
   { path: '/admin/content/:type/update/:id', name: 'admin.content.update', component: AdminContent },
+
+  { path: '/content/js-plugin/:slug', name: 'content.js-plugin', component: ContentJsPlugin },
+  { path: '/content/:type_slug/:slug', name: 'content', component: NotFound },
 
   { path: '*', component: NotFound }
 ]

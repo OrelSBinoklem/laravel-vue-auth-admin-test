@@ -3,6 +3,10 @@ import { mapGetters } from 'vuex'
 import axios from "axios/index";
 
 export const mixinCreateAndEdit = {
+  components: {
+    editor: require('vue2-ace-editor')
+  },
+
   props: {
 
   },
@@ -131,6 +135,16 @@ export const mixinCreateAndEdit = {
       }
 
       return sortedAndIndentFlat;
+    },
+
+    editorInit: function () {
+      require('brace/ext/language_tools') //language extension prerequsite...
+      require('brace/mode/html')
+      require('brace/mode/javascript')    //language
+      require('brace/mode/css')
+      require('brace/mode/less')
+      require('brace/theme/chrome')
+      require('brace/snippets/javascript') //snippet
     }
   },
   computed: {

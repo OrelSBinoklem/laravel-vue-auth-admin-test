@@ -19,6 +19,7 @@ class ContentJSPluginRepository extends BaseContentRepository {
     public function getTableData() {
         $data = parent::getTableData();
 
+        //todo-orel может както фильтровать данные и передавать только нужное а не весь объект
         return response()->json(
             $data
         )
@@ -28,12 +29,32 @@ class ContentJSPluginRepository extends BaseContentRepository {
 
     public function getOne(Request $request) {
         $data = $request->all();
+        $content = $this->model->newQuery()->with(['metas', 'categories', 'tags'])->where('id', (int)$data['id'])->first();
 
-        return response()->json(
-            $this->model->newQuery()->with(['metas', 'categories', 'tags'])->where('id', (int)$data['id'])->first()
-        )
-            ->header('Access-Control-Allow-Origin', '*')
-            ->header('Access-Control-Allow-Methods', 'GET');
+        if($content) {
+            return response()->json(
+                $content
+            )
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Methods', 'GET');
+        } else {
+            abort(404, 'Контент ненайден');
+        }
+    }
+
+    public function getOneBySlug(Request $request) {
+        $data = $request->all();
+        $content = $this->model->newQuery()->with(['metas', 'categories', 'tags'])->where('slug', (string)$data['slug'])->first();
+
+        if($content) {
+            return response()->json(
+                $content
+            )
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Methods', 'GET');
+        } else {
+            abort(404, 'Контент ненайден');
+        }
     }
 
     public function add(Request $request) {
@@ -65,6 +86,10 @@ class ContentJSPluginRepository extends BaseContentRepository {
 
         $new->setMeta([
             'alerts' => $data['alerts'],
+        ]);
+
+        $new->setMeta([
+            'editors' => $data['editors'],
         ]);
 
         $new->save();
@@ -99,6 +124,14 @@ class ContentJSPluginRepository extends BaseContentRepository {
 
             //'created_by' => Auth::user()->id,
             'modified_by' => Auth::user()->id
+        ]);
+
+        $plugin->setMeta([
+            'alerts' => $data['alerts'],
+        ]);
+
+        $plugin->setMeta([
+            'editors' => $data['editors'],
         ]);
 
         $plugin->save();
@@ -138,6 +171,11 @@ class ContentJSPluginRepository extends BaseContentRepository {
             'meta_keyword' => 'required|string|max:255',
             'published' => 'required|integer|between:0,1',
 
+            'editors' => 'array|arr_uniq_field:slug',
+            'editors.*' => 'array',
+            'editors.*.slug' => 'string|max:255',
+            'editors.*.text' => 'string|max:4095',
+
             'alerts.*.title' => 'string|max:255',
             'alerts.*.text' => 'string|max:1023'
         ]);
@@ -154,6 +192,11 @@ class ContentJSPluginRepository extends BaseContentRepository {
             'meta_description' => 'required|string|max:255',
             'meta_keyword' => 'required|string|max:255',
             'published' => 'required|integer|between:0,1',
+
+            'editors' => 'array|arr_uniq_field:slug',
+            'editors.*' => 'array',
+            'editors.*.slug' => 'string|max:255',
+            'editors.*.text' => 'string|max:4095',
 
             'alerts.*.title' => 'string|max:255',
             'alerts.*.text' => 'string|max:1023'

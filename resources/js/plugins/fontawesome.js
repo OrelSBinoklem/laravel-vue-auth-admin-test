@@ -2,15 +2,15 @@ import Vue from 'vue'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {
-  faEdit, faTrashAlt, faSave, faPlusSquare, faMinusSquare
+  faEdit, faTrashAlt, faSave, faPlusSquare, faMinusSquare, faWindowClose
 } from '@fortawesome/free-regular-svg-icons'
 import {
   faUser, faLock, faSignOutAlt, faCog, faChartArea, faAngleRight, faBars, faTachometerAlt, faUserPlus, faCalendarAlt, faUserTie, faFileContract,
-  faListAlt, faPlus, faCaretDown, faCopy, faFolder, faTag
+  faListAlt, faPlus, faCaretDown, faCopy, faFolder, faTag, faChevronRight, faExpand, faTimes
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
-  faGithub
+  faGithub, faWordpress, faVuejs, faLaravel
 } from '@fortawesome/free-brands-svg-icons'
 
 //import * as regular from '@fortawesome/free-regular-svg-icons'
@@ -18,10 +18,12 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(
-  faEdit, faTrashAlt, faSave, faPlusSquare, faMinusSquare,
+  faEdit, faTrashAlt, faSave, faPlusSquare, faMinusSquare, faWindowClose,
+
   faUser, faLock, faSignOutAlt, faCog, faChartArea, faAngleRight, faBars, faTachometerAlt, faUserPlus, faCalendarAlt, faUserTie, faFileContract,
-  faListAlt, faPlus, faCaretDown, faCopy, faFolder, faTag,
-  faGithub
+  faListAlt, faPlus, faCaretDown, faCopy, faFolder, faTag, faChevronRight, faExpand, faTimes,
+
+  faGithub, faWordpress, faVuejs, faLaravel
 )
 
 Vue.component('fa', FontAwesomeIcon)

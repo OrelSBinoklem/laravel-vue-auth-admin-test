@@ -26,7 +26,7 @@
     props: {
       maxLevel: {
         type: Number,
-        default: 3
+        default: 4
       },
       items: {
         type: Array,
@@ -39,7 +39,7 @@
       openedItems: {
         type: Object,
         required: true
-      }
+      },
     },
 
     components: {
@@ -181,5 +181,13 @@
   .tree-menu-items-edit
     .tree-node-inner-back
       box-sizing: content-box
-      width: calc(100% - 60px)
+      width: calc(100% - 90px)
+    .tree-node-children .card
+      border-left-width: 2px
+    .tree-node-children .tree-node-children .card
+      border-left-color: #dc3545 !important
+    .tree-node-children .tree-node-children .tree-node-children .card
+      border-left-color: #28a745 !important
+    .tree-node-children .tree-node-children .tree-node-children .tree-node-children .card
+      border-left-color: #007bff !important
 </style>

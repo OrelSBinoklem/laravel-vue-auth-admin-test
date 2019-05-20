@@ -3,6 +3,18 @@
     <div class="col">
       <form @submit.prevent="addOrUpdatePlugin" @keydown="form.onKeydown($event)" action="" method="post">
 
+        <div class="form-group row">
+          <div class="col-md-12 d-flex">
+            <!-- Submit Button -->
+            <v-button v-if="!edit" block :loading="form.busy">
+              Добавить плагин
+            </v-button>
+            <v-button v-else block :loading="form.busy">
+              Обновить плагин
+            </v-button>
+          </div>
+        </div>
+
         <div class="row">
           <div class="col-6">
             <!-- Заголовок -->
@@ -124,6 +136,34 @@
             </div>
           </div>
 
+          <div class="col-12">
+            <!-- Редакторы -->
+            <div class="form-group row">
+              <h4 class="col-md-12">Редакторы</h4>
+              <div class="col-12">
+                <div :class="{ 'is-invalid': form.errors.has('editors') }" class="form-control d-none"></div>
+                <has-error :form="form" field="editors"/>
+              </div>
+              <div v-for="(alert, index) in form.editors" class="col-md-12 mb-2">
+                <div :class="{ 'is-invalid': form.errors.has(`alerts.${index}`) }" class="form-control d-none"></div>
+                <has-error :form="form" :field="`alerts.${index}`"/>
+                <div class="row">
+                  <div  class="col-md-6">
+                    <input v-model="form.editors[index].slug" :class="{ 'is-invalid': form.errors.has(`editors.${index}.slug`) }" class="form-control" type="text" :name="'editor-slug' + index">
+                    <has-error :form="form" :field="`editors.${index}.slug`"/>
+                  </div>
+                  <div  class="col-md-6">
+                    <editor v-model="form.editors[index].text" @init="editorInit" lang="html" theme="chrome" width="100%" :height="150"></editor>
+                    <div :class="{ 'is-invalid': form.errors.has(`editors.${index}.text`) }" class="form-control d-none"></div>
+                    <has-error :form="form" :field="`editors.${index}.text`"/>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 mt-2">
+                <div @click="onAddEditor" class="btn btn-primary">Добавить редактор</div>
+              </div>
+            </div>
+          </div>
 
         </div>
 
@@ -144,17 +184,15 @@
              ref="modal-select-categories"
              title="Выберите категории"
              hide-footer>
-      <div>
-        <!-- Категории -->
-        <div class="row">
-          <div class="col">
-            <div v-for="(cat, index) in categories" :key="cat.id">
-              <label :style="{paddingLeft: (cat.indent * 30) + 'px'}">
-                <b-form-checkbox-group v-model="form.categories_ids" >
-                  <b-form-checkbox :value="cat.id">{{ cat.title }}</b-form-checkbox>
-                </b-form-checkbox-group>
-              </label>
-            </div>
+      <!-- Категории -->
+      <div class="row">
+        <div class="col">
+          <div v-for="(cat, index) in categories" :key="cat.id">
+            <label :style="{paddingLeft: (cat.indent * 30) + 'px'}">
+              <b-form-checkbox-group v-model="form.categories_ids" >
+                <b-form-checkbox :value="cat.id">{{ cat.title }}</b-form-checkbox>
+              </b-form-checkbox-group>
+            </label>
           </div>
         </div>
       </div>
@@ -165,17 +203,15 @@
              ref="modal-select-tags"
              title="Выберите тэги"
              hide-footer>
-      <div>
-        <!-- Категории -->
-        <div class="row">
-          <div class="col">
-            <div v-for="(tag, index) in tags" :key="tag.id">
-              <label>
-                <b-form-checkbox-group v-model="form.tags_ids" >
-                  <b-form-checkbox :value="tag.id">{{ tag.title }}</b-form-checkbox>
-                </b-form-checkbox-group>
-              </label>
-            </div>
+      <!-- Тэги -->
+      <div class="row">
+        <div class="col">
+          <div v-for="(tag, index) in tags" :key="tag.id">
+            <label>
+              <b-form-checkbox-group v-model="form.tags_ids" >
+                <b-form-checkbox :value="tag.id">{{ tag.title }}</b-form-checkbox>
+              </b-form-checkbox-group>
+            </label>
           </div>
         </div>
       </div>
@@ -227,6 +263,9 @@
         meta_description: '',
         meta_keyword: '',
         published: false,
+
+        editors: [],
+
         alerts: [],
         categories_ids: [],
         tags_ids: []
@@ -263,6 +302,13 @@
         })
       },
 
+      onAddEditor () {
+        this.form.editors.push({
+          slug: '',
+          text: ''
+        })
+      },
+
       onSelectCategories () {
         this.$root.$emit('bv::show::modal','modal-select-categories')
       },
@@ -287,7 +333,9 @@
           this.form.meta_keyword = this.data.meta_keyword
           this.form.published = !!this.data.published
 
-          this.form.alerts = this.data.meta_data.alerts
+          this.form.editors = this.data.meta_data.editors ? this.data.meta_data.editors : []
+
+          this.form.alerts = this.data.meta_data.alerts ? this.data.meta_data.alerts : []
           this.form.categories_ids = this.__getIdsFromArr(data.categories)
           this.form.tags_ids = this.__getIdsFromArr(data.tags)
         }

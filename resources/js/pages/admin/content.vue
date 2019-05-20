@@ -36,6 +36,7 @@
   import axios from 'axios'
   import _ from 'lodash'
   import ContentCreateAndEdit from "../../components/content-types/ContentCreateAndEdit";
+  import {contentTypes} from "../../components/content-types/contentTypes";
 
   export default {
     layout: 'admin',
@@ -89,13 +90,7 @@
       editData: null,
       currentType: null,
       categories: [],
-      contentTypes: [
-        {
-          name: 'JS плагин',
-          slug: 'js-plugin',
-          component: 'js-plugin'
-        }
-      ]
+      contentTypes: contentTypes.get().contentTypes
     }),
 
     computed: {
