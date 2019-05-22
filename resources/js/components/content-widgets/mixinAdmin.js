@@ -1,20 +1,14 @@
-import { mapGetters } from 'vuex'
-import axios from 'axios'
-
-export const mixinShow = {
-  metaInfo () {
-    return {
-      //todo-orel когда передаёш пустую строку то оно выводит в титле undefined
-      title: this.data !== null ? this.data.meta_title : ' ',
-      meta: [
-        { hid: 'description', name: 'description', content: this.data !== null ? this.data.meta_description : '' },
-        { hid: 'keywords', name: 'keywords', content: this.data !== null ? this.data.meta_keyword : '' }
-      ]
-    }
-  },
-
+export const mixinAdmin = {
   props: {
+    edit: {
+      type: Boolean,
+      required: true
+    },
 
+    data: {
+      type: Object,
+      required: true
+    },
   },
 
   data() {
@@ -26,16 +20,20 @@ export const mixinShow = {
 
   },
   methods: {
-
+    editorInit: function () {
+      require('brace/ext/language_tools') //language extension prerequsite...
+      require('brace/mode/html')
+      require('brace/mode/javascript')    //language
+      require('brace/mode/css')
+      require('brace/mode/less')
+      require('brace/theme/chrome')
+      require('brace/snippets/javascript') //snippet
+    }
   },
   computed: {
-    ...mapGetters({
-      language: 'lang/locale'
-    })
+
   },
   watch: {
-    '$route.params': function(newVal, oldVal){
-      this.__loadItem(newVal.slug)
-    },
+
   },
 }

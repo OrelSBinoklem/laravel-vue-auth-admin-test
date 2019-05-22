@@ -19,6 +19,7 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0-rc.13",
+    "emmet": "git+https://github.com/cloud9ide/emmet-core.git#41973fcc70392864c7a469cf5dcd875b88b93d4a",
     "glyphicons-only-bootstrap": "^1.0.1",
     "jquery": "^3.3.1",
     "js-cookie": "^2.2.0",
