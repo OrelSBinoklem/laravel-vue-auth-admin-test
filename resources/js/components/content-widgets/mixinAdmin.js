@@ -5,10 +5,40 @@ export const mixinAdmin = {
       required: true
     },
 
+    form: {
+      type: Form,
+      required: true
+    },
+
     data: {
       type: Object,
       required: true
     },
+
+    prefixDataForm: {
+      type: String,
+      required: true
+    }
+  },
+
+  beforeMount() {
+    if(!('positions' in this.data)) {this.data.positions = {}}
+
+    if(!this.edit) {
+      for(let key in this.positions) {
+        this.data.positions[key] = {rules: rules, widgets: []}
+      }
+    } else {
+      for(let key in this.positions) {
+        if(!(key in this.data.positions)){
+          this.data.positions[key] = {}
+        }
+        this.data.positions[key].rules = rules
+        if(!('widgets' in this.data.positions[key])){
+          this.data.positions[key].widgets = []
+        }
+      }
+    }
   },
 
   data() {

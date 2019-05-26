@@ -74,6 +74,9 @@ return [
     'timezone' => ':attribute 必须个有效的时区',
 
     'arr_uniq_field' => '字段 :field 在集合中 :attribute 具有相同的值。',
+    'position_widgets_count' => '根据位置规则，应该有不同数量的小部件。',
+    'widget_matches_position' => '小部件与位置条件不匹配',
+    'widget_exist' => '系统中缺少此小部件。',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines

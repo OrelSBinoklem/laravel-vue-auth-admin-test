@@ -2,9 +2,12 @@ import _ from 'lodash'
 import { mapGetters } from 'vuex'
 import axios from "axios/index";
 
+import AdminPosition from '../content-widgets/AdminPosition'
+
 export const mixinCreateAndEdit = {
   components: {
-    editor: require('vue2-ace-editor')
+    editor: require('vue2-ace-editor'),
+    AdminPosition
   },
 
   props: {

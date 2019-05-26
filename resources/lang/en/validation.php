@@ -114,6 +114,9 @@ return [
     'url'                  => 'The :attribute format is invalid.',
 
     'arr_uniq_field' => 'Fields :field in collection :attribute have the same values.',
+    'position_widgets_count' => 'According to the position rules, there should be a different number of widgets',
+    'widget_matches_position' => 'Widget does not match position conditions',
+    'widget_exist' => 'This widget is missing from the system',
 
     /*
     |--------------------------------------------------------------------------

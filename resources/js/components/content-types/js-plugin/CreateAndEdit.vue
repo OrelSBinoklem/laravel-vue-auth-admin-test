@@ -137,6 +137,16 @@
           </div>
 
           <div class="col-12">
+            <!-- Недочёты и предупреждения -->
+            <div class="form-group row">
+              <h4 class="col-md-12">Недостатки плагина</h4>
+              <div class="col-md-12 mb-2">
+
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
             <!-- Редакторы -->
             <div class="form-group row">
               <h4 class="col-md-12">Редакторы</h4>
@@ -161,6 +171,21 @@
               </div>
               <div class="col-md-12 mt-2">
                 <div @click="onAddEditor" class="btn btn-primary">Добавить редактор</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <!-- Область для виджетов -->
+            <div class="form-group row">
+              <h4 class="col-md-12">Редакторы</h4>
+              <div class="col-12">
+                <AdminPosition
+                        :edit="edit"
+                        :form="form"
+                        :data="form.positions.tut_alerts"
+                        prefixDataForm="positions.tut_alerts"
+                ></AdminPosition>
               </div>
             </div>
           </div>
@@ -268,7 +293,27 @@
 
         alerts: [],
         categories_ids: [],
-        tags_ids: []
+        tags_ids: [],
+        positions: {
+          'tut_alerts': {
+            //todo убрать rules их нечегот хранить на сервере
+            rules: [
+              {
+                name: /^alert$/gmi,
+                count: 2,
+                not: {
+                  props: {
+                    'variant': /^light|dark/gim
+                  }
+                }
+              },
+              {
+                name: /^button$/gmi
+              }
+            ],
+            widgets: []
+          }
+        }
       })
     }),
 

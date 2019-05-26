@@ -10,7 +10,6 @@ use Validator;
 use Auth;
 
 class ContentJSPluginRepository extends BaseContentRepository {
-
     public function __construct(ContentJSPlugin $contentJSPlugin) {
         $this->with = ['metas', 'categories', 'tags'];
         $this->model = $contentJSPlugin;
@@ -92,6 +91,10 @@ class ContentJSPluginRepository extends BaseContentRepository {
             'editors' => $data['editors'],
         ]);
 
+        $new->setMeta([
+            'positions' => $data['positions'],
+        ]);
+
         $new->save();
 
         $new->categories()->sync($data['categories_ids']);
@@ -134,6 +137,10 @@ class ContentJSPluginRepository extends BaseContentRepository {
             'editors' => $data['editors'],
         ]);
 
+        $plugin->setMeta([
+            'positions' => $data['positions'],
+        ]);
+
         $plugin->save();
 
         $plugin->categories()->sync($data['categories_ids']);
@@ -161,7 +168,7 @@ class ContentJSPluginRepository extends BaseContentRepository {
 
     protected function validatorCreate(array $data)
     {
-        return Validator::make($data, [
+        $rules = [
             'title' => 'required|string|max:255',
             'slug' => 'required|alpha_dash|max:255|unique:content_j_s_plugins,slug',
             'description_short' => 'required|string|max:1023',
@@ -178,12 +185,14 @@ class ContentJSPluginRepository extends BaseContentRepository {
 
             'alerts.*.title' => 'string|max:255',
             'alerts.*.text' => 'string|max:1023'
-        ]);
+        ];
+        $this->validateWidgetsData($data,$rules);
+        return Validator::make($data, $rules);
     }
 
     protected function validatorUpdate(array $data, ContentJSPlugin $plugin)
     {
-        return Validator::make($data, [
+        $rules = [
             'title' => 'required|string|max:255',
             //'slug' => 'required|alpha_dash|max:255|unique:content_j_s_plugins,slug',
             'description_short' => 'required|string|max:1023',
@@ -200,9 +209,33 @@ class ContentJSPluginRepository extends BaseContentRepository {
 
             'alerts.*.title' => 'string|max:255',
             'alerts.*.text' => 'string|max:1023'
-        ]);
+        ];
+        $this->validateWidgetsData($data,$rules);
+        return Validator::make($data, $rules);
     }
 
+    protected function getPositionsRules(array $data) {
+        return [
+            'tut_alerts' => [
+                'rules' => [
+                    [
+                        'name' => [
+                            'regex:/^alert$/gmi'
+                        ],
+                        'count' => 2,
+                        'not' => [
+                            'params' => [
+                                'variant' => 'regex:/^light|dark$/gimu'
+                            ]
+                        ]
+                    ],
+                    [
+                        'name' => 'regex:/^button$/gimu'
+                    ]
+                ]
+            ]
+        ];
+    }
 }
 
 ?>
