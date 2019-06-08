@@ -25,11 +25,15 @@
     has-error(:form='form', :field='`${prefixDataForm}`')
     draggable(v-model="data.widgets" handle=".widget")
       template(v-if="data.widgets" v-for="(widget, index) in data.widgets")
-        AdminWidget(:edit="edit" :form="form" :data="widget" :positionData="data" :prefixDataForm="prefixDataForm + '.widgets.' + index")
+        .widget-container
+          AdminWidget(:edit="edit" :form="form" :data="widget" :positionData="data" :prefixDataForm="prefixDataForm + '.widgets.' + index")
+          b-button.btn-widget-delete(variant='outline-danger' @click='onDeleteWidget(index)'): fa(icon='times', size='lg')
+    b-button.btn-widget-clone(v-if="'widgets' in data && data.widgets.length" block variant='outline-success' @click='onCloneWidget'): fa(:icon="['far', 'clone']")
 </template>
 
 <script>
   import Form from 'vform'
+  import $ from 'jquery'
   import _ from 'lodash'
   import draggable from 'vuedraggable'
   import { mapGetters } from 'vuex'
@@ -175,6 +179,16 @@
           }
         }
         return false
+      },
+
+      onDeleteWidget(index) {
+        this.data.widgets.splice(index, 1)
+      },
+
+      onCloneWidget() {
+        this.data.widgets.push(
+          $.extend(true, {}, this.data.widgets[this.data.widgets.length - 1])
+        )
       }
     },
 
@@ -230,4 +244,21 @@
     white-space: nowrap
     &-count-text.error
       color: red
+
+  .widget-container
+    position: relative
+    ~ .widget-container
+      margin-top: 5px
+
+  .btn-widget-delete
+    display: none
+    position: absolute
+    top: 0
+    right: 0
+
+  .widget-container:hover .btn-widget-delete
+    display: block
+
+  .btn-widget-clone
+    margin-top: 5px
 </style>

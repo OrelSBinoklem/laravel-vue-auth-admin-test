@@ -119,8 +119,6 @@
       outline-width: 3px
       outline-style: solid
       outline-offset: -2px
-    ~ .widget
-      margin-top: 5px
 
   .name
     position: relative

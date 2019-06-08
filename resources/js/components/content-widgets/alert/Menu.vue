@@ -1,5 +1,5 @@
 <template lang="pug">
-  span(v-if="!megamenu" @click="onClick") Alert
+  span(v-if="!megamenu" @click="onClick('primary')") Alert
   .row(v-else)
     .col-3(@click="onClick('primary')"): b-alert(show variant='primary') Primary Alert
     .col-3(@click="onClick('secondary')"): b-alert(show variant='secondary') Secondary Alert
@@ -41,19 +41,13 @@
     methods: {
       onClick(variant) {
         if(this.current !== null) {
-          if(variant) {
-            this.current.widgets.push({
-              name: 'alert',
-              props: {
-                variant,
-                html: ''
-              }
-            })
-          } else {
-            this.current.widgets.push({
-              name: 'alert'
-            })
-          }
+          this.current.widgets.push({
+            name: 'alert',
+            props: {
+              variant,
+              html: ''
+            }
+          })
         }
       }
     },
