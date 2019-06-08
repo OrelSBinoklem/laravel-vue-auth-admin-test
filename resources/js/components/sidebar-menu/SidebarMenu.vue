@@ -121,6 +121,7 @@ export default {
     height: 100vh;
     padding-top: 50px;
     transition: 0.3s width;
+    z-index: 1035;
   }
 
   .v-sidebar-menu .vsm-item {

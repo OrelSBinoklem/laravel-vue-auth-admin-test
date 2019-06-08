@@ -1,3 +1,4 @@
+import $ from 'jquery'
 import _ from 'lodash'
 import { mapGetters } from 'vuex'
 import axios from "axios/index";
@@ -12,6 +13,14 @@ export const mixinCreateAndEdit = {
 
   props: {
 
+  },
+
+  beforeMount() {
+    document.body.addEventListener('click', this.onClickOutsidePosition)
+  },
+
+  beforeDestroy() {
+    document.body.removeEventListener('click', this.onClickOutsidePosition)
   },
 
   data() {
@@ -148,6 +157,12 @@ export const mixinCreateAndEdit = {
       require('brace/mode/less')
       require('brace/theme/chrome')
       require('brace/snippets/javascript') //snippet
+    },
+
+    onClickOutsidePosition(e) {
+      if (!($(e.target).closest('.position, .sidebar-menu-widgets').length)) {
+        this.$store.dispatch('content-widgets/setSelectPosition', null)
+      }
     }
   },
   computed: {

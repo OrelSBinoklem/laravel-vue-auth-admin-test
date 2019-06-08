@@ -137,16 +137,6 @@
           </div>
 
           <div class="col-12">
-            <!-- Недочёты и предупреждения -->
-            <div class="form-group row">
-              <h4 class="col-md-12">Недостатки плагина</h4>
-              <div class="col-md-12 mb-2">
-
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12">
             <!-- Редакторы -->
             <div class="form-group row">
               <h4 class="col-md-12">Редакторы</h4>
@@ -296,19 +286,22 @@
         tags_ids: [],
         positions: {
           'tut_alerts': {
-            //todo убрать rules их нечегот хранить на сервере
+            //todo-fast убрать rules их нечего хранить на сервере и data
+            data: {
+              name: 'Недостатки плагина'
+            },
             rules: [
               {
-                name: /^alert$/gmi,
+                name: 'regex:/^alert$/mi',
                 count: 2,
                 not: {
                   props: {
-                    'variant': /^light|dark/gim
+                    'variant': ['regex:/^(light|dark)$/im']
                   }
                 }
               },
               {
-                name: /^button$/gmi
+                name: 'regex:/^button$/imu'
               }
             ],
             widgets: []
@@ -383,6 +376,13 @@
           this.form.alerts = this.data.meta_data.alerts ? this.data.meta_data.alerts : []
           this.form.categories_ids = this.__getIdsFromArr(data.categories)
           this.form.tags_ids = this.__getIdsFromArr(data.tags)
+
+
+          for(let key in this.form.positions) {
+            if('positions' in this.data.meta_data && key in this.data.meta_data.positions && 'widgets' in this.data.meta_data.positions[key]) {
+              this.form.positions[key].widgets = this.data.meta_data.positions[key].widgets
+            }
+          }
         }
       }
     },

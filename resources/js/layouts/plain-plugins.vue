@@ -1,5 +1,5 @@
 <template>
-  <div class="main-layout">
+  <div class="plain-plugins-layout">
     <!--<navbar-full-width/>-->
     <navbar/>
 
@@ -54,5 +54,7 @@
 </script>
 
 <style lang="sass" scoped>
-
+.plain-plugins-layout
+  > .menu
+    z-index: 1035
 </style>

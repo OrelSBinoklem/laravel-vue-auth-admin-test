@@ -23,7 +23,7 @@ axios.interceptors.request.use(request => {
 })
 
 // Response interceptor
-var $eventBus = new Vue();
+let $eventBus = new Vue();
 Vue.prototype.$eventHub = $eventBus;
 
 Vue.component('notifications', {

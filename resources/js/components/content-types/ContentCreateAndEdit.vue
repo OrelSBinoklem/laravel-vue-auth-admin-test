@@ -1,5 +1,5 @@
 <template lang="pug">
-  div.tree-menu-items-edit
+  div
     component(v-if="show" v-bind:is="componentShow" v-bind="{type}")
     component(v-else @updated="onUpdated" v-bind:is="componentCreateAndEdit" v-bind="{edit, data: editData}")
 </template>
@@ -62,8 +62,5 @@
 </script>
 
 <style lang="sass">
-  .tree-menu-items-edit
-    .tree-node-inner-back
-      box-sizing: content-box
-      width: calc(100% - 60px)
+
 </style>

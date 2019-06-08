@@ -1,3 +1,5 @@
+import Form from 'vform'
+
 export const mixinAdmin = {
   props: {
     edit: {
@@ -26,14 +28,16 @@ export const mixinAdmin = {
 
     if(!this.edit) {
       for(let key in this.positions) {
-        this.data.positions[key] = {rules: rules, widgets: []}
+        if(key in this.staticRules) {
+          this.data.positions[key] = {rules: this.staticRules[key], widgets: []}
+        }
       }
     } else {
       for(let key in this.positions) {
         if(!(key in this.data.positions)){
           this.data.positions[key] = {}
         }
-        this.data.positions[key].rules = rules
+        this.data.positions[key].rules = this.staticRules[key]
         if(!('widgets' in this.data.positions[key])){
           this.data.positions[key].widgets = []
         }

@@ -6,18 +6,18 @@ use App\Helpers\Contracts\WidgetsTypesRules;
 
 use Illuminate\Support\Facades\Validator;
 
-class Alert extends WidgetsTypesRules{
+class Alert extends WidgetsTypesRules {
     public function getWidgetRules(array $data) {
         return [
             'props.variant' => 'required|in:primary,secondary,success,danger,warning,info,light,dark',
 
-            'text' => 'required|string'
+            'props.html' => 'required|string'
         ];
     }
 
     public function getPositionsRules(array $data) {
         return [
-            'slot' => [
+            /*'default' => [
                 'rules' => [
                     [
                         'name' => [
@@ -34,7 +34,7 @@ class Alert extends WidgetsTypesRules{
                         'name' => 'regex:/^button$/gimu'
                     ]
                 ]
-            ]
+            ]*/
         ];
     }
 }

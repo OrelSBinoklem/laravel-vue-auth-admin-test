@@ -359,6 +359,8 @@ export default {
   position: absolute
   top: 0
   right: 0
+  padding: 1rem 2rem
+  font-size: 2.5rem
 </style>
 
 <style lang="sass">

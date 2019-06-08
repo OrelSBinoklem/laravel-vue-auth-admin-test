@@ -19,3 +19,7 @@ export const SET_MENU_CLIENT = 'SET_MENU_CLIENT'
 
 // db.js
 export const REFRESH_CATEGORIES = 'REFRESH_CATEGORIES'
+
+// content-widgets.js
+export const SET_SELECT_POSITION = 'SET_SELECT_POSITION'
+export const SET_WIDGETS_TYPES = 'SET_WIDGETS_TYPES'

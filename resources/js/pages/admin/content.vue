@@ -18,7 +18,7 @@
               Нет типов контента!!!
             </div>
           </div>
-          <div class="col-10">
+          <div class="col-8">
             <div class="row" v-if="currentType !== null">
               <div class="col-12">
                 <content-create-and-edit @updated="onUpdated" :type="currentType" :editData="editData" :edit="edit" :show="show"></content-create-and-edit>
@@ -142,7 +142,3 @@
     }
   }
 </script>
-
-<style lang="sass" scoped>
-
-</style>

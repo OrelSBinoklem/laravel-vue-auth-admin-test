@@ -1,9 +1,13 @@
 <template>
   <div class="main-layout">
-    <navbar-full-width/>
+    <navbar/>
     <sidebar-menu :menu="menu" :collapsed="menuCollapsed" @collapse="menuCollapse" />
 
-    <div class="mt-4">
+    <SidebarMenuWidgets
+      v-show="this.$route.name === 'admin.content.create' || this.$route.name === 'admin.content.update'">
+    </SidebarMenuWidgets>
+
+    <div class="main-layout__content">
       <child/>
     </div>
     <notifications></notifications>
@@ -11,15 +15,19 @@
 </template>
 
 <script>
-  import NavbarFullWidth from "../components/NavbarFullWidth";
+  //import NavbarFullWidth from "../components/NavbarFullWidth";
+  import Navbar from '../components/Navbar'
   import SidebarMenu from '../components/sidebar-menu/SidebarMenu';
+  import SidebarMenuWidgets from "../components/menu-widgets/SidebarMenuWidgets";
 
   export default {
     name: 'AdminLayout',
 
     components: {
-      NavbarFullWidth,
-      SidebarMenu
+      //NavbarFullWidth,
+      Navbar,
+      SidebarMenu,
+      SidebarMenuWidgets
     },
 
     data: () => ({

@@ -1,27 +1,28 @@
 <template lang="pug">
-  .row
-    .col-6
-      // Material
-      .form-group.row
-        //todo-orel перевести
-        label.col-12 Алерт
-        .col-12
-          b-form-select(v-model='data.props.variant', :options='typesOptions')
-          .form-control.d-none(:class="{ 'is-invalid': form.errors.has(`${prefixDataForm}.props.variant`) }")
-          has-error(:form='form', :field='`${prefixDataForm}.props.variant`')
-        .col-12
-          editor(v-model='data.text', @init='editorInit', lang='html', theme='chrome', width='100%', :height='150')
-          .form-control.d-none(:class="{ 'is-invalid': form.errors.has(`${prefixDataForm}.text`) }")
-          has-error(:form='form', :field='`${prefixDataForm}.text`')
+  .col-12
+    // Material
+    .form-group.row
+      .col-12
+        b-form-select(v-model='data.props.variant', :options='variantOptions')
+        .form-control.d-none(:class="{ 'is-invalid': form.errors.has(`${prefixDataForm}.props.variant`) }")
+        has-error(:form='form', :field='`${prefixDataForm}.props.variant`')
+      .col-12.mt-3
+        editor(v-model='data.props.html', @init='editorInit', lang='html', theme='chrome', width='100%', :height='150')
+        .form-control.d-none(:class="{ 'is-invalid': form.errors.has(`${prefixDataForm}.props.html`) }")
+        has-error(:form='form', :field='`${prefixDataForm}.props.html`')
 </template>
 
 <script>
+  import Vue from 'vue'
+  import {mixinAdmin} from '../mixinAdmin'
 
   export default {
     name: "Admin",
 
-    components: {
+    mixins: [mixinAdmin],
 
+    components: {
+      editor: require('vue2-ace-editor')
     },
 
     props: {
@@ -29,7 +30,18 @@
     },
 
     beforeMount() {
-
+      if(!('props' in this.data)) {
+        Vue.set(this.data, 'props', {});
+        Vue.set(this.data.props, 'variant', 'primary');
+        Vue.set(this.data.props, 'html', '');
+      } else {
+        if(!('variant' in this.data.props)) {
+          this.data.props.variant = 'primary'
+        }
+        if(!('html' in this.data.props) || this.data.props.html === null) {
+          this.data.props.html = ''
+        }
+      }
     },
 
     data: () => ({
@@ -46,7 +58,7 @@
       ],
 
       staticRules: {
-        slot: {
+        /*slot: {
           rules: [
             {
               name: /^alert2$/gmi,
@@ -62,7 +74,7 @@
             }
           ],
           widgets: []
-        }
+        }*/
       }
     }),
 

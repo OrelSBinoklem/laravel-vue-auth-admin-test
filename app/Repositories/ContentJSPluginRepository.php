@@ -13,6 +13,7 @@ class ContentJSPluginRepository extends BaseContentRepository {
     public function __construct(ContentJSPlugin $contentJSPlugin) {
         $this->with = ['metas', 'categories', 'tags'];
         $this->model = $contentJSPlugin;
+        parent::__construct();
     }
 
     public function getTableData() {
@@ -220,17 +221,17 @@ class ContentJSPluginRepository extends BaseContentRepository {
                 'rules' => [
                     [
                         'name' => [
-                            'regex:/^alert$/gmi'
+                            'regex:/^alert$/im'
                         ],
                         'count' => 2,
                         'not' => [
-                            'params' => [
-                                'variant' => 'regex:/^light|dark$/gimu'
+                            'props' => [
+                                'variant' => ['regex:/^light|dark$/im']
                             ]
                         ]
                     ],
                     [
-                        'name' => 'regex:/^button$/gimu'
+                        'name' => 'regex:/^button$/im'
                     ]
                 ]
             ]
