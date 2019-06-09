@@ -15,17 +15,15 @@
     },
 
     props: {
-      props: {
-        variant: {
-          type: String,
-          required: true
-        },
-
-        html: {
-          type: String,
-          required: true
-        }
+      variant: {
+        type: String,
+        required: true
       },
+
+      html: {
+        type: String,
+        required: true
+      }
     },
 
     data: () => ({

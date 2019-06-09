@@ -1,6 +1,8 @@
 import { mapGetters } from 'vuex'
 import axios from 'axios'
 
+import ClientPositionWidget from '../content-widgets/ClientPositionWidget'
+
 export const mixinShow = {
   metaInfo () {
     return {
@@ -11,6 +13,10 @@ export const mixinShow = {
         { hid: 'keywords', name: 'keywords', content: this.data !== null ? this.data.meta_keyword : '' }
       ]
     }
+  },
+
+  components: {
+    ClientPositionWidget
   },
 
   props: {

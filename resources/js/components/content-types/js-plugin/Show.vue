@@ -8,6 +8,9 @@
             <h4>{{alert.title}}</h4>
             <p>{{alert.text}}</p>
           </div>
+          <ClientPositionWidget
+            :data="data.meta_data.positions.tut_alerts"
+          ></ClientPositionWidget>
         </div>
       </div>
     </div>

@@ -79,7 +79,7 @@
           if('name' in rule){rules.name = rule.name}
           if('props' in rule) {
             for(let propName in rule.props) {
-              rules['props.' . propName] = rule.props[propName];
+              rules['props.' + propName] = rule.props[propName];
             }
           }
 
@@ -127,9 +127,9 @@
     font-size: 12px
     font-weight: bold
 
-    .error-widget
-      position: absolute
-      left: calc(100% + 3px)
-      top: 0
-      color: red
+  .error-widget
+    position: absolute
+    left: calc(100% + 3px)
+    top: 0
+    color: red
 </style>

@@ -115,71 +115,34 @@
           </div>
 
           <div class="col-12">
-            <!-- Недочёты и предупреждения -->
-            <div class="form-group row">
-              <h4 class="col-md-12">Недостатки плагина</h4>
-              <div v-for="(alert, index) in form.alerts" class="col-md-12 mb-2">
-                <div class="row">
-                  <div  class="col-md-6">
-                    <input v-model="form.alerts[index].title" :class="{ 'is-invalid': form.errors.has(`alerts.${index}.title`) }" class="form-control" type="text" :name="'alert-title' + index">
-                    <has-error :form="form" :field="`alerts.${index}.title`"/>
-                  </div>
-                  <div  class="col-md-6">
-                    <input v-model="form.alerts[index].text" :class="{ 'is-invalid': form.errors.has(`alerts.${index}.text`) }" class="form-control" type="text" :name="'alert-text' + index">
-                    <has-error :form="form" :field="`alerts.${index}.text`"/>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-12 mt-2">
-                <div @click="onAddAlert" class="btn btn-primary">Добавить алерт</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12">
             <!-- Редакторы -->
-            <div class="form-group row">
-              <h4 class="col-md-12">Редакторы</h4>
-              <div class="col-12">
-                <div :class="{ 'is-invalid': form.errors.has('editors') }" class="form-control d-none"></div>
-                <has-error :form="form" field="editors"/>
-              </div>
-              <div v-for="(alert, index) in form.editors" class="col-md-12 mb-2">
-                <div :class="{ 'is-invalid': form.errors.has(`alerts.${index}`) }" class="form-control d-none"></div>
-                <has-error :form="form" :field="`alerts.${index}`"/>
-                <div class="row">
-                  <div  class="col-md-6">
-                    <input v-model="form.editors[index].slug" :class="{ 'is-invalid': form.errors.has(`editors.${index}.slug`) }" class="form-control" type="text" :name="'editor-slug' + index">
-                    <has-error :form="form" :field="`editors.${index}.slug`"/>
-                  </div>
-                  <div  class="col-md-6">
-                    <editor v-model="form.editors[index].text" @init="editorInit" lang="html" theme="chrome" width="100%" :height="150"></editor>
-                    <div :class="{ 'is-invalid': form.errors.has(`editors.${index}.text`) }" class="form-control d-none"></div>
-                    <has-error :form="form" :field="`editors.${index}.text`"/>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-12 mt-2">
-                <div @click="onAddEditor" class="btn btn-primary">Добавить редактор</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12">
-            <!-- Область для виджетов -->
             <div class="form-group row">
               <h4 class="col-md-12">Редакторы</h4>
               <div class="col-12">
                 <AdminPosition
                         :edit="edit"
                         :form="form"
-                        :data="form.positions.tut_alerts"
-                        prefixDataForm="positions.tut_alerts"
+                        :data="form.positions.use_code"
+                        prefixDataForm="positions.use_code"
                 ></AdminPosition>
               </div>
             </div>
           </div>
 
+          <div class="col-12">
+            <!-- Недочёты и предупреждения -->
+            <div class="form-group row">
+              <h4 class="col-md-12">Недостатки плагина</h4>
+              <div class="col-12">
+                <AdminPosition
+                  :edit="edit"
+                  :form="form"
+                  :data="form.positions.tut_alerts"
+                  prefixDataForm="positions.tut_alerts"
+                ></AdminPosition>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="form-group row">
@@ -293,15 +256,35 @@
             rules: [
               {
                 name: 'regex:/^alert$/mi',
-                count: 2,
-                not: {
+                props: {
+                  'variant': ['regex:/^warning$/im']
+                }
+                //count: 2,
+                /*not: {
                   props: {
                     'variant': ['regex:/^(light|dark)$/im']
                   }
-                }
+                }*/
               },
-              {
+              /*{
                 name: 'regex:/^button$/imu'
+              }*/
+            ],
+            widgets: []
+          },
+
+          'use_code': {
+            //todo-fast убрать rules их нечего хранить на сервере и data
+            data: {
+              name: 'Код для копирования'
+            },
+            rules: [
+              {
+                name: 'regex:/^alert$/mi',
+                props: {
+                  'variant': ['regex:/^warning$/im']
+                }
+
               }
             ],
             widgets: []
