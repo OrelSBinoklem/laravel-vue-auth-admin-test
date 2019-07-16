@@ -4,7 +4,8 @@
     .wrap-scroll-list-menu
       vue-scroll(:ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}")
         .wrap-list-menu
-          component(v-for="type in types" :is="slugToNameComponent(type.slug)" v-bind="{megamenu: openMegamenu}" :key="type.slug")
+          div(v-for="type in types" )
+            component(:is="slugToNameComponent(type.slug)" v-bind="{megamenu: openMegamenu}" :key="type.slug")
     .megamenu-wrap(v-if='openMegamenu')
       //vue-scroll(:ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}")
       .megamenu-container.container-fluid
@@ -25,12 +26,20 @@
   import _ from 'lodash'
   import {types} from "../content-widgets/types";
   import MenuAlert from "../content-widgets/alert/Menu";
+  import MenuCallout from "../content-widgets/callout/Menu";
+  import MenuCasualHtml from "../content-widgets/casual_html/Menu";
+  import MenuCodeEditor from "../content-widgets/code_editor/Menu";
+  import MenuCopyCode from "../content-widgets/copy_code/Menu";
 
   export default {
     name: "MenuWidgets",
 
     components: {
-      MenuAlert
+      MenuAlert,
+      MenuCallout,
+      MenuCasualHtml,
+      MenuCodeEditor,
+      MenuCopyCode
     },
 
     props: {

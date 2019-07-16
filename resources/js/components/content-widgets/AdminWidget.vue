@@ -5,8 +5,10 @@
     .form-control.d-none(:class="{ 'is-invalid': form.errors.has(`${prefixDataForm}`) }")
     has-error(:form='form', :field='`${prefixDataForm}`')
     component(v-bind:is="data.name" v-bind="data.props" :edit="edit" :form="form" :data="data" :prefixDataForm="prefixDataForm")
-      template(v-if="data.positions" v-for="(position, name) in data.positions" :slot="name")
+      //template(v-if="data.positions" v-for="(position, name) in data.positions" :slot="name")
         AdminPosition(:edit="edit" :form="form" :data="position" :prefixDataForm="prefixDataForm + '.positions.' + name")
+    template(v-if="data.positions" v-for="(position, name) in data.positions")
+      AdminPosition(:edit="edit" :form="form" :data="position" :prefixDataForm="prefixDataForm + '.positions.' + name")
 </template>
 
 <script>
@@ -14,15 +16,21 @@
   import _ from 'lodash'
   import { mapGetters } from 'vuex'
   import Validator from 'validatorjs'
-  import AdminPosition from './AdminPosition'
   import alert from './alert/Admin'
+  import callout from './callout/Admin'
+  import casual_html from './casual_html/Admin'
+  import code_editor from './code_editor/Admin'
+  import copy_code from './copy_code/Admin'
 
   export default {
     name: "AdminWidget",
 
     components: {
-      AdminPosition,
-      alert
+      alert,
+      callout,
+      casual_html,
+      code_editor,
+      copy_code
     },
 
     props: {

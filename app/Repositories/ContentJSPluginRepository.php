@@ -180,19 +180,30 @@ class ContentJSPluginRepository extends BaseContentRepository {
             'published' => 'required|integer|between:0,1'
         ];
         $this->validateWidgetsData($data,$rules);
+        debug('validatorUpdate');
+        debug($data);
         return Validator::make($data, $rules);
     }
 
     protected function getPositionsRules(array $data) {
         return [
+            'description' => [
+                'rules' => [
+                    [
+                        'name' => [
+                            'regex:/^casual_html$/im'
+                        ]
+                    ]
+                ]
+            ],
             'tut_alerts' => [
                 'rules' => [
                     [
                         'name' => [
-                            'regex:/^alert$/im'
+                            'regex:/^callout/im'
                         ],
                         'props' => [
-                            'variant' => ['regex:/^warning$/im']
+                            'variant' => ['regex:/^danger|warning$/im']
                         ]
                         //'count' => 2,
                         /*'not' => [
@@ -210,10 +221,7 @@ class ContentJSPluginRepository extends BaseContentRepository {
                 'rules' => [
                     [
                         'name' => [
-                            'regex:/^alert$/im'
-                        ],
-                        'props' => [
-                            'variant' => ['regex:/^warning$/im']
+                            'regex:/^copy_code$/im'
                         ]
                     ]
                 ]

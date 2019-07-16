@@ -8,6 +8,8 @@ export const state = {
   selected: null,
   widgetsTypes: null,
   widgetsTypesObject: null,
+
+  selectedCopyCode: null
 }
 
 // getters
@@ -15,6 +17,8 @@ export const getters = {
   selected: state => state.selected,
   widgetsTypes: state => state.widgetsTypes,
   widgetsTypesObject: state => state.widgetsTypesObject,
+
+  selectedCopyCode: state => state.selectedCopyCode,
 }
 
 // mutations
@@ -26,6 +30,10 @@ export const mutations = {
   [types.SET_WIDGETS_TYPES] (state, payload) {
     state.widgetsTypes = payload
     state.widgetsTypesObject = _.keyBy(payload, 'slug');
+  },
+
+  [types.SET_SELECT_COPY_CODE] (state, payload) {
+    state.selectedCopyCode = payload
   }
 }
 
@@ -37,5 +45,9 @@ export const actions = {
 
   setWidgetsTypes ({ commit, dispatch }, payload) {
     commit(types.SET_WIDGETS_TYPES, payload)
+  },
+
+  setSelectCopyCode ({ commit, dispatch }, payload) {
+    commit(types.SET_SELECT_COPY_CODE, payload)
   }
 }

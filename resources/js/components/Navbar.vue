@@ -17,6 +17,8 @@
           </li> -->
         </ul>
 
+        <slot/>
+
         <ul class="navbar-nav ml-auto">
           <!-- Authenticated -->
           <li v-if="user" class="nav-item dropdown">

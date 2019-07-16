@@ -115,15 +115,30 @@
           </div>
 
           <div class="col-12">
-            <!-- Редакторы -->
+            <!-- Зачем и как работает -->
             <div class="form-group row">
-              <h4 class="col-md-12">Редакторы</h4>
+              <h4 class="col-md-12">Зачем и как работает</h4>
               <div class="col-12">
                 <AdminPosition
-                        :edit="edit"
-                        :form="form"
-                        :data="form.positions.use_code"
-                        prefixDataForm="positions.use_code"
+                  :edit="edit"
+                  :form="form"
+                  :data="form.positions.description"
+                  prefixDataForm="positions.description"
+                ></AdminPosition>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <!-- Код для копирования -->
+            <div class="form-group row">
+              <h4 class="col-md-12">Код для копирования</h4>
+              <div class="col-12">
+                <AdminPosition
+                  :edit="edit"
+                  :form="form"
+                  :data="form.positions.use_code"
+                  prefixDataForm="positions.use_code"
                 ></AdminPosition>
               </div>
             </div>
@@ -248,6 +263,19 @@
         categories_ids: [],
         tags_ids: [],
         positions: {
+          'description': {
+            //todo-fast убрать rules их нечего хранить на сервере и data
+            data: {
+              name: 'Зачем и как работает'
+            },
+            rules: [
+              {
+                name: 'regex:/^casual_html$/mi'
+              }
+            ],
+            widgets: []
+          },
+
           'tut_alerts': {
             //todo-fast убрать rules их нечего хранить на сервере и data
             data: {
@@ -255,9 +283,9 @@
             },
             rules: [
               {
-                name: 'regex:/^alert$/mi',
+                name: 'regex:/^callout$/mi',
                 props: {
-                  'variant': ['regex:/^warning$/im']
+                  'variant': ['regex:/^danger|warning$/im']
                 }
                 //count: 2,
                 /*not: {
@@ -280,11 +308,7 @@
             },
             rules: [
               {
-                name: 'regex:/^alert$/mi',
-                props: {
-                  'variant': ['regex:/^warning$/im']
-                }
-
+                name: 'regex:/^copy_code$/mi'
               }
             ],
             widgets: []

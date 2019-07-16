@@ -1,5 +1,5 @@
 <template lang="pug">
-  .position(@click="onClick" :class="{active: current === data}")
+  .position(@click.stop="onClick" :class="{active: current === data}")
     .name {{data.data.name}}
       span.error-count(v-if="__errorsCount()"): fa(icon='exclamation-triangle')
       span.rules
@@ -10,14 +10,14 @@
               span.rule-name(v-if="'name' in rule") name: {{rule.name + ''}}
               span.rule-count(v-if="'count' in rule") {{', '}}
                 span.rule-count-text(:class="{error: rule.errorCount}") count: {{rule.count}}
-              span.rule-props(v-if="'props' in rule")
+              span.rule-props(v-if="'props' in rule") {{', '}}
                 span.rule-prop(v-for="(prop, propName) in rule.props")
                   span.rule-prop-name {{propName + ': '}}
                   span.rule-prop-value {{prop + ''}}
               span.rule-not(v-if="'not' in rule") {{', '}}
                 span.rule-not-text {{'NOT: '}}
                 span.rule-name(v-if="'name' in rule.not") name: {{rule.not.name + ''}}
-                span.rule-props(v-if="'props' in rule.not")
+                span.rule-props(v-if="'props' in rule.not") {{', '}}
                   span.rule-prop(v-for="(prop, propName) in rule.not.props")
                     span.rule-prop-name {{propName + ': '}}
                     span.rule-prop-value {{prop + ''}}
@@ -39,14 +39,11 @@
   import { mapGetters } from 'vuex'
   import Validator from 'validatorjs'
   import {types as widgetTypes} from './types'
-  import AdminWidget from './AdminWidget'
 
   export default {
     name: "AdminPosition",
 
     components: {
-      AdminWidget,
-
       draggable
     },
 
@@ -218,6 +215,7 @@
     display: inline-block
     font-size: 12px
     font-weight: bold
+    text-transform: uppercase
 
   .error-count
     position: absolute

@@ -8,14 +8,28 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Arr;
 
 use App\Orel\Content\Widgets\Alert as WidgetAlert;
+use App\Orel\Content\Widgets\Callout as WidgetCallout;
+use App\Orel\Content\Widgets\CasualHtml as WidgetCasualHtml;
+use App\Orel\Content\Widgets\CodeEditor as WidgetCodeEditor;
+use App\Orel\Content\Widgets\CopyCode as WidgetCopyCode;
 
 class ValidatorServiceProvider extends ServiceProvider {
 
     protected $widgets_rules = [];
 
-    public function boot(WidgetAlert $widgetAlert)
+    public function boot(
+        WidgetAlert $widgetAlert,
+        WidgetCallout $widgetCallout,
+        WidgetCasualHtml $widgetCasualHtml,
+        WidgetCodeEditor $widgetCodeEditor,
+        WidgetCopyCode $widgetCopyCode
+    )
     {
         $this->widgets_rules['alert'] = $widgetAlert;
+        $this->widgets_rules['callout'] = $widgetCallout;
+        $this->widgets_rules['casual_html'] = $widgetCasualHtml;
+        $this->widgets_rules['code_editor'] = $widgetCodeEditor;
+        $this->widgets_rules['copy_code'] = $widgetCopyCode;
 
         $this->app['validator']->extend('arr_uniq_field', function ($attribute, $value, $parameters)
         {
@@ -134,7 +148,7 @@ class ValidatorServiceProvider extends ServiceProvider {
                 return $count === (int)$rule_pos['count'];
             } else if(preg_match("/^[1-9]\d*\+$/i", $rule_pos['count'] . '')) {
                 return $count >= (int)preg_replace('/\D/', '', $rule_pos['count'] . '');
-            } else if(preg_match("/^(?:\d+)\-(?:[1-9]\d*)$/i", $rule_pos['count'] . '', $matches)) {
+            } else if(preg_match("/^(\d+)\-([1-9]\d*)$/i", $rule_pos['count'] . '', $matches)) {
                 return $count >= (int)$matches[1] && $count <= (int)$matches[2];
             }
         } else {

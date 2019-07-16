@@ -3,6 +3,10 @@
 namespace App\Repositories;
 
 use App\Orel\Content\Widgets\Alert as WidgetAlert;
+use App\Orel\Content\Widgets\Callout as WidgetCallout;
+use App\Orel\Content\Widgets\CasualHtml as WidgetCasualHtml;
+use App\Orel\Content\Widgets\CodeEditor as WidgetCodeEditor;
+use App\Orel\Content\Widgets\CopyCode as WidgetCopyCode;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
@@ -13,6 +17,10 @@ class BaseContentRepository extends VueTableRepository {
 
     public function __construct() {
         $this->widgets_rules['alert'] = new WidgetAlert();
+        $this->widgets_rules['callout'] = new WidgetCallout();
+        $this->widgets_rules['casual_html'] = new WidgetCasualHtml();
+        $this->widgets_rules['code_editor'] = new WidgetCodeEditor();
+        $this->widgets_rules['copy_code'] = new WidgetCopyCode();
     }
 
     public function getPublicWhereInSlugs(array $slugs) {
@@ -61,6 +69,8 @@ class BaseContentRepository extends VueTableRepository {
                 $positionRules = $FIRST
                     ? $this->getPositionsRules($data_original)
                     : $this->widgets_rules[$dataWidget['name']]->getPositionsRules($dataWidget);
+                //debug('rules');
+                //debug($positionRules);
                 //
                 foreach ($positionRules as $key => $position) {
                     $allRules[$FIRST ? 'positions.' . $key : $prefixDataForm . '.positions.' . $key] = 'required|position_widgets_count';
@@ -68,11 +78,11 @@ class BaseContentRepository extends VueTableRepository {
                         //Вживление правил
                         $dataWidget['positions'][$key]['rules'] = $position['rules'];
 
-                        $prefixDataForm .= (!$FIRST ? '.' : '') . 'positions.' . $key;
+                        $prefixDataFormPos = $prefixDataForm . (!$FIRST ? '.' : '') . 'positions.' . $key;
                         if(isset($dataWidget['positions'][$key]['widgets'])) {
                             foreach ($dataWidget['positions'][$key]['widgets'] as $key_w => $widget) {
-
-                                $this->rulesWidgets($data_original, $widget,$allRules, $prefixDataForm . '.widgets.' . (int)$key_w,  $prefixDataForm, FALSE);
+                                //$dataWidget['positions'][$key]['widgets'][$key_w] токо так сохраняються изменения в следующей итерации
+                                $this->rulesWidgets($data_original, $dataWidget['positions'][$key]['widgets'][$key_w], $allRules, $prefixDataFormPos . '.widgets.' . (int)$key_w,  $prefixDataFormPos, FALSE);
 
                             }
                         }

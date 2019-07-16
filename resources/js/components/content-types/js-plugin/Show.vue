@@ -4,12 +4,14 @@
       <div v-if="data !== null" class="content">
         <h2>{{data.title}}</h2>
         <div>
-          <div v-for="alert in data.meta_data.alerts" class="bs-callout bs-callout-warning">
-            <h4>{{alert.title}}</h4>
-            <p>{{alert.text}}</p>
-          </div>
+          <ClientPositionWidget
+            :data="data.meta_data.positions.description"
+          ></ClientPositionWidget>
           <ClientPositionWidget
             :data="data.meta_data.positions.tut_alerts"
+          ></ClientPositionWidget>
+          <ClientPositionWidget
+            :data="data.meta_data.positions.use_code"
           ></ClientPositionWidget>
         </div>
       </div>

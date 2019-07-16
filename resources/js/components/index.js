@@ -5,6 +5,9 @@ import Button from './Button'
 import Checkbox from './Checkbox'
 import { HasError, AlertError, AlertSuccess } from 'vform'
 
+import AdminPosition from './content-widgets/AdminPosition'
+import AdminWidget from './content-widgets/AdminWidget'
+
 // Components that are registered globaly.
 [
   Card,
@@ -13,7 +16,9 @@ import { HasError, AlertError, AlertSuccess } from 'vform'
   Checkbox,
   HasError,
   AlertError,
-  AlertSuccess
+  AlertSuccess,
+  AdminPosition,
+  AdminWidget
 ].forEach(Component => {
   Vue.component(Component.name, Component)
 })

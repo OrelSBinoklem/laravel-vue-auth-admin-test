@@ -14,6 +14,8 @@
         <locale-dropdown/>
       </ul>
 
+      <slot/>
+
       <ul class="navbar-nav">
         <!-- Authenticated -->
         <li v-if="user" class="nav-item dropdown">
