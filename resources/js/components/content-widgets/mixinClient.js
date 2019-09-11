@@ -9,7 +9,10 @@ export const mixinClient = {
   },
 
   props: {
-
+    navHash: {
+        type: Object,
+        required: false
+    }
   },
 
   data() {

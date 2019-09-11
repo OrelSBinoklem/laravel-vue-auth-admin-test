@@ -7,13 +7,17 @@ export const state = {
   menuCollapsed: String(Cookies.get('interface.menu.collapsed')) === 'true',
   contentPluginsSidebarMegamenu: Cookies.getJSON('interface.content.plugins.sidebar_megamenu.state') || {},
   priorityCopyTypeCode: Cookies.getJSON('interface.priorityCopyTypeCode') || {},
+  hashGroups: {},
+  navHashes: []
 }
 
 // getters
 export const getters = {
   menuCollapsed: (state) => {return state.menuCollapsed},
   contentPluginsSidebarMegamenu: (state) => {return state.contentPluginsSidebarMegamenu},
-  priorityCopyTypeCode: (state) => {return state.priorityCopyTypeCode}
+  priorityCopyTypeCode: (state) => {return state.priorityCopyTypeCode},
+  hashGroups: (state) => {return state.hashGroups},
+  navHashes: (state) => {return state.navHashes}
 }
 
 // mutations
@@ -31,6 +35,14 @@ export const mutations = {
   [types.SET_PRIORITY_COPY_TYPE_CODE_STATE] (state, payload ) {
     state.priorityCopyTypeCode = payload
     Cookies.set('interface.priorityCopyTypeCode', payload, { expires: 365 })
+  },
+
+  [types.SET_HASH_GROUPS] (state, payload ) {
+    state.hashGroups = payload
+  },
+
+  [types.SET_NAV_HASHES] (state, payload ) {
+    state.navHashes = payload
   }
 }
 
@@ -46,5 +58,13 @@ export const actions = {
 
   savePriorityCopyTypeCode ({ commit, dispatch }, payload) {
     commit(types.SET_PRIORITY_COPY_TYPE_CODE_STATE, payload)
+  },
+
+  setHashGroups ({ commit, dispatch }, payload) {
+    commit(types.SET_HASH_GROUPS, payload)
+  },
+
+  setNavHashes ({ commit, dispatch }, payload) {
+    commit(types.SET_NAV_HASHES, payload)
   }
 }

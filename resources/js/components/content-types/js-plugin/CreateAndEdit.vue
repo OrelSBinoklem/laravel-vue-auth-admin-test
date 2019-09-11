@@ -115,6 +115,21 @@
           </div>
 
           <div class="col-12">
+            <!-- Тест скролла по хешам -->
+            <div class="form-group row">
+              <h4 class="col-md-12">Тест скролла по хешам</h4>
+              <div class="col-12">
+                <AdminPosition
+                        :edit="edit"
+                        :form="form"
+                        :data="form.positions.alerts_scroll_test"
+                        prefixDataForm="positions.alerts_scroll_test"
+                ></AdminPosition>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
             <!-- Зачем и как работает -->
             <div class="form-group row">
               <h4 class="col-md-12">Зачем и как работает</h4>
@@ -263,6 +278,18 @@
         categories_ids: [],
         tags_ids: [],
         positions: {
+          'alerts_scroll_test': {
+            data: {
+              name: 'Тест скролла по хешам'
+            },
+            rules: [
+              {
+                name: 'regex:/^alert$/mi'
+              }
+            ],
+            widgets: []
+          },
+
           'description': {
             //todo-fast убрать rules их нечего хранить на сервере и data
             data: {

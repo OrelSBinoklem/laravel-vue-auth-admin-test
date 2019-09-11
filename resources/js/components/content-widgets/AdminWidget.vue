@@ -121,11 +121,11 @@
     padding: 5px
     min-width: 30px
     min-height: 15px
-    outline: 1px dashed #000
+    background-color: #F7F9FB
+    outline: 1px solid #7DBCFB
     outline-offset: -1px
     &.active
-      outline-width: 3px
-      outline-style: solid
+      outline: 3px solid #000
       outline-offset: -2px
 
   .name

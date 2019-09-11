@@ -11,7 +11,12 @@ class Alert extends WidgetsTypesRules {
         return [
             'props.variant' => 'required|in:primary,secondary,success,danger,warning,info,light,dark',
 
-            'props.html' => 'required|string'
+            'props.html' => 'required|string',
+
+            'props.navHash' => 'array',
+            'props.navHash.title' => 'string|max:255',
+            'props.navHash.slug' => 'alpha_dash|max:255',
+            'props.navHash.group' => 'alpha_dash|max:255',
         ];
     }
 

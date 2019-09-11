@@ -3,6 +3,8 @@
     // Material
     .form-group.row
       .col-12
+        admin-content-form-hash(v-bind="{form, data, prefixDataForm}")
+      .col-12.mt-3
         b-form-select(v-model='data.props.variant', :options='variantOptions')
         .form-control.d-none(:class="{ 'is-invalid': form.errors.has(`${prefixDataForm}.props.variant`) }")
         has-error(:form='form', :field='`${prefixDataForm}.props.variant`')

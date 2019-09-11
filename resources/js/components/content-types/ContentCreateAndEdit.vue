@@ -50,13 +50,25 @@
         return 'type-' + this.type.component + '-create-and-edit'
       },
     },
-    // watch: {},
+    watch: {
+      type(type) {
+        if('hashGroups' in type)
+          this.$store.dispatch('interface/setHashGroups', type.hashGroups)
+        else
+          this.$store.dispatch('interface/setHashGroups', {})
+      }
+    },
     methods: {
       onUpdated (e) {
         this.$emit('updated', e)
       }
     },
-    // created() {},
+    created() {
+      if('hashGroups' in this.type)
+        this.$store.dispatch('interface/setHashGroups', this.type.hashGroups)
+      else
+        this.$store.dispatch('interface/setHashGroups', {})
+    },
     // mounted() {},
   }
 </script>

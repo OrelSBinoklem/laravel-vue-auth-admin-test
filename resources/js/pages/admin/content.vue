@@ -55,11 +55,14 @@
         this.$router.push({ name: 'admin.content.type', params: { type: this.contentTypes[0].slug } })
         this.currentType = this.contentTypes[0]
         this.show = true
+
       } else if(this.$route.name == 'admin.content.type') {
         this.show = true
+
       } else if(this.$route.name == 'admin.content.create') {
         this.edit = false
         this.show = false
+
       } else if(this.$route.name == 'admin.content.update') {
         this.edit = true
         this.show = false

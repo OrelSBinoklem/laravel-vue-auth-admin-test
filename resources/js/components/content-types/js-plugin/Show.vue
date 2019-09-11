@@ -5,6 +5,9 @@
         <h2>{{data.title}}</h2>
         <div>
           <ClientPositionWidget
+            :data="data.meta_data.positions.alerts_scroll_test"
+          ></ClientPositionWidget>
+          <ClientPositionWidget
             :data="data.meta_data.positions.description"
           ></ClientPositionWidget>
           <ClientPositionWidget
@@ -46,10 +49,12 @@
 
     methods: {
       __loadItem (slug) {
+        console.log('__loadItem', slug);
         axios
           .get('/api/content/js-plugin', {params: {slug}})
           .then(response => {
             this.data = response.data
+            this.$emit('load', this.data)
           }).catch(err => {
             if(err.response.status == 404) {
               this.$router.push(404)

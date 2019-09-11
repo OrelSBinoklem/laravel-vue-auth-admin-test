@@ -17,7 +17,11 @@ class CopyCode extends WidgetsTypesRules {
             'props.max_lines' => 'integer|between:1,999',
             'props.editors' => 'required|array',
             'props.editors.*.heading' => 'string',
-            'props.editors.*.variant_or_group' => 'in:layouts,styles,js,data,jade,html,xml,svg,css,sass,scss,less,stylus,javascript,typescript,coffee,json,yaml,php'
+            'props.editors.*.variant_or_group' => 'in:layouts,styles,js,data,jade,html,xml,svg,css,sass,scss,less,stylus,javascript,typescript,coffee,json,yaml,php',
+            'props.navHash' => 'array',
+            'props.navHash.title' => 'string|max:255',
+            'props.navHash.slug' => 'alpha_dash|max:255',
+            'props.navHash.group' => 'alpha_dash|max:255',
         ];
     }
 

@@ -1,5 +1,10 @@
 <template lang="pug">
-  b-alert(:variant='variant' v-html="html" show)
+  b-alert(
+    :id="!!navHash && ((!!navHash.group ? navHash.group + '-' : '') + navHash.slug)"
+    :class="{'is-hash': !!navHash}"
+    :variant='variant'
+    v-html="html"
+    show)
 </template>
 
 <script>

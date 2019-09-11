@@ -28,7 +28,7 @@
         .widget-container
           AdminWidget(:edit="edit" :form="form" :data="widget" :positionData="data" :prefixDataForm="prefixDataForm + '.widgets.' + index")
           b-button.btn-widget-delete(variant='outline-danger' @click='onDeleteWidget(index)'): fa(icon='times', size='lg')
-    b-button.btn-widget-clone(v-if="'widgets' in data && data.widgets.length" block variant='outline-success' @click='onCloneWidget'): fa(:icon="['far', 'clone']")
+    b-button.btn-widget-clone(v-if="'widgets' in data && data.widgets.length" block variant='success' @click='onCloneWidget'): fa(:icon="['far', 'clone']")
 </template>
 
 <script>
@@ -200,14 +200,14 @@
     padding: 5px
     min-width: 30px
     min-height: 15px
-    outline: 1px dashed red
+    outline: 1px solid #FBBA78
     outline-offset: -1px
+    background-color: #FBF9F7
     &.active
-      outline-width: 3px
-      outline-style: solid
+      outline: 3px solid red
       outline-offset: -2px
     ~ .position
-      margin-top: 5px
+      margin-top: 30px
 
   .name
     position: relative
@@ -229,6 +229,7 @@
     top: 100%
     left: 0
     z-index: 1
+    text-transform: none
 
   .name:hover .rules
     display: block
@@ -246,7 +247,7 @@
   .widget-container
     position: relative
     ~ .widget-container
-      margin-top: 5px
+      margin-top: 30px
 
   .btn-widget-delete
     display: none
@@ -254,7 +255,7 @@
     top: 0
     right: 0
 
-  .widget-container:hover .btn-widget-delete
+  .widget-container:hover > .btn-widget-delete
     display: block
 
   .btn-widget-clone

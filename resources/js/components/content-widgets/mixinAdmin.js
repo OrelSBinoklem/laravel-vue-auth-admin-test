@@ -1,6 +1,11 @@
 import Form from 'vform'
+import AdminContentFormHash from '../scroll-hash/AdminContentFormHash'
 
 export const mixinAdmin = {
+  components: {
+    AdminContentFormHash
+  },
+
   props: {
     edit: {
       type: Boolean,
@@ -24,7 +29,11 @@ export const mixinAdmin = {
   },
 
   beforeMount() {
-    if(!('positions' in this.data)) {this.data.positions = {}}
+    if(!('props' in this.data))
+      Vue.set(this.data, 'props', {})
+
+    if(!('positions' in this.data))
+      this.data.positions = {}
 
     if(!this.edit) {
       for(let key in this.positions) {

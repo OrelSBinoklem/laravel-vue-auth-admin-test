@@ -245,4 +245,12 @@
   position: absolute
   top: 9px
   right: 35px
+
+.card
+  h1
+    font: 18px/22px Arial, sans-serif
+    color: #333333
+  a
+    font: 16px/18px Tahoma, sans-serif
+    text-decoration: none
 </style>

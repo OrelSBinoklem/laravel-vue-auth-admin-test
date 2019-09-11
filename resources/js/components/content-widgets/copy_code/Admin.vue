@@ -3,6 +3,8 @@
     // Material
     .form-group.row
       .col-12
+        admin-content-form-hash(v-bind="{form, data, prefixDataForm}")
+      .col-12.mt-3
         b-form-select(v-model='data.props.type_visible', :options='typesVisibleOptions')
         .form-control.d-none(:class="{ 'is-invalid': form.errors.has(`${prefixDataForm}.props.type_visible`) }")
         has-error(:form='form', :field='`${prefixDataForm}.props.type_visible`')

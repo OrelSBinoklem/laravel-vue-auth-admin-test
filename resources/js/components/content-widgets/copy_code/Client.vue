@@ -7,7 +7,7 @@
         .col-auto: b-button(
           variant='outline-primary'
           v-clipboard:copy='getPriorityEditor(editor.variant_or_group, positions["editor" + index].widgets).props.code'
-          v-clipboard:success="onCopy" v-clipboard:error="onErrorCopy")
+          v-clipboard:success="() => onCopy(editor.heading)" v-clipboard:error="onErrorCopy")
           | {{getPriorityEditor(editor.variant_or_group, positions["editor" + index].widgets).props.variant}}&nbsp;
           fa(:icon="['far', 'copy']")
       .row.type-row__editors
@@ -24,7 +24,7 @@
             block
             variant='outline-primary'
             v-clipboard:copy='getPriorityEditor(editors[currentTabIndex].variant_or_group, positions["editor" + currentTabIndex].widgets).props.code'
-            v-clipboard:success="onCopy" v-clipboard:error="onErrorCopy") Copy!
+            v-clipboard:success="() => onCopy(editors[currentTabIndex].heading)" v-clipboard:error="onErrorCopy") Copy!
           ul.list-group
             li.list-group-item.d-flex.justify-content-between.align-items-center(
               v-for="(editor, index) in editors"
@@ -45,7 +45,7 @@
           .col-auto: b-button(
             variant='outline-primary'
             v-clipboard:copy='getPriorityEditor(editor.variant_or_group, positions["editor" + index].widgets).props.code'
-            v-clipboard:success="onCopy" v-clipboard:error="onErrorCopy")
+            v-clipboard:success="() => onCopy(editor.heading)" v-clipboard:error="onErrorCopy")
             | {{getPriorityEditor(editor.variant_or_group, positions["editor" + index].widgets).props.variant}}&nbsp;
             fa(:icon="['far', 'copy']")
         .col-12.type-casual__body(@click="onClickEditor(editor)")
@@ -182,10 +182,10 @@
         }
       },
 
-      onCopy() {
+      onCopy(heading) {
         this.$eventHub.$emit('open-modal', {
           type: 'success',
-          title: null,
+          title: heading,
           message: 'Copied!'
         });
       },

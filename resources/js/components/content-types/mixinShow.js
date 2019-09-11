@@ -1,5 +1,4 @@
 import { mapGetters } from 'vuex'
-import axios from 'axios'
 
 import ClientPositionWidget from '../content-widgets/ClientPositionWidget'
 
@@ -40,8 +39,8 @@ export const mixinShow = {
     })
   },
   watch: {
-    '$route.params': function(newVal, oldVal){
-      this.__loadItem(newVal.slug)
+    '$route.params.slug': function(newVal, oldVal){
+      this.__loadItem(newVal)
     },
   },
 }
