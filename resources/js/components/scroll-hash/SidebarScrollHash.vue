@@ -479,6 +479,7 @@ export default {
   .g-item.__full-text {
     text-overflow: clip;
     white-space: normal;
+    word-wrap: break-word;
   }
 
 </style>

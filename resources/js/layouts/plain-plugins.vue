@@ -14,12 +14,11 @@
       </b-button-group>
     </navbar>
 
-    <sidebar-megamenu
-            :menus="menus"
-            :menustart="'currentTab' in menuState ? menuState.currentTab : 'plain-plugins'"
-            :state="menuState"
-            @state-change="menuStateChange"
-    />
+    <div class="grid-menu">
+      <grid-menu
+        :data="gridMenu"
+      />
+    </div>
 
     <b-button variant="outline-primary" class="btn-open-hash-menu" @click="onOpenHashMenu"><fa icon="expand"></fa></b-button>
     <div class="plain-plugins-hash-menu" :class="{__expanded: optHashMenu.modeNoSlider}">
@@ -51,7 +50,7 @@
 
   //import NavbarFullWidth from "../components/NavbarFullWidth";
   import Navbar from '~/components/Navbar';
-  import SidebarMegamenu from '../components/sidebar-megamenu/SidebarMegamenu';
+  import GridMenu from '../components/plain-plugins/GridMenu';
   import SidebarScrollHash from '../components/scroll-hash/SidebarScrollHash';
 
   export default {
@@ -62,17 +61,28 @@
     components: {
       //NavbarFullWidth,
       Navbar,
-      SidebarMegamenu,
+      GridMenu,
       SidebarScrollHash
     },
 
     data: () => ({
-      menus: [
-        {icon: ['custom', 'jquery'], menuSlug: 'plain-plugins', color: '#0865A7'},
-        {icon: ['fab', 'wordpress'], menuSlug: 'plain-plugins2', color: '#00769D'},
-        {icon: ['fab', 'vuejs'], menuSlug: 'plain-plugins3', color: '#2EB47E'},
-        {icon: ['fab', 'laravel'], menuSlug: 'plain-plugins4', color: '#F34D38'}
-      ],
+      gridMenu: {
+        cols: [
+          'Плагины', 'Авторские', 'Заготовки'
+        ],
+        rows: [
+          {icon: ['custom', 'jquery'], color: '#0865A7'},
+          {icon: ['fab', 'wordpress'], color: '#00769D'},
+          {icon: ['fab', 'vuejs'], color: '#2EB47E'},
+          {icon: ['fab', 'laravel'], color: '#F34D38'}
+        ],
+        items: [
+          ['plain-plugins', 'test', 'test'],
+          ['plain-plugins2', 'test', 'test'],
+          ['plain-plugins3', 'test', 'test'],
+          ['plain-plugins4', 'test', 'test'],
+        ]
+      },
 
       typesPriorityCopyTypeCode: [
         {
@@ -176,11 +186,21 @@
     }
   }
 
+  .grid-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 320px;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+  }
 
   .btn-open-hash-menu {
     position: fixed;
     top: 10px;
-    right: 360px;
+    right: 320px;
   }
 
 
@@ -189,7 +209,7 @@
     top: 0;
     right: 0;
     bottom: 0;
-    width: 360px;
+    width: 320px;
     background-color: #fff;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     z-index: 1;
