@@ -188,6 +188,11 @@
 
       onClickUncollapsed() {
         this.data.open = !this.data.open;
+
+        this.$emit('toggle-branch-collapse', {
+          id: this.data.id,
+          open: this.data.open
+        })
       },
 
       __getMetaFields () {
@@ -227,7 +232,7 @@
     },
     // created() {},
     mounted() {
-      console.log(this.data);
+      console.log('this.data', this.data);
     }
   }
 </script>

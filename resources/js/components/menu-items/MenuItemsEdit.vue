@@ -10,7 +10,8 @@
           :collapsed="__itemOpened(data.id)"
           @update="onUpdate"
           @delete="onDelete"
-          @toggle="onToggle")
+          @toggle="onToggle"
+          @toggle-branch-collapse="onToggleBranchCollapse")
     b-modal#modal-delete-menu-item(ref='modal-delete-menu-item', title='Точно удалить?')
       template(slot='modal-footer')
         b-button(size='sm', variant='secondary', @click='cancelModal') Нет
@@ -180,7 +181,11 @@
         }
 
         return this.openedItems[id]
-      }
+      },
+
+      onToggleBranchCollapse (e) {
+        this.$emit('toggle-branch-collapse', e)
+      },
     },
     // created() {},
     // mounted() {},

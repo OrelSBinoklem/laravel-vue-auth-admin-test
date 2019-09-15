@@ -43,6 +43,7 @@
                   @update="onUpdate"
                   @delete="onDelete"
                   @toggle="onToggle"
+                  @toggle-branch-collapse="onToggleBranchCollapse"
                 ></menu-items-edit>
               </div>
               <div class="col-6">
@@ -186,6 +187,7 @@
       items: null,
       itemsSpecialData: null,
       openedItems: {},
+      openedItemsBranches: {},
       menus: [],
 
       addMenuForm: new Form({
@@ -333,7 +335,11 @@
 
       onToggle (e) {
         this.openedItems[e.id] = e.collapsed
-      }
+      },
+
+      onToggleBranchCollapse (e) {
+        this.openedItemsBranches[e.id] = e.open
+      },
     },
 
     watch: {
@@ -361,6 +367,14 @@
         } else {
           this.items = null
         }
+      },
+      
+      items: function (items) {
+        items.forEach((item) => {
+          if(item.id in this.openedItemsBranches) {
+            item.open = this.openedItemsBranches[item.id];
+          }
+        });
       }
     }
   }
