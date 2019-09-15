@@ -34,7 +34,17 @@
           <div class="col-10">
             <div class="row" v-if="items !== null">
               <div class="col-6">
-                <menu-items-edit :items.sync="items" :itemsSpecialData="itemsSpecialData" :maxLevel="4" :menuId="currentMenu.id" :openedItems="openedItems" @update="onUpdate" @delete="onDelete" @toggle="onToggle"></menu-items-edit>
+                <menu-items-edit
+                  :items.sync="items"
+                  :itemsSpecialData="itemsSpecialData"
+                  :maxLevel="4"
+                  :menuId="currentMenu.id"
+                  :openedItems="openedItems"
+                  @update="onUpdate"
+                  @delete="onDelete"
+                  @toggle="onToggle"
+                  @toggle-branch-collapse="onToggleBranchCollapse"
+                ></menu-items-edit>
               </div>
               <div class="col-6">
                 <menu-items-add :items.sync="items" :itemsSpecialData="itemsSpecialData" :menuId="currentMenu.id" @store="onStore"></menu-items-add>
@@ -177,6 +187,7 @@
       items: null,
       itemsSpecialData: null,
       openedItems: {},
+      openedItemsBranches: {},
       menus: [],
 
       addMenuForm: new Form({
@@ -324,7 +335,11 @@
 
       onToggle (e) {
         this.openedItems[e.id] = e.collapsed
-      }
+      },
+
+      onToggleBranchCollapse (e) {
+        this.openedItemsBranches[e.id] = e.open
+      },
     },
 
     watch: {
@@ -352,6 +367,14 @@
         } else {
           this.items = null
         }
+      },
+      
+      items: function (items) {
+        items.forEach((item) => {
+          if(item.id in this.openedItemsBranches) {
+            item.open = this.openedItemsBranches[item.id];
+          }
+        });
       }
     }
   }

@@ -1,5 +1,14 @@
 <template lang="pug">
-  div
+  .menu-item(:class="{__open: !!data.open}")
+    button.btn-uncollapsed(
+      v-if="edit"
+      type="button",
+      @click="onClickUncollapsed",
+      v-on:mousemove.stop="", v-on:mouseover.stop="", v-on:mouseout.stop="")
+      template(v-if="!!data.children && !!data.children.length")
+        fa(v-if="!data.open" :icon="['far', 'plus-square']")
+        fa(v-else :icon="['far', 'minus-square']")
+
     .card.border-secondary(:class="data.publish == 0 ? '__not-publish' : data.not_publish_parent === true ? '__not-publish-parent' : null")
       .card-header(v-if="!__isPlaceholder()") {{edit ? data.name : type}}
         small.text-muted(v-if="edit") {{type}}
@@ -9,6 +18,7 @@
           :class="isCollapsed ? '__open' : null",
           v-on:mousemove.stop="", v-on:mouseover.stop="", v-on:mouseout.stop="")
           fa(icon="caret-down")
+
       template(v-if="!__isPlaceholder()")
         b-collapse(v-model="isCollapsed", :id="edit ? 'collapse-' + data.id : 'collapse-item-edit' + data.type_id")
           .card-body(v-on:mousemove.stop="", v-on:mouseover.stop="", v-on:mouseout.stop="")
@@ -176,6 +186,15 @@
         })
       },
 
+      onClickUncollapsed() {
+        this.data.open = !this.data.open;
+
+        this.$emit('toggle-branch-collapse', {
+          id: this.data.id,
+          open: this.data.open
+        })
+      },
+
       __getMetaFields () {
         switch(this.data.type_id) {
           case 1:
@@ -212,45 +231,71 @@
       }
     },
     // created() {},
+    mounted() {
+      console.log('this.data', this.data);
+    }
   }
 </script>
 
 <style scoped lang="sass">
-.card
-  min-height: 37px
-.card.__not-publish
-  opacity: 0.5
-.card.__not-publish-parent
-  border-style: dashed
-.card-header
-  position: relative
-  padding: 0.4rem 0.5rem
-.card-body
-  padding: 0.5rem
-.__edit
-  display: block
-  position: absolute
-  top: 0
-  right: 0
-  width: 35px
-  height: 100%
-  border: none
-  outline: none
-  background: transparent
-  cursor: pointer
-  transition: transform 0.2s linear
-.__edit.__open
-  transform: scaleY(-1)
-.card-header small
-  position: absolute
-  top: 9px
-  right: 35px
+  .menu-item
+    position: relative
 
-.card
-  h1
-    font: 18px/22px Arial, sans-serif
-    color: #333333
-  a
-    font: 16px/18px Tahoma, sans-serif
-    text-decoration: none
+  .btn-uncollapsed
+    display: block
+    position: absolute
+    top: 0
+    right: 100%
+    width: 30px
+    height: 100%
+    border: none
+    outline: none
+    background: transparent
+    cursor: pointer
+  .btn-uncollapsed:hover
+    background-color: #eee
+  .btn-uncollapsed svg
+    position: relative
+    background-color: #F7F9FB
+
+  .card
+    min-height: 37px
+  .card.__not-publish
+    opacity: 0.5
+  .card.__not-publish-parent
+    border-style: dashed
+  .card-header
+    position: relative
+    padding: 0.4rem 0.5rem
+  .card-body
+    padding: 0.5rem
+  .__edit
+    display: block
+    position: absolute
+    top: 0
+    right: 0
+    width: 35px
+    height: 100%
+    border: none
+    outline: none
+    background: transparent
+    cursor: pointer
+  .__edit:hover
+    background-color: #eee
+  .__edit svg
+    transition: transform 0.2s linear
+  .__edit.__open svg
+    transform: scaleY(-1)
+  .card-header small
+    position: absolute
+    top: 9px
+    right: 35px
+
+  .card
+    h1
+      font: 18px/22px Arial, sans-serif
+      color: #333333
+    a
+      font: 16px/18px Tahoma, sans-serif
+      text-decoration: none
 </style>

@@ -1,8 +1,17 @@
 <template lang="pug">
   div.tree-menu-items-edit
+    //todo-mark vue-draggable-nested-tree(:indent="30") связано с $pl-item-level
     vue-draggable-nested-tree(:data="items" draggable crossTree ref="tree1" @drag="ondrag" @change="onchange" :space="5" :indent="30")
       div(slot-scope="{data, store}", :key="data.id")
-        menu-item(:data="data" :edit="true" :menuId="menuId" :collapsed="__itemOpened(data.id)" @update="onUpdate" @delete="onDelete" @toggle="onToggle")
+        menu-item(
+          :data="data"
+          :edit="true"
+          :menuId="menuId"
+          :collapsed="__itemOpened(data.id)"
+          @update="onUpdate"
+          @delete="onDelete"
+          @toggle="onToggle"
+          @toggle-branch-collapse="onToggleBranchCollapse")
     b-modal#modal-delete-menu-item(ref='modal-delete-menu-item', title='Точно удалить?')
       template(slot='modal-footer')
         b-button(size='sm', variant='secondary', @click='cancelModal') Нет
@@ -52,7 +61,9 @@
       }
     },
     // computed: {},
-    // watch: {},
+    watch: {
+
+    },
     ////////////////////////////////////this.$emit('update:title', newTitle)
     methods: {
       ondrag(node) {
@@ -170,7 +181,11 @@
         }
 
         return this.openedItems[id]
-      }
+      },
+
+      onToggleBranchCollapse (e) {
+        this.$emit('toggle-branch-collapse', e)
+      },
     },
     // created() {},
     // mounted() {},
@@ -178,6 +193,8 @@
 </script>
 
 <style lang="sass">
+  //todo-mark $pl-item-level связано с vue-draggable-nested-tree(:indent="30")
+  $pl-item-level: 30px
   .tree-menu-items-edit
     .tree-node-inner-back
       box-sizing: content-box
@@ -190,4 +207,26 @@
       border-left-color: #28a745 !important
     .tree-node-children .tree-node-children .tree-node-children .tree-node-children .card
       border-left-color: #007bff !important
+    .tree-node
+      position: relative
+    .tree-node.open:before
+      content: ''
+      position: absolute
+      left: -15px
+      top: 19px
+      bottom: 19px
+      border-left: 1px solid #999
+    .tree-node .tree-node .tree-node.open:before
+      left: -15px + $pl-item-level
+    .tree-node .tree-node .tree-node .tree-node.open:before
+      left: -15px + $pl-item-level * 2
+    .tree-node .tree-node .tree-node .tree-node .tree-node.open:before
+      left: -15px + $pl-item-level * 3
+    .tree-node.open > .tree-node-children > .tree-node > .tree-node-inner-back > .tree-node-inner > div > .menu-item > .btn-uncollapsed:before
+      content: ''
+      position: absolute
+      top: 50%
+      right: 50%
+      width: 100%
+      border-bottom: 1px solid #999
 </style>
