@@ -67,6 +67,7 @@
 
     data: () => ({
       gridMenu: {
+        mainHyperMenu: '',
         cols: [
           'Плагины', 'Авторские', 'Заготовки'
         ],
