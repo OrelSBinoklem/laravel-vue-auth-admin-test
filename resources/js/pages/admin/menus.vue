@@ -34,7 +34,16 @@
           <div class="col-10">
             <div class="row" v-if="items !== null">
               <div class="col-6">
-                <menu-items-edit :items.sync="items" :itemsSpecialData="itemsSpecialData" :maxLevel="4" :menuId="currentMenu.id" :openedItems="openedItems" @update="onUpdate" @delete="onDelete" @toggle="onToggle"></menu-items-edit>
+                <menu-items-edit
+                  :items.sync="items"
+                  :itemsSpecialData="itemsSpecialData"
+                  :maxLevel="4"
+                  :menuId="currentMenu.id"
+                  :openedItems="openedItems"
+                  @update="onUpdate"
+                  @delete="onDelete"
+                  @toggle="onToggle"
+                ></menu-items-edit>
               </div>
               <div class="col-6">
                 <menu-items-add :items.sync="items" :itemsSpecialData="itemsSpecialData" :menuId="currentMenu.id" @store="onStore"></menu-items-add>
