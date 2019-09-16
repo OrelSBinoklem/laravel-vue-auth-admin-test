@@ -1,6 +1,12 @@
 <template lang="pug">
-  div.tree-menu-items-edit
+  div.tree-menu-items-edit(@mouseenter="onMouseenter" @mouseleave="onMouseleave"
+    :class="{'__mode-toggle-branches': componentMouseEntered && ctrlPressed}")
+    b-button.btn-collapse-all(variant='primary' @click='onCollapseAll').mb-3 collapse all
+    b-button.btn-expand-all(variant='primary' @click='onExpandAll').ml-3.mb-3 expand all
+    b-button(id="tooltip-tree-menu-items-edit-collapsed-tree" variant='outline-primary').ml-3.mb-3 Ctrl + LClick ?
+    b-tooltip(target="tooltip-tree-menu-items-edit-collapsed-tree" triggers="hover") <b>Ctrl + LClick по плюсу или минусу - разворачивает или сворачивает всю ветку пунктов меню соответственно!</b>
     //todo-mark vue-draggable-nested-tree(:indent="30") связано с $pl-item-level
+    //todo-mark vue-draggable-nested-tree(:space="5") связано с $mb-item
     vue-draggable-nested-tree(:data="items" draggable crossTree ref="tree1" @drag="ondrag" @change="onchange" :space="5" :indent="30")
       div(slot-scope="{data, store}", :key="data.id")
         menu-item(
@@ -57,6 +63,9 @@
 
     data() {
       return {
+        //todo-mark тут нужен глобальный обработчик нажатий клавиш, а то когда модульпоявиться непонятно нажата ли клавиша Ctrl, хотя это неважно потому что работь фишка будет только при наведении на модуль и именно при наведении будет дополнительно проверяться клавиша Ctrl
+        ctrlPressed: false,
+        componentMouseEntered: false,
         curDeleteItemData: null
       }
     },
@@ -175,6 +184,98 @@
         this.$emit('toggle', e)
       },
 
+      onToggleBranchCollapse (item) {
+        let id = item.id;
+        let ids = [];
+        let open = !item.open;
+
+        if(this.componentMouseEntered && this.ctrlPressed) {
+
+          function recursion(items, allChild) {
+            items.forEach((item) => {
+              if(item.id === id || !!allChild) {
+
+                item.open = open;
+                ids.push(item.id);
+
+                allChild = true;
+              }
+
+              if('children' in item && item.children.length) {
+                recursion(item.children, allChild);
+              }
+
+              if(item.id === id) {
+                allChild = false;
+              }
+            });
+          }
+          recursion(this.items, false);
+
+        } else {
+          ids.push(id);
+          item.open = open;
+        }
+
+        this.$emit('toggle-branch-collapse', {open: open, itemsIds: ids});
+      },
+
+      onCollapseAll() {
+        let res = {open: false, itemsIds: []};
+
+        function recursion(items) {
+          items.forEach((item) => {
+            item.open = false;
+            res.itemsIds.push(item.id);
+
+            if('children' in item && item.children.length) {
+              recursion(item.children);
+            }
+          });
+        }
+
+        recursion(this.items);
+
+        this.$emit('collapse-all', res);
+      },
+
+      onExpandAll() {
+        let res = {open: true, itemsIds: []};
+
+        function recursion(items) {
+          items.forEach((item) => {
+            item.open = true;
+            res.itemsIds.push(item.id);
+
+            if('children' in item && item.children.length) {
+              recursion(item.children);
+            }
+          });
+        }
+
+        recursion(this.items);
+
+        this.$emit('expand-all', res);
+      },
+
+      onMouseenter(e) {
+        this.ctrlPressed = e.ctrlKey;
+        this.componentMouseEntered = true;
+      },
+
+      onMouseleave(e) {
+        this.ctrlPressed = e.ctrlKey;
+        this.componentMouseEntered = false;
+      },
+
+      handlerKeydown(e) {
+        this.ctrlPressed = e.ctrlKey;
+      },
+
+      handlerKeyup(e) {
+        this.ctrlPressed = e.ctrlKey;
+      },
+
       __itemOpened (id) {
         if(!(id in this.openedItems)) {
           return false
@@ -182,19 +283,27 @@
 
         return this.openedItems[id]
       },
-
-      onToggleBranchCollapse (e) {
-        this.$emit('toggle-branch-collapse', e)
-      },
     },
-    // created() {},
+
+    created() {
+      window.addEventListener('keydown', this.handlerKeydown);
+      window.addEventListener('keyup', this.handlerKeyup);
+    },
+
     // mounted() {},
+
+    beforeDestroy() {
+      window.removeEventListener('keydown', this.handlerKeydown);
+      window.removeEventListener('keyup', this.handlerKeyup);
+    }
   }
 </script>
 
 <style lang="sass">
   //todo-mark $pl-item-level связано с vue-draggable-nested-tree(:indent="30")
   $pl-item-level: 30px
+  //todo-mark vue-draggable-nested-tree(:space="5") связано с $mb-item
+  $mb-item: 5px
   .tree-menu-items-edit
     .tree-node-inner-back
       box-sizing: content-box
@@ -209,19 +318,28 @@
       border-left-color: #007bff !important
     .tree-node
       position: relative
-    .tree-node.open:before
+    .tree-node.open > .tree-node-inner-back > .tree-node-inner > div > .menu-item > .btn-uncollapsed:after
       content: ''
       position: absolute
-      left: -15px
-      top: 19px
-      bottom: 19px
+      top: 50%
+      right: 50%
+      bottom: 0
       border-left: 1px solid #999
-    .tree-node .tree-node .tree-node.open:before
-      left: -15px + $pl-item-level
-    .tree-node .tree-node .tree-node .tree-node.open:before
-      left: -15px + $pl-item-level * 2
-    .tree-node .tree-node .tree-node .tree-node .tree-node.open:before
-      left: -15px + $pl-item-level * 3
+    .tree-node.open > .tree-node-inner-back > .tree-node-inner > div > .menu-item.__not-child > .btn-uncollapsed:after
+      display: none
+    .tree-node.open > .tree-node-children > .tree-node:before
+      content: ''
+      position: absolute
+      top: -$mb-item
+      left: -16px
+      bottom: 0
+      border-left: 1px solid #999
+    .tree-node .tree-node .tree-node.open > .tree-node-children > .tree-node:before
+      left: -16px + $pl-item-level
+    .tree-node .tree-node .tree-node .tree-node.open > .tree-node-children > .tree-node:before
+      left: -16px + $pl-item-level * 2
+    .tree-node .tree-node .tree-node .tree-node .tree-node.open > .tree-node-children > .tree-node:before
+      left: -16px + $pl-item-level * 3
     .tree-node.open > .tree-node-children > .tree-node > .tree-node-inner-back > .tree-node-inner > div > .menu-item > .btn-uncollapsed:before
       content: ''
       position: absolute
@@ -229,4 +347,6 @@
       right: 50%
       width: 100%
       border-bottom: 1px solid #999
+    &.__mode-toggle-branches .btn-uncollapsed:hover
+      background-color: #ccc
 </style>

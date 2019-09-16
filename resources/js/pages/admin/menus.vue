@@ -44,10 +44,17 @@
                   @delete="onDelete"
                   @toggle="onToggle"
                   @toggle-branch-collapse="onToggleBranchCollapse"
+                  @collapse-all="onCollapseAll"
+                  @expand-all="onExpandAll"
                 ></menu-items-edit>
               </div>
               <div class="col-6">
-                <menu-items-add :items.sync="items" :itemsSpecialData="itemsSpecialData" :menuId="currentMenu.id" @store="onStore"></menu-items-add>
+                <menu-items-add
+                  :items.sync="items"
+                  :itemsSpecialData="itemsSpecialData"
+                  :menuId="currentMenu.id"
+                  @store="onStore"
+                ></menu-items-add>
               </div>
             </div>
           </div>
@@ -137,6 +144,7 @@
 </template>
 
 <script>
+  import Vue from 'vue';
   import Form from 'vform'
   import axios from 'axios'
   import _ from 'lodash'
@@ -274,6 +282,28 @@
         this.__reloadItems()
       },
 
+      onToggle (e) {
+        this.openedItems[e.id] = e.collapsed
+      },
+
+      onToggleBranchCollapse (e) {
+        e.itemsIds.forEach((id) => {
+          this.openedItemsBranches[id] = e.open;
+        });
+      },
+
+      onCollapseAll(e) {
+        e.itemsIds.forEach((id) => {
+          this.openedItemsBranches[id] = e.open;
+        });
+      },
+
+      onExpandAll(e) {
+        e.itemsIds.forEach((id) => {
+          this.openedItemsBranches[id] = e.open;
+        });
+      },
+
       __flatToTreeArray(arr) {
         var r = []
         arr.forEach(function (a) {
@@ -331,15 +361,7 @@
         } else {
           this.items = null
         }
-      },
-
-      onToggle (e) {
-        this.openedItems[e.id] = e.collapsed
-      },
-
-      onToggleBranchCollapse (e) {
-        this.openedItemsBranches[e.id] = e.open
-      },
+      }
     },
 
     watch: {
@@ -370,11 +392,21 @@
       },
       
       items: function (items) {
-        items.forEach((item) => {
-          if(item.id in this.openedItemsBranches) {
-            item.open = this.openedItemsBranches[item.id];
-          }
-        });
+
+        function recursion(items, opened) {
+          items.forEach((item) => {
+            if(item.id in opened) {
+              Vue.set(item, 'open', opened[item.id]);
+            }
+
+            if('children' in item && item.children.length) {
+              recursion(item.children, opened);
+            }
+          });
+        }
+
+        recursion(items, this.openedItemsBranches);
+
       }
     }
   }

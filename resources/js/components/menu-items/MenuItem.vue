@@ -1,5 +1,5 @@
 <template lang="pug">
-  .menu-item(:class="{__open: !!data.open}")
+  .menu-item(:class="{__open: !!data.open, '__not-child': !data.children || !data.children.length}")
     button.btn-uncollapsed(
       v-if="edit"
       type="button",
@@ -187,12 +187,9 @@
       },
 
       onClickUncollapsed() {
-        this.data.open = !this.data.open;
-
-        this.$emit('toggle-branch-collapse', {
-          id: this.data.id,
-          open: this.data.open
-        })
+        if(!!this.data.children && !!this.data.children.length) {
+          this.$emit('toggle-branch-collapse', this.data);
+        }
       },
 
       __getMetaFields () {
@@ -231,9 +228,7 @@
       }
     },
     // created() {},
-    mounted() {
-      console.log('this.data', this.data);
-    }
+    // mounted() {}
   }
 </script>
 
@@ -254,9 +249,14 @@
     cursor: pointer
   .btn-uncollapsed:hover
     background-color: #eee
+  .menu-item.__not-child .btn-uncollapsed
+    cursor: default
+    background: transparent
   .btn-uncollapsed svg
     position: relative
     background-color: #F7F9FB
+    color: #343a40
+    z-index: 1
 
   .card
     min-height: 37px
