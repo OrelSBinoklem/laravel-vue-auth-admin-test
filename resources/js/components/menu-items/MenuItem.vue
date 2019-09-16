@@ -259,14 +259,15 @@
     z-index: 1
 
   .card
-    min-height: 37px
+    min-height: 30px
   .card.__not-publish
     opacity: 0.5
   .card.__not-publish-parent
     border-style: dashed
   .card-header
     position: relative
-    padding: 0.4rem 0.5rem
+    padding: 0.2rem 0.3rem
+    font-size: 14px
   .card-body
     padding: 0.5rem
   .__edit
@@ -288,8 +289,10 @@
     transform: scaleY(-1)
   .card-header small
     position: absolute
-    top: 9px
+    top: 5px
     right: 35px
+    font-size: 12px
+    font-weight: bold
 
   .card
     h1

@@ -7,7 +7,7 @@
     b-tooltip(target="tooltip-tree-menu-items-edit-collapsed-tree" triggers="hover") <b>Ctrl + LClick по плюсу или минусу - разворачивает или сворачивает всю ветку пунктов меню соответственно!</b>
     //todo-mark vue-draggable-nested-tree(:indent="30") связано с $pl-item-level
     //todo-mark vue-draggable-nested-tree(:space="5") связано с $mb-item
-    vue-draggable-nested-tree(:data="items" draggable crossTree ref="tree1" @drag="ondrag" @change="onchange" :space="5" :indent="30")
+    vue-draggable-nested-tree(:data="items" draggable crossTree ref="tree1" @drag="ondrag" @change="onchange" :space="3" :indent="30")
       div(slot-scope="{data, store}", :key="data.id")
         menu-item(
           :data="data"
@@ -303,7 +303,7 @@
   //todo-mark $pl-item-level связано с vue-draggable-nested-tree(:indent="30")
   $pl-item-level: 30px
   //todo-mark vue-draggable-nested-tree(:space="5") связано с $mb-item
-  $mb-item: 5px
+  $mb-item: 3px
   .tree-menu-items-edit
     .tree-node-inner-back
       box-sizing: content-box

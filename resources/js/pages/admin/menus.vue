@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid pl-6">
+  <div class="container-fluid pl-6 page-admin-menus">
     <div class="row">
       <div class="col">
         <div class="row">
@@ -7,15 +7,15 @@
             <h1>{{$t('menus')}}</h1>
           </div>
           <div class="col">
-            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-toolbar pt-2" role="toolbar" aria-label="Toolbar with button groups">
               <div class="btn-group mr-2" role="group" aria-label="First group">
-                <button @click="onAddMenu" type="button" class="btn btn-success"><fa icon="plus" size="lg"/></button>
+                <button @click="onAddMenu" type="button" class="btn btn-success"><fa icon="plus"/></button>
               </div>
               <div class="btn-group mr-2" role="group" aria-label="First group">
-                <button @click="currentMenu !== null ? onUpdateMenu($event) : null" type="button" class="btn btn-warning" :class="{disabled: currentMenu === null}"><fa :icon="['far', 'edit']" size="lg"/></button>
+                <button @click="currentMenu !== null ? onUpdateMenu($event) : null" type="button" class="btn btn-warning" :class="{disabled: currentMenu === null}"><fa :icon="['far', 'edit']"/></button>
               </div>
               <div class="btn-group" role="group" aria-label="First group">
-                <button @click="currentMenu !== null ? onDeleteMenu($event) : null" type="button" class="btn btn-danger" :class="{disabled: currentMenu === null}"><fa :icon="['far', 'trash-alt']" size="lg"/></button>
+                <button @click="currentMenu !== null ? onDeleteMenu($event) : null" type="button" class="btn btn-danger" :class="{disabled: currentMenu === null}"><fa :icon="['far', 'trash-alt']"/></button>
               </div>
             </div>
           </div>
@@ -414,4 +414,11 @@
 
 <style lang="sass" scoped>
 
+</style>
+
+<style lang="scss">
+  .page-admin-menus .tree-menu-items-edit {
+    margin-top: -45px;
+    padding-left: 30px;
+  }
 </style>
