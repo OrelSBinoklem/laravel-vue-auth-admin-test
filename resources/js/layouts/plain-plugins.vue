@@ -17,7 +17,19 @@
     <div class="grid-menu">
       <grid-menu
         :data="gridMenu"
+        @select="onSelectGridMenu"
       />
+    </div>
+
+    <div class="plugins-megamenu" v-if="openMegamenu">
+      <vue-scroll :ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}">
+        <div class="container">
+          <MegaMenu :items="curMenuData" @change-page="onChangePageMegamenu"></MegaMenu>
+        </div>
+      </vue-scroll>
+      <b-button class="btn-close-megamenu" variant="outline-primary" size="lg" @click="onCloseMegamenu">
+        <fa icon="times" size="lg"></fa>
+      </b-button>
     </div>
 
     <b-button variant="outline-primary" class="btn-open-hash-menu" @click="onOpenHashMenu"><fa icon="expand"></fa></b-button>
@@ -51,6 +63,7 @@
   //import NavbarFullWidth from "../components/NavbarFullWidth";
   import Navbar from '~/components/Navbar';
   import GridMenu from '../components/plain-plugins/GridMenu';
+  import MegaMenu from '../components/plain-plugins/MegaMenu';
   import SidebarScrollHash from '../components/scroll-hash/SidebarScrollHash';
 
   export default {
@@ -62,6 +75,7 @@
       //NavbarFullWidth,
       Navbar,
       GridMenu,
+      MegaMenu,
       SidebarScrollHash
     },
 
@@ -78,12 +92,15 @@
           {icon: ['fab', 'laravel'], color: '#F34D38'}
         ],
         items: [
-          ['plain-plugins', 'test', 'test'],
-          ['plain-plugins2', 'test', 'test'],
-          ['plain-plugins3', 'test', 'test'],
-          ['plain-plugins4', 'test', 'test'],
+          ['jq-plugins', 'jq-authors', 'jq-code'],
+          ['wp-plugins', 'wp-authors', 'wp-code'],
+          ['vue-plugins', 'vue-authors', 'vue-code'],
+          ['laravel-plugins', 'laravel-authors', 'laravel-code'],
         ]
       },
+
+      curMenuData: [],
+      openMegamenu: false,
 
       typesPriorityCopyTypeCode: [
         {
@@ -159,6 +176,18 @@
           this.optHashMenu.columnsSlide = 2;
           this.optHashMenu.modeNoSlider = false;
         }
+      },
+
+      onSelectGridMenu(item) {
+        this.openMegamenu = true;
+      },
+
+      onCloseMegamenu() {
+        this.openMegamenu = false;
+      },
+
+      onChangePageMegamenu() {
+        this.openMegamenu = false;
       }
     },
 
@@ -198,12 +227,29 @@
     z-index: 1;
   }
 
+  .plugins-megamenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    background-color: #fff;
+    z-index: 2;
+  }
+
+  .btn-close-megamenu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 1rem 2rem;
+    font-size: 2.5rem;
+  }
+
   .btn-open-hash-menu {
     position: fixed;
     top: 10px;
     right: 320px;
   }
-
 
   .plain-plugins-hash-menu {
     position: fixed;
