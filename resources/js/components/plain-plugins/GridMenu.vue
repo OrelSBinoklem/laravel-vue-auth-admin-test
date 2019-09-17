@@ -26,22 +26,15 @@
       //todo-crutch @mouseleave="onBtnLeave" в .buttons чтоб немерцали эффекты наведения когда курсор гуляет по кнопкам
       .buttons(
         :style="{gridTemplateRows: ' 1fr'.repeat(data.rows.length), gridTemplateColumns: ' 1fr'.repeat(data.cols.length)}"
-        @click="onBtnClick"
         @mouseleave="onBtnLeave")
         template(v-for="(row, i) in data.items")
           button(
             v-for="(item, j) in row"
             :class="{'end-row': i === data.items.length - 1, 'end-col': j === row.length - 1, 'hover-row': curBtnHover.row === i && curBtnHover.col > j, 'hover-col': curBtnHover.col === j && curBtnHover.row > i}"
             @mouseenter="onBtnHover(i, j)"
+            @click="onBtnClick(item)"
           )
             span.button-circle
-
-    .megamenu-wrap(v-if='openMegamenu')
-      vue-scroll(:ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}")
-        .container
-          MegaMenu(:items='curMenuData' @change-page='onChangePageMegamenu')
-      b-button.btn-close-megamenu(variant='outline-primary' size='lg' @click='onCloseMegamenu')
-        fa(icon='times' size='lg')
 
 
 </template>
@@ -50,13 +43,11 @@
 
 import $ from 'jquery';
 
-import MegaMenu from './MegaMenu';
-
 export default {
   name: 'GridMenu',
 
   components: {
-    MegaMenu
+
   },
 
   props: {
@@ -69,10 +60,7 @@ export default {
   data() {
     return {
       headerLines: [],
-      curBtnHover: {row: null, col: null},
-
-      curMenuData: [],
-      openMegamenu: false,
+      curBtnHover: {row: null, col: null}
     }
   },
 
@@ -127,17 +115,9 @@ export default {
       this.curBtnHover.col = null;
     },
 
-    onBtnClick() {
-      this.openMegamenu = true;
-    },
-
-    onCloseMegamenu() {
-      this.openMegamenu = false
-    },
-
-    onChangePageMegamenu() {
-      this.openMegamenu = false
-    },
+    onBtnClick(item) {
+      this.$emit('select', item);
+    }
   },
 
   watch: {
@@ -341,23 +321,6 @@ export default {
       width: 100px;
       height: 100px;
     }
-  }
-
-  .megamenu-wrap {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 100vw;
-    background-color: #fff;
-  }
-
-  .btn-close-megamenu {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 1rem 2rem;
-    font-size: 2.5rem;
   }
 </style>
 
