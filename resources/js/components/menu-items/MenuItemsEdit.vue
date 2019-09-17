@@ -4,7 +4,7 @@
     b-button.btn-collapse-all(variant='primary' @click='onCollapseAll').mb-3 collapse all
     b-button.btn-expand-all(variant='primary' @click='onExpandAll').ml-3.mb-3 expand all
     b-button(id="tooltip-tree-menu-items-edit-collapsed-tree" variant='outline-primary').ml-3.mb-3 Ctrl + LClick ?
-    b-tooltip(target="tooltip-tree-menu-items-edit-collapsed-tree" triggers="hover") <b>Ctrl + LClick по плюсу или минусу - разворачивает или сворачивает всю ветку пунктов меню соответственно!</b>
+    b-tooltip(target="tooltip-tree-menu-items-edit-collapsed-tree" triggers="hover") Ctrl + LClick по плюсу или минусу - разворачивает или сворачивает всю ветку пунктов меню соответственно!
     //todo-mark vue-draggable-nested-tree(:indent="30") связано с $pl-item-level
     //todo-mark vue-draggable-nested-tree(:space="5") связано с $mb-item
     vue-draggable-nested-tree(:data="items" draggable crossTree ref="tree1" @drag="ondrag" @change="onchange" :space="3" :indent="30")
