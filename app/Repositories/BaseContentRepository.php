@@ -8,10 +8,14 @@ use App\Orel\Content\Widgets\CasualHtml as WidgetCasualHtml;
 use App\Orel\Content\Widgets\CodeEditor as WidgetCodeEditor;
 use App\Orel\Content\Widgets\CopyCode as WidgetCopyCode;
 
+use App\Orel\Menus\PlainPluginsMegaMenu\Repository as PPMMRepository;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
 
 class BaseContentRepository extends VueTableRepository {
+    use PPMMRepository;
+
     protected $widgets_rules = [];
     protected $public_columns = ['id', 'title', 'slug', 'description_short', 'published', 'viewed', 'created_at', 'updated_at'];
 

@@ -17,14 +17,14 @@
     <div class="grid-menu">
       <grid-menu
         :data="gridMenu"
-        @select="onSelectGridMenu"
+        @select="onSelectMegaMenu"
       />
     </div>
 
     <div class="plugins-megamenu" v-if="openMegamenu">
       <vue-scroll :ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}">
         <div class="container">
-          <MegaMenu :items="curMenuData" @change-page="onChangePageMegamenu"></MegaMenu>
+          <MegaMenu :items="curMegaMenuItems" @change-page="onChangePageMegamenu"></MegaMenu>
         </div>
       </vue-scroll>
       <b-button class="btn-close-megamenu" variant="outline-primary" size="lg" @click="onCloseMegamenu">
@@ -59,6 +59,7 @@
   import { mapGetters } from 'vuex';
 
   import {mGetSetScrollHash} from '../components/scroll-hash/mGetSetScrollHash';
+  import {getRenderedMenuDataMixin} from '../components/menu-items/get-rendered-menu-data-mixin';
 
   //import NavbarFullWidth from "../components/NavbarFullWidth";
   import Navbar from '~/components/Navbar';
@@ -69,7 +70,7 @@
   export default {
     name: 'PlainPluginsLayout',
 
-    mixins: [mGetSetScrollHash],
+    mixins: [mGetSetScrollHash, getRenderedMenuDataMixin],
 
     components: {
       //NavbarFullWidth,
@@ -81,7 +82,6 @@
 
     data: () => ({
       gridMenu: {
-        mainHyperMenu: '',
         cols: [
           'Плагины', 'Авторские', 'Заготовки'
         ],
@@ -99,7 +99,7 @@
         ]
       },
 
-      curMenuData: [],
+      curMegaMenu: null,
       openMegamenu: false,
 
       typesPriorityCopyTypeCode: [
@@ -150,6 +150,15 @@
         return this.$store.getters['interface/priorityCopyTypeCode']
       },
 
+      curMegaMenuItems() {
+        if(this.curMegaMenu !== null) {
+          let subMenu = _.find(this.menuData, {'slug': this.curMegaMenu});
+          return !!subMenu && 'children' in subMenu ? subMenu.children : [];
+        } else {
+          return [];
+        }
+      },
+
       ...mapGetters({
         hashGroups: 'interface/hashGroups',
         navHashes: 'interface/navHashes'
@@ -178,7 +187,8 @@
         }
       },
 
-      onSelectGridMenu(item) {
+      onSelectMegaMenu(item) {
+        this.curMegaMenu = item;
         this.openMegamenu = true;
       },
 
@@ -195,12 +205,14 @@
 
     },
 
-    beforeMount() {
+    async beforeMount() {
       document.body.addEventListener('click', this.onClickOutsidePosition);
 
       if(this.$route.hash.substr(1) !== this.currentHash) {
         this.currentHashScrolled = this.currentHash = this.$route.hash.substr(1);
       }
+
+      await this.getDataMenuBySlug('plain-plugins');
     },
 
     beforeDestroy() {

@@ -8,6 +8,12 @@ use App\Events\ChangeEmail;
 use App\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
+use App\Events\MenuItemSaved;
+use App\Events\MenuItemDeleted;
+use App\Events\MenuSaved;
+use App\Events\MenuDeleted;
+use App\Listeners\ClearMenuClientCache;
+
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -21,7 +27,19 @@ class EventServiceProvider extends ServiceProvider
         ],
         ChangeEmail::class => [
             SendEmailVerificationNotification::class,
-        ]
+        ],
+        MenuItemSaved::class => [
+            ClearMenuClientCache::class,
+        ],
+        MenuItemDeleted::class => [
+            ClearMenuClientCache::class,
+        ],
+        MenuSaved::class => [
+            ClearMenuClientCache::class,
+        ],
+        MenuDeleted::class => [
+            ClearMenuClientCache::class,
+        ],
     ];
 
     /**

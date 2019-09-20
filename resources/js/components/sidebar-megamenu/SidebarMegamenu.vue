@@ -52,6 +52,7 @@ import axios from 'axios'
 import Vue from 'vue'
 import vuescroll from 'vuescroll';
 import {getRenderedMenuDataMixin} from '../menu-items/get-rendered-menu-data-mixin';
+import {menuHelpers} from '../menu-items/menu-helpers';
 import TreeMenu from './TreeMenu';
 import MegaMenu from './MegaMenu';
 
@@ -60,7 +61,7 @@ Vue.use(vuescroll);
 export default {
   name: 'SidebarMegamenu',
 
-  mixins: [getRenderedMenuDataMixin],
+  mixins: [getRenderedMenuDataMixin, menuHelpers],
 
   components: {
     TreeMenu,
@@ -126,20 +127,6 @@ export default {
       this.openMegamenu = false
     },
 
-    async getFullMenuDataCache(slug) {
-      let menuData = this.$store.getters['menu/menuClientBySlug'](slug)
-      if(menuData) {
-        return menuData
-      } else {
-        let loadedMenuData = await this.getFullMenuDataBySlug(slug)
-        this.$store.dispatch('menu/setMenuClient', {
-          slug: slug,
-          menu: loadedMenuData
-        })
-        return loadedMenuData
-      }
-    },
-
     async getFullMenuDataBySlug(slug) {
       //Получаем меню
       await this.getDataMenuBySlug(slug)
@@ -195,48 +182,6 @@ export default {
             return qs.stringify(params)
           },
         })
-    },
-
-    __treeToFlat(collection) {
-      let result = [];
-
-      for(let el of collection) {
-        result.push(el)
-        if('children' in el) {
-          this.__treeToFlatRecursion(el.children, result)
-        }
-      }
-
-      return result
-    },
-
-    __treeToFlatRecursion(collection, result) {
-      for(let el of collection) {
-        result.push(el)
-        if('children' in el) {
-          this.__treeToFlatRecursion(el.children, result)
-        }
-      }
-    },
-
-    __setParent(collection, parent) {
-      if(parent) {
-        for(let el of collection) {
-          el.parent = parent
-          if('children' in el) {
-            this.__setParent(el.children, el)
-          }
-        }
-      } else {
-        let parentRoot = {children: collection}
-        for(let el of collection) {
-          el.parent = parentRoot
-          if('children' in el) {
-            this.__setParent(el.children, el)
-          }
-        }
-      }
-
     }
   },
   watch: {

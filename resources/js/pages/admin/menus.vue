@@ -99,7 +99,7 @@
     </b-modal>
     <b-modal id="modal-update-menu"
              ref="modal-update-menu"
-             :title="'Обновить меню &quot;' + (this.currentMenu ? this.currentMenu.name : '') + '&quot;?'"
+             :title="'Обновить меню &quot;' + (currentMenu ? currentMenu.name : '') + '&quot;?'"
              hide-footer>
       <form @submit.prevent="updateMenu" @keydown="updateMenuForm.onKeydown($event)" action="" method="post">
 
@@ -135,7 +135,7 @@
     </b-modal>
     <b-modal id="modal-delete-menu"
              ref="modal-delete-menu"
-             :title="'Точно удалить меню &quot;' + (this.currentMenu ? this.currentMenu.name : '') + '&quot;?'"
+             :title="'Точно удалить меню &quot;' + (currentMenu ? currentMenu.name : '') + '&quot;?'"
              @ok="deleteMenu">
       <template slot="modal-cancel">Нет</template>
       <template slot="modal-ok">Да</template>
@@ -246,6 +246,13 @@
         await this.updateMenuForm.put('/api/admin/menus/' + this.currentMenu.id)
         this.$root.$emit('bv::hide::modal','modal-update-menu')
         await this._reloadMenus()
+        let updatedMenu = _.find(this.menus, {'id': this.currentMenu.id});
+        if(!!updatedMenu) {
+          this.currentMenu = updatedMenu;
+        } else {
+          this.currentMenu = null;
+          this.$router.push({ name: 'admin.menu'})
+        }
       },
 
       async deleteMenu() {

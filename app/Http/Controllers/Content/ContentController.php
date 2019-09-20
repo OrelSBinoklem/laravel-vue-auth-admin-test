@@ -8,9 +8,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 use App\Orel\Content\Types;
+use App\Orel\Menus\PlainPluginsMegaMenu\Controller as PPMMController;
 
 class ContentController extends Controller
 {
+    use PPMMController;
+
     protected $types;
 
     public function __construct(Types $types) {
