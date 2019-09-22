@@ -3,11 +3,13 @@
 namespace App\Repositories;
 
 use Illuminate\Http\Request;
+use App\Traits\UploadTrait;
 
 use App\Menu;
 use App\MenuItems;
 
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 use App\Orel\Admin\Menu\ItemsTypes\Casual as typeCasual;
@@ -19,6 +21,8 @@ use Carbon\Carbon;
 
 class MenusRepository extends VueTableRepository
 {
+    use UploadTrait;
+
 	protected $with = [];
     protected $fieldsFilter = ['name'];
 
@@ -216,6 +220,16 @@ class MenusRepository extends VueTableRepository
 
         $new = new MenuItems;
 
+        if ($request->has('icon_data') && $request->file('icon_data') !== null) {
+            $image = $request->file('icon_data');
+            $name = str_slug($data['slug']).'_'.time();
+            $folder = '/uploads/images/';
+            $filePath = $folder . $name. '.' . $image->getClientOriginalExtension();
+            $this->uploadOne($image, $folder, 'public', $name);
+
+            $new->icon = $filePath;
+        }
+
         $new->fill([
             'name' => $data['name'],
             'slug' => $data['slug'],
@@ -224,7 +238,8 @@ class MenusRepository extends VueTableRepository
             'order' => 1,
             'menu_id' => $menu->id,
             'parent_id' => null,
-            'type_id' => $data['type_id']
+            'type_id' => $data['type_id'],
+            'class' => $data['class']
         ]);
 
         $type->setMetaFields($new, $data);
@@ -255,10 +270,26 @@ class MenusRepository extends VueTableRepository
 
         $type->validatorUpdateItem($data, $menuItem)->validate();
 
+        $iconPath = null;
+        $folder = '/uploads/images/';
+        if ($request->has('icon_data') && $request->file('icon_data') !== null) {
+            $image = $request->file('icon_data');
+            $name = str_slug($data['slug']).'_'.time();
+            $filePath = $folder . $name. '.' . $image->getClientOriginalExtension();
+            $this->uploadOne($image, $folder, 'public', $name);
+            $menuItem->icon = $filePath;
+        } else {
+            if(!$request->has('icon') || !$request->input('icon') && $menuItem->icon !== null) {
+                Storage::disk('public')->delete($menuItem->icon);
+                $menuItem->icon = null;
+            }
+        }
+
         $menuItem->fill([
             'name' => $data['name'],
             //'slug' => $data['slug'], слаг лучше неменять иначе теряеться его смысл
-            'publish' => $data['publish']
+            'publish' => $data['publish'],
+            'class' => $data['class']
         ]);
 
         $type->setMetaFields($menuItem, $data);
@@ -336,11 +367,18 @@ class MenusRepository extends VueTableRepository
 
             foreach(array_reverse($collectionsLevelsNested, TRUE) as $key => $value) {
                 $value->map(function ($item, $key) use (&$success_nested) {
+                    if($item->icon !== null) {
+                        Storage::disk('public')->delete($item->icon);
+                    }
                     if(!$item->delete()) {
                         $success_nested = FALSE;
                     }
                 });
             }
+        }
+
+        if($menuItem->icon !== null) {
+            Storage::disk('public')->delete($menuItem->icon);
         }
 
         $success = $menuItem->delete();
@@ -372,7 +410,9 @@ class MenusRepository extends VueTableRepository
             'name' => 'required|string|max:255',
             'slug' => 'required|alpha_dash|max:255|unique:menu_items,slug',
             'publish' => 'required|integer|between:0,1',
-            'type_id' => 'required|integer|between:1,100'
+            'type_id' => 'required|integer|between:1,100',
+            'icon_data' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:64|dimensions:max_width=500,max_height=500',
+            'class' => 'nullable|alpha_dash|max:255'
         ]);
     }
 
@@ -382,7 +422,9 @@ class MenusRepository extends VueTableRepository
             'name' => 'required|string|max:255',
             //'slug' => 'required|alpha_dash|max:255|unique:menu_items,slug,' . $item->id,
             'publish' => 'required|integer|between:0,1',
-            'type_id' => 'required|integer|between:1,100'
+            'type_id' => 'required|integer|between:1,100',
+            'icon_data' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:64|dimensions:max_width=500,max_height=500',
+            'class' => 'nullable|alpha_dash|max:255'
         ]);
     }
 }

@@ -43,7 +43,8 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::resource('menus', 'MenusController', ['only' => ['index', 'store', 'update', 'destroy']]);
         Route::get('menus/{id_menu}/items', 'MenusController@getItems')->where('id_menu', '[0-9]+');
         Route::post('menus/{id_menu}/items', 'MenusController@storeItem')->where('id_menu', '[0-9]+');
-        Route::put('menus/{id_menu}/items/{id_item}', 'MenusController@updateItem')->where(['id_menu' => '[0-9]+', 'id_item' => '[0-9]+']);
+        //todo-mark был put но php непотдерживает сохранение файлов этим методом а хаком https://gist.github.com/Stunext/9171b7a8f3633b0b601a0feb8088dca1 нестал пользоваться
+        Route::post('menus/{id_menu}/items/{id_item}', 'MenusController@updateItem')->where(['id_menu' => '[0-9]+', 'id_item' => '[0-9]+']);
         Route::put('menus/{id_menu}/items-update-tree', 'MenusController@updateTreeItems')->where('id_menu', '[0-9]+');
         Route::delete('menus/{id_menu}/items/{id_item}', 'MenusController@deleteItem')->where(['id_menu' => '[0-9]+', 'id_item' => '[0-9]+']);
 
