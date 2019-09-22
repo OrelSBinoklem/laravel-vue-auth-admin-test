@@ -102,6 +102,8 @@
         var result = []
         ;(function recursion(items, parent_id) {
           items.forEach((item) => {
+            item.parent_id = parent_id;
+            item.order = order;
             result.push({id: item.id, parent_id, order})
             order++
             if('children' in item) {
@@ -128,6 +130,7 @@
       },
 
       async onDeleteMenuItem () {
+        console.log(this.curDeleteItemData);
         if(this.curDeleteItemData.hasParent) {
           this.$root.$emit('bv::hide::modal', 'modal-delete-menu-item')
           this.$root.$emit('bv::show::modal','modal-delete-menu-item-what-new-parent')
@@ -148,6 +151,9 @@
             new_parent: null
           }
         })
+
+        this.$root.$emit('bv::hide::modal', 'modal-delete-menu-item-what-new-parent')
+
         this.$emit('delete')
       },
 
@@ -157,6 +163,9 @@
             new_parent: this.curDeleteItemData.parent_id
           }
         })
+
+        this.$root.$emit('bv::hide::modal', 'modal-delete-menu-item-what-new-parent')
+
         this.$emit('delete')
       },
 
