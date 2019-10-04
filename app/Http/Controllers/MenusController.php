@@ -34,7 +34,7 @@ class MenusController extends Controller
             abort(404, 'Нет такого меню');
         }
 
-        return \Cache::remember('menu_client_' . $menu->id, 900, function() use ($slug) {
+        return \Cache::remember('menu_client_' . $menu->id, 90, function() use ($slug) {
             return $this->menu_rep->get_items_for_client(Menu::where('slug', (string)$slug)->first());
         });
     }

@@ -2,12 +2,19 @@
 
 namespace App;
 
+use App\Events\ContentJSPluginDeleted;
+use App\Events\ContentJSPluginSaved;
 use Illuminate\Database\Eloquent\Model;
 use Kodeine\Metable\Metable;
 
 class ContentJSPlugin extends Model
 {
     use Metable;
+
+    protected $dispatchesEvents = [
+        'saved' => ContentJSPluginSaved::class,
+        'deleted' => ContentJSPluginDeleted::class,
+    ];
     //
     protected $guarded = ['id', 'viewed', 'created_at', 'updated_at'];
 

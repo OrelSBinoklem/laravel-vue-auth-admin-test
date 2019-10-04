@@ -35,6 +35,8 @@ class Category extends AdminMenuItemType {
             'id' => $model->id,
             'slug' => $model->slug,
             'name' => $model->name,
+            'icon' => $model->icon,
+            'class' => $model->class,
             'order' => $model->order,
             'parent_id' => $model->parent_id,
             'type_id' => $model->type_id,

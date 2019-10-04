@@ -2,7 +2,9 @@
 
 
   .megamenu
-    .item(v-for="item in curMenuData") {{item.name}}
+    .row
+      .item-wrap(v-for="item in curMenuData").col-3
+        component(v-bind:is="cardItem" :data="item" @change-page="onChangePage")
 
 
 </template>
@@ -14,20 +16,20 @@ import axios from 'axios';
 
 import {menuHelpers} from '../menu-items/menu-helpers';
 
+import CardPlugin from "./CardsMenuItem/CardPlugin";
+
 export default {
   name: 'MegaMenu',
 
   mixins: [menuHelpers],
 
   components: {
-
+    CardPlugin
   },
 
   props: {
-    items: {
-      type: Array,
-      required: true
-    }
+    items: {type: Array, required: true},
+    cardItem: {type: [String, null], required: true}
   },
 
   data() {
@@ -42,12 +44,12 @@ export default {
   },
 
   async mounted () {
-    this.curMenuData = await this.getFullMenuDataCache(this.items)
+    this.curMenuData = await this.getFullMenuDataCache(this.items);
   },
 
   methods: {
     onChangePage() {
-      this.$emit('change-page')
+      this.$emit('change-page');
     },
 
     async getFullMenuDataBySlug(items) {
@@ -70,8 +72,6 @@ export default {
 
       //Получаем материалы которые связаны с пунктами "Материал"
       let {data} = await this.__getSpecialData(null, flat)
-
-      console.log(data);
 
       //Нормализуем категории и тэги в материалах
       _.values(data).forEach((el) => {
@@ -136,6 +136,15 @@ export default {
 <style lang="scss" scoped>
   .megamenu {
 
+  }
+
+  .item-wrap {
+    margin-top: 15px;
+    position: relative;
+  }
+
+  .item-wrap:hover {
+    z-index: 3;
   }
 </style>
 
