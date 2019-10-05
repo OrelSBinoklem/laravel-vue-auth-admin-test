@@ -45,6 +45,8 @@ trait Repository
                 if(isset($meta_data['plugin_npm'])) {$content['meta_data']['plugin_npm'] = $meta_data['plugin_npm'];}
                 if(isset($meta_data['plugin_demo'])) {$content['meta_data']['plugin_demo'] = $meta_data['plugin_demo'];}
 
+                if(isset($meta_data['teaching'])) {$content['meta_data']['teaching'] = $meta_data['teaching'];}
+
                 \Cache::put('materials_for_ppmm_' . $name_model . '_' . $slug, $content, 90);
             }
 

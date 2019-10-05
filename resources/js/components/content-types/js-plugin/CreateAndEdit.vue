@@ -190,6 +190,34 @@
           </div>
 
           <div class="col-12">
+            <!-- Обучающий материал -->
+            <div class="form-group row">
+              <h4 class="col-12">Обучающий материал</h4>
+              <div class="col-12">
+                <div :class="{ 'is-invalid': form.errors.has('meta_fields.teaching') }" class="form-control d-none"></div>
+                <has-error :form="form" field="meta_fields.teaching"/>
+              </div>
+              <div v-for="(alert, index) in form.meta_fields.teaching" class="col-md-12 mb-2">
+                <div :class="{ 'is-invalid': form.errors.has(`meta_fields.teaching.${index}`) }" class="form-control d-none"></div>
+                <has-error :form="form" :field="`meta_fields.teaching.${index}`"/>
+                <div class="row">
+                  <div  class="col-md-6">
+                    <input v-model="form.meta_fields.teaching[index].title" :class="{ 'is-invalid': form.errors.has(`meta_fields.teaching.${index}.title`) }" class="form-control" type="text" :name="'teaching-title' + index">
+                    <has-error :form="form" :field="`meta_fields.teaching.${index}.title`"/>
+                  </div>
+                  <div  class="col-md-6">
+                    <input v-model="form.meta_fields.teaching[index].link" :class="{ 'is-invalid': form.errors.has(`meta_fields.teaching.${index}.link`) }" class="form-control" type="text" :name="'teaching-link' + index">
+                    <has-error :form="form" :field="`meta_fields.teaching.${index}.link`"/>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 mt-2">
+                <div @click="onAddTeaching" class="btn btn-primary">Добавить ссылку</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
             <!-- Тест скролла по хешам -->
             <div class="form-group row">
               <h4 class="col-md-12">Тест скролла по хешам</h4>
@@ -394,7 +422,9 @@
           plugin_github: null,
           plugin_npm: null,
           plugin_demo: null,
+          teaching: [],
         },
+
         positions: {
           'alerts_scroll_test': {
             data: {
@@ -531,6 +561,14 @@
           }).catch(error => console.error(error))
       },
 
+      onAddTeaching () {
+        this.form.meta_fields.teaching.push({
+          title: '',
+          link: ''
+        });
+        console.log(this.form.meta_fields.teaching);
+      },
+
       __setDataForm(data) {
         this.__reloadCategories()
         this.__reloadTags()
@@ -557,6 +595,8 @@
             'plugin_github',
             'plugin_npm',
             'plugin_demo',
+
+            'teaching',
           ];
           for(let val of meta_fields)
             if(_.hasIn(this, 'data.meta_data.' + val))

@@ -19,6 +19,8 @@ class ContentJSPluginRepository extends BaseContentRepository {
         'plugin_github',
         'plugin_npm',
         'plugin_demo',
+
+        'teaching',
     ];
 
     public function __construct(ContentJSPlugin $contentJSPlugin) {
@@ -138,6 +140,8 @@ class ContentJSPluginRepository extends BaseContentRepository {
 
         $data = $request->all();
 
+        debug($data);
+
         $data['published'] = $data['published'] ? 1 : 0;
 
         $this->validatorUpdate($data, $plugin)->validate();
@@ -234,6 +238,10 @@ class ContentJSPluginRepository extends BaseContentRepository {
             'meta_fields.plugin_github' => 'nullable|url|max:255',
             'meta_fields.plugin_npm' => 'nullable|url|max:255',
             'meta_fields.plugin_demo' => 'nullable|url|max:255',
+
+            'meta_fields.teaching' => 'array',
+            'meta_fields.teaching.*.title' => 'required|string|max:255',
+            'meta_fields.teaching.*.link' => 'required|url|max:255',
         ];
         $this->validateWidgetsData($data,$rules);
         return Validator::make($data, $rules);
@@ -256,6 +264,10 @@ class ContentJSPluginRepository extends BaseContentRepository {
             'meta_fields.plugin_github' => 'nullable|url|max:255',
             'meta_fields.plugin_npm' => 'nullable|url|max:255',
             'meta_fields.plugin_demo' => 'nullable|url|max:255',
+
+            'meta_fields.teaching' => 'array',
+            'meta_fields.teaching.*.title' => 'required|string|max:255',
+            'meta_fields.teaching.*.link' => 'required|url|max:255',
         ];
         $this->validateWidgetsData($data,$rules);
         return Validator::make($data, $rules);

@@ -1,5 +1,10 @@
 const XRegExp = require('xregexp');
 
+let matchingDomainAndIconForServices = {
+  'youtube.com': ['fab', 'youtube'],
+  'github.com': ['fab', 'github']
+};
+
 window.appHelper = {
 
   /**
@@ -40,5 +45,34 @@ window.appHelper = {
     }
 
     return result.substr(0, maxLetters);
+  },
+
+  /**
+   * Домен из URL
+   * @param url
+   * @returns {boolean|string}
+   */
+  domainFromUrl(url) {
+    var result = false;
+    var match
+    if (match = url.match(/^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:\/\n\?\=]+)/im)) {
+      result = match[1]
+      if (match = result.match(/^[^\.]+\.(.+\..+)$/)) {
+        result = match[1]
+      }
+    }
+    return result
+  },
+
+  /**
+   * Получить Font Awesome иконку сервиса по url - работает для плагина @fortawesome/vue-fontawesome
+   * @param url
+   * @returns {string|array}
+   */
+  getFaIconServiceFromUrl(url) {
+    let domain = appHelper.domainFromUrl(url);
+    if(!!domain && domain in matchingDomainAndIconForServices)
+      return matchingDomainAndIconForServices[domain];
+    return 'globe';
   }
 };

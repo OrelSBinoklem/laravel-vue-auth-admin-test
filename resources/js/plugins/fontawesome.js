@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
-  faGithub, faWordpress, faVuejs, faLaravel, faNpm
+  faGithub, faWordpress, faVuejs, faLaravel, faNpm, faYoutube
 } from '@fortawesome/free-brands-svg-icons'
 
 //import * as regular from '@fortawesome/free-regular-svg-icons'
@@ -25,7 +25,7 @@ library.add(
   faListAlt, faPlus, faCaretDown, faCopy, faFolder, faTag, faChevronRight, faExpand, faTimes, faExclamationTriangle, faFileAlt,
   faDownload, faLink, faGraduationCap, faFileArchive, faGlobe, faEye,
 
-  faGithub, faWordpress, faVuejs, faLaravel, faNpm
+  faGithub, faWordpress, faVuejs, faLaravel, faNpm, faYoutube
 )
 
 Vue.component('fa', FontAwesomeIcon)

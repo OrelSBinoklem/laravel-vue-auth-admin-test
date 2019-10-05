@@ -26,8 +26,8 @@
               button(@click='onSelectPlugin(tab)')
                 span.full-name {{tab.name}}
 
-    .tab-content-wrap(:class="{'first-tab-active': __isFirsTab(curTab), 'last-tab-active': __isLastTab(curTab) || isCurTabMore}")
-      .tab-content(v-if="!!data.children && !!data.children.length")
+    .tab-content-wrap(@mouseleave="fixScrollAfterOpenLinkInNewTab" :class="{'first-tab-active': __isFirsTab(curTab), 'last-tab-active': __isLastTab(curTab) || isCurTabMore}")
+      .tab-content(ref="tabContent" v-if="!!data.children && !!data.children.length")
         .name-content
           router-link(v-if='curTab.is_router', :to='__getRouterData(curTab)', active-class='active'): span(@click="onChangePage") {{ curTab.name }}
           a(v-else='', :href='curTab.path' @click="onChangePage") {{ curTab.name }}
@@ -74,6 +74,10 @@
             //Обучающий материал
             .more-info-section.more-info-training-material
               .more-icon(title="Обучающие материалы"): fa(icon="graduation-cap")
+              b-dropdown(v-if="!!curTab.material.meta_data.teaching && !!curTab.material.meta_data.teaching.length" text='Обучающие материалы')
+                b-dropdown-item(v-for="item in curTab.material.meta_data.teaching" :href="item.link" target="_blank" :key="item.title + '-' + item.link")
+                  span {{item.title}}&nbsp;
+                  span: fa(:icon="getIconFromUrl(item.link)")
 
             //Категории
             .more-info-section.more-info-cat
@@ -229,7 +233,7 @@ export default {
       this.$eventHub.$emit('open-modal', {
         type: 'success',
         title: heading,
-        message: 'Copied!'
+        message: 'Скопировано!'
       });
     },
 
@@ -243,6 +247,21 @@ export default {
 
     getAbbreviation(str) {
       return appHelper.getAbbreviation(str, 4);
+    },
+
+    getIconFromUrl(url) {
+      return appHelper.getFaIconServiceFromUrl(url);
+    },
+
+    fixScrollAfterOpenLinkInNewTab() {
+      console.log('fixScrollAfterOpenLinkInNewTab');
+
+      this.$nextTick(() => {
+        if(!!this.$refs.tabContent)
+          setTimeout(() => {
+            this.$refs.tabContent.scrollTop = 0;
+          }, 1);
+      });
     },
 
     __isFirsTab(checkTab) {
@@ -522,6 +541,7 @@ export default {
   .tab-content-wrap:hover .tab-content {
     min-height: 100%;
     height: auto;
+    overflow: visible;
   }
 
   .tab-content-wrap:hover .tab-content:after {
@@ -593,5 +613,12 @@ export default {
 </style>
 
 <style lang="scss">
-
+  .card-plugin {
+    .more-info-training-material {
+      .dropdown-menu a {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
 </style>
