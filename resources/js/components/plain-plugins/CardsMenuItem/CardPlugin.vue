@@ -32,49 +32,57 @@
           router-link(v-if='curTab.is_router', :to='__getRouterData(curTab)', active-class='active'): span(@click="onChangePage") {{ curTab.name }}
           a(v-else='', :href='curTab.path' @click="onChangePage") {{ curTab.name }}
         template(v-if="!!curTab && !!curTab.material")
-          .desc(v-if="!selMoreInfo") {{curTab.material.description_short}}
-          .more-info(v-else)
+          .desc {{curTab.material.description_short}}
+          .more-info
 
             //Скачать
             .more-info-section.more-info-download
               .more-icon(title="Скачать"): fa(icon="download")
-              .row(v-if="!!curPluginUrl")
-                .col-8: h6.heading(title="Скачать плагин") Скачать плагин
-                .col-4.pl-0
-                  b-button(
-                    variant='primary'
-                    size="sm"
-                    block
-                    :href="curPluginUrl"
-                  )
-                    fa(icon="file-archive")
-              template(v-if="'props' in widgetCopyCode && 'editors' in widgetCopyCode.props")
-                .row(v-for="(editor, index) in widgetCopyCode.props.editors")
-                  .col-8: h6.heading(:title="editor.heading") {{ editor.heading }}
-                  .col-4.pl-0
-                    b-button(
-                      variant='outline-primary'
-                      size="sm"
-                      block
-                      v-clipboard:copy='getPriorityEditor(editor.variant_or_group, widgetCopyCode.positions["editor" + index].widgets).props.code'
-                      v-clipboard:success="() => onCopy(editor.heading)"
-                      v-clipboard:error="onErrorCopy"
-                    )
-                      | {{getPriorityEditor(editor.variant_or_group, widgetCopyCode.positions["editor" + index].widgets).props.variant}}&nbsp;
-                      fa(:icon="['far', 'copy']")
+              .row-btn-group.row(v-if="!!curPluginUrl")
+                .col-12
+                  .btn-group
+                    b-button(variant='outline-primary' size="sm" block :href="curPluginUrl" title="Скачать плагин"): fa(icon="file-archive")
+                    button.btn.btn-sm.btn-primary.dropdown-toggle.dropdown-toggle-split(type='button' @click="showCollapseDownload = !showCollapseDownload" title="Дополнительный код"): span.sr-only
+              b-collapse(v-model="showCollapseDownload")
+                template(v-if="'props' in widgetCopyCode && 'editors' in widgetCopyCode.props")
+                  .row(v-for="(editor, index) in widgetCopyCode.props.editors")
+                    .col-8: h6.heading(:title="editor.heading") {{ editor.heading }}
+                    .col-4.pl-0
+                      b-button(
+                        variant='outline-primary'
+                        size="sm"
+                        block
+                        v-clipboard:copy='getPriorityEditor(editor.variant_or_group, widgetCopyCode.positions["editor" + index].widgets).props.code'
+                        v-clipboard:success="() => onCopy(editor.heading)"
+                        v-clipboard:error="onErrorCopy"
+                      )
+                        | {{getPriorityEditor(editor.variant_or_group, widgetCopyCode.positions["editor" + index].widgets).props.variant}}&nbsp;
+                        fa(:icon="['far', 'copy']")
 
             //Ссылки автора
             .more-info-section.more-info-author-links
-              .more-icon(title="Ссылки на плагин"): fa(icon="link")
-              a.btn.btn-outline-primary.m-1(v-if="!!curTab.material.meta_data.plugin_site" :href="curTab.material.meta_data.plugin_site" title="Сайт плагина" target="_blank"): fa(icon="globe")
-              a.btn.btn-outline-primary.m-1(v-if="!!curTab.material.meta_data.plugin_github" :href="curTab.material.meta_data.plugin_github" title="GitHub" target="_blank"): fa(:icon="['fab', 'github']")
-              a.btn.btn-outline-primary.m-1(v-if="!!curTab.material.meta_data.plugin_npm" :href="curTab.material.meta_data.plugin_npm" title="NPM" target="_blank"): fa(:icon="['fab', 'npm']")
-              a.btn.btn-outline-primary.m-1(v-if="!!curTab.material.meta_data.plugin_demo" :href="curTab.material.meta_data.plugin_demo" title="Демо" target="_blank"): fa(icon="eye")
+              .more-icon(title="Ссылки на плагин" :class="{'exist': !!curTab.material.meta_data.plugin_site || !!curTab.material.meta_data.plugin_github || !!curTab.material.meta_data.plugin_npm || !!curTab.material.meta_data.plugin_demo}"): fa(icon="link")
+              a.btn.btn-sm.btn-outline-primary(v-if="!!curTab.material.meta_data.plugin_site" :href="curTab.material.meta_data.plugin_site" title="Сайт плагина" target="_blank"): fa(icon="globe")
+              a.btn.btn-sm.btn-outline-primary(v-if="!!curTab.material.meta_data.plugin_github" :href="curTab.material.meta_data.plugin_github" title="GitHub" target="_blank"): fa(:icon="['fab', 'github']")
+              a.btn.btn-sm.btn-outline-primary(v-if="!!curTab.material.meta_data.plugin_npm" :href="curTab.material.meta_data.plugin_npm" title="NPM" target="_blank"): fa(:icon="['fab', 'npm']")
+              a.btn.btn-sm.btn-outline-primary(v-if="!!curTab.material.meta_data.plugin_demo" :href="curTab.material.meta_data.plugin_demo" title="Демо" target="_blank"): fa(icon="eye")
+
+            //Фиксы и улучшения плагина
+            .more-info-section.more-info-fix-extend-plugin
+              .more-icon(title="Фиксы и улучшения плагина"): fa(icon="paperclip")
+              .link-row(v-if="!!curSubItems" v-for="item in curSubItems")
+                router-link(v-if='item.is_router', :to='__getRouterData(item)', active-class='active'): span(@click="onChangePage") {{ item.name }}
+                a(v-else='', :href='item.path' @click="onChangePage") {{ item.name }}
 
             //Обучающий материал
             .more-info-section.more-info-training-material
               .more-icon(title="Обучающие материалы"): fa(icon="graduation-cap")
-              b-dropdown(v-if="!!curTab.material.meta_data.teaching && !!curTab.material.meta_data.teaching.length" text='Обучающие материалы')
+              b-dropdown(
+                v-if="!!curTab.material.meta_data.teaching && !!curTab.material.meta_data.teaching.length"
+                variant="outline-primary"
+                size="sm"
+                text='Обучающие материалы'
+                )
                 b-dropdown-item(v-for="item in curTab.material.meta_data.teaching" :href="item.link" target="_blank" :key="item.title + '-' + item.link")
                   span {{item.title}}&nbsp;
                   span: fa(:icon="getIconFromUrl(item.link)")
@@ -82,17 +90,13 @@
             //Категории
             .more-info-section.more-info-cat
               .more-icon(title="Категории"): fa(icon="folder")
-              .more-info-cat-row
-                b-badge(v-for="cat in curTab.material.categories" variant="primary" :key="'cat:' + cat.id") {{cat.title}}
+              b-badge(v-for="cat in curTab.material.categories" variant="primary" :key="'cat:' + cat.id") {{cat.title}}
 
             //Тэги
             .more-info-section.more-info-tag
               .more-icon(title="Тэги"): fa(icon="tag")
-              .more-info-tag-row
-                b-badge(v-for="tag in curTab.material.tags" variant="primary" :key="'tag:' + tag.id") {{tag.title}}
+              b-badge(v-for="tag in curTab.material.tags" variant="primary" :key="'tag:' + tag.id") {{tag.title}}
 
-        .tab-content-desc(:class="{active: !selMoreInfo}" @click="selMoreInfo = false" title="Краткое описание"): fa(icon="file-alt")
-        .tab-content-more(:class="{active: selMoreInfo}" @click="selMoreInfo = true" title="Дополнительные данные"): fa(icon="boxes")
       .not-content(v-else) пусто
 
 
@@ -121,7 +125,8 @@ export default {
     return {
       curTab: null,
       openedMoreTabs: false,
-      selMoreInfo: false
+
+      showCollapseDownload: false
     }
   },
 
@@ -192,7 +197,13 @@ export default {
         return '/storage' + this.curTab.material.meta_data.plugin_file;
       else
         return null;
+    },
 
+    curSubItems() {
+      if(_.hasIn(this, 'curTab.children') && !!this.curTab.children.length)
+        return this.curTab.children;
+      else
+        return null;
     }
   },
 
@@ -254,8 +265,6 @@ export default {
     },
 
     fixScrollAfterOpenLinkInNewTab() {
-      console.log('fixScrollAfterOpenLinkInNewTab');
-
       this.$nextTick(() => {
         if(!!this.$refs.tabContent)
           setTimeout(() => {
@@ -480,38 +489,6 @@ export default {
     height: 164px;
   }
 
-  .tab-content-more,
-  .tab-content-desc {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    width: 26px;
-    height: 26px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /*background-color: #f7f9fb;*/
-    background-color: #E6E8EA;
-    border-radius: 5px;
-    color: #999;
-    cursor: pointer;
-  }
-
-  .tab-content-more:hover,
-  .tab-content-desc:hover {
-    color: #212529;
-  }
-
-  .tab-content-more.active,
-  .tab-content-desc.active {
-    color: #212529;
-    background-color: #fff;
-  }
-
-  .tab-content-desc {
-    right: 34px;
-  }
-
   .tab-content {
     position: absolute;
     top: 0;
@@ -572,9 +549,17 @@ export default {
     font-weight: bold;
   }
 
+  .desc {
+    margin-bottom: 15px;
+  }
+
   .more-info-section {
     .more-icon {
+      margin-right: 5px;
       margin-bottom: 5px;
+      position: relative;
+      display: inline-block;
+      z-index: 1;
     }
   }
 
@@ -584,7 +569,8 @@ export default {
 
   .more-info-download {
     .row {
-      margin-bottom: 3px;
+      padding-top: 2px;
+      padding-bottom: 2px;
     }
 
     .heading {
@@ -594,20 +580,36 @@ export default {
       overflow: hidden;
       font-size: 14px;
     }
+
+    .row-btn-group {
+      margin-top: -31px;
+      text-align: right;
+    }
   }
 
   .more-info-author-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
 
+    .exist.more-icon {
+      margin-top: 11px;
+    }
+
+    .btn {
+      margin: 0.25rem;
+      width: 34px;
+    }
   }
 
-  .more-info-cat-row,
-  .more-info-tag-row {
-    margin-left: -3px;
-    margin-right: -3px;
-
+  .more-info-cat,
+  .more-info-tag {
     .badge {
-      margin-left: 3px;
-      margin-right: 3px;
+      margin: 0 3px 5px;
+    }
+
+    .badge:first-child {
+      margin-left: 25px;
     }
   }
 </style>
@@ -615,6 +617,13 @@ export default {
 <style lang="scss">
   .card-plugin {
     .more-info-training-material {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .more-icon {
+        flex: 0 0 auto;
+      }
+
       .dropdown-menu a {
         display: flex;
         justify-content: space-between;
