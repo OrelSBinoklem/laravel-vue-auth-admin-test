@@ -99,6 +99,9 @@
 
       .not-content(v-else) пусто
 
+      .loader(v-if="showLoader")
+        b-spinner(type="grow")
+
 
 </template>
 
@@ -106,19 +109,19 @@
 
 import $ from 'jquery'
 import _ from 'lodash'
-import Taxonomy from "../../../pages/admin/taxonomy";
 
 export default {
   name: 'CardPlugin',
 
   components: {
-    Taxonomy
 
   },
 
   props: {
     data: {type: Object, required: true},
     maxTabsLinkRow: {type: Number, default: 5},
+    startPreload: {type: Number, default: 2},
+    curNextPreload: {type: Number, default: 1},
   },
 
   data() {
@@ -132,7 +135,11 @@ export default {
 
   beforeMount() {
     if(!!this.data.children && !!this.data.children.length) {
+
       this.curTab = this.data.children[0];
+
+      this.$emit('neded-materials', this.data.children.length > 1 ? this.data.children.slice(0, this.startPreload) : this.data.children[0]);
+
     }
 
     document.body.addEventListener('click', this.onClickOutsidePosition);
@@ -204,12 +211,25 @@ export default {
         return this.curTab.children;
       else
         return null;
+    },
+
+    showLoader() {
+      return !!this.data.children && !!this.data.children.length && (!this.curTab || !this.curTab.material);
     }
   },
 
   methods: {
     onSelectPlugin(tab) {
       this.curTab = tab;
+
+      if(this.curNextPreload > 0) {
+        let index = _.findIndex(this.data.children, ['id', tab.id]);
+        console.log(index);
+        this.$emit('neded-materials', index + 1 < this.data.children.length ? this.data.children.slice(index, index + 1 + this.curNextPreload) : tab);
+
+      } else {
+        this.$emit('neded-materials', tab);
+      }
 
       if(this.isCurTabMore)
         this.openedMoreTabs = false;
@@ -611,6 +631,19 @@ export default {
     .badge:first-child {
       margin-left: 25px;
     }
+  }
+
+  .loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    z-index: 1;
   }
 </style>
 

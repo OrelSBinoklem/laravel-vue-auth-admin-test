@@ -3,8 +3,8 @@
 
   .megamenu
     .row
-      .item-wrap(v-for="item in curMenuData").col-3
-        component(v-bind:is="cardItem" :data="item" @change-page="onChangePage")
+      .item-wrap(v-for="item in menuData").col-3
+        component(v-bind:is="cardItem" :data="item" @neded-materials="addItemStackLoadSpecial" @change-page="onChangePage")
 
 
 </template>
@@ -12,6 +12,7 @@
 <script>
 
 const qs = require('qs');
+import Vue from 'vue';
 import axios from 'axios';
 
 import {menuHelpers} from '../menu-items/menu-helpers';
@@ -35,7 +36,8 @@ export default {
   data() {
     return {
       menuData: [],
-      curMenuData: []
+      curMenuData: [],
+      stackLoadSpecial: []
     }
   },
 
@@ -44,7 +46,13 @@ export default {
   },
 
   async mounted () {
-    this.curMenuData = await this.getFullMenuDataCache(this.items);
+    this.menuData = this.items;
+
+    this.LoadSpecialThrottle = _.throttle(async () => {
+      let clone = this.stackLoadSpecial.slice();
+      this.stackLoadSpecial = [];
+      await this.getFullMenuDataBySlug(clone);
+    }, 1000);
   },
 
   methods: {
@@ -52,15 +60,24 @@ export default {
       this.$emit('change-page');
     },
 
-    async getFullMenuDataBySlug(items) {
-      //Получаем меню
-      this.menuData = items;
+    addItemStackLoadSpecial(items) {
+      if(Array.isArray(items)) {
+        this.stackLoadSpecial = [...this.stackLoadSpecial, ...items];
+      } else {
+        this.stackLoadSpecial.push(items);
+      }
 
+      this.$nextTick(() => {
+        this.LoadSpecialThrottle();
+      });
+    },
+
+    async getFullMenuDataBySlug(items) {
       //Добавляем ссылку на parent в виде свойства parent
-      this.__setParent(this.menuData)
+      this.__setParent(items)
 
       //Делаем данные плоскими
-      let flat = this.__treeToFlat(this.menuData)
+      let flat = this.__treeToFlat(items)
 
       //кеш
       flat.forEach((el) => {
@@ -71,31 +88,35 @@ export default {
       });
 
       //Получаем материалы которые связаны с пунктами "Материал"
-      let {data} = await this.__getSpecialData(null, flat)
+      let result = await this.__getSpecialData(null, flat)
 
-      //Нормализуем категории и тэги в материалах
-      _.values(data).forEach((el) => {
-        _.values(el).forEach((el) => {
-          el.tags = _.keyBy(el.tags, 'slug')
-          el.categories = _.keyBy(el.categories, 'slug')
-        })
-      })
+      if(!!result && 'data' in result) {
+        let data = result['data'];
 
-      //К пунктам меню привязываем материалы
-      flat.forEach((el) => {
-        let type = el.meta_data.content_type;
-        let slug = el.meta_data.material_slug;
+        //Нормализуем категории и тэги в материалах
+        _.values(data).forEach((el) => {
+          _.values(el).forEach((el) => {
+            el.tags = _.keyBy(el.tags, 'slug')
+            el.categories = _.keyBy(el.categories, 'slug')
+          })
+        });
 
-        if(el.type_id === 2 && type in data && slug in data[type]) {
-          el.material = data[type][slug]
-          this.$store.dispatch('menu/setItemsRelatedData', [{
-            id: el.id,
-            data: el.material
-          }]);
-        }
-      })
+        //К пунктам меню привязываем материалы
+        flat.forEach((el) => {
+          let type = el.meta_data.content_type;
+          let slug = el.meta_data.material_slug;
 
-      return this.menuData
+          if(el.type_id === 2 && type in data && slug in data[type]) {
+            Vue.set(el, 'material', data[type][slug]);
+            this.$store.dispatch('menu/setItemsRelatedData', [{
+              id: el.id,
+              data: el.material
+            }]);
+          }
+        });
+      }
+
+      return items;
     },
 
     async __getSpecialData(store, items) {
@@ -110,7 +131,12 @@ export default {
           slugs[item.meta_data.content_type] = []
         }
         slugs[item.meta_data.content_type].push(item.meta_data.material_slug)
-      })
+      });
+
+      //удаляем повторные слаги
+      _.mapValues(slugs, (val) => {
+        return _.uniq(val);
+      });
 
       if(temp.length) {
         return axios
@@ -121,13 +147,13 @@ export default {
             },
           })
       } else {
-        return {};
+        return null;
       }
     }
   },
   watch: {
     async items(val) {
-      this.curMenuData = await this.getFullMenuDataCache(val)
+      this.menuData = this.items;
     }
   }
 }

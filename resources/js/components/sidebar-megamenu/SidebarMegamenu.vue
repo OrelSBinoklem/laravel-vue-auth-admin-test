@@ -138,25 +138,29 @@ export default {
       let flat = this.__treeToFlat(this.menuData)
 
       //Получаем материалы которые связаны с пунктами "Материал"
-      let {data} = await this.__getSpecialData(null, flat)
+      let result = await this.__getSpecialData(null, flat)
 
-      //Нормализуем категории и тэги в материалах
-      _.values(data).forEach((el) => {
-        _.values(el).forEach((el) => {
-          el.tags = _.keyBy(el.tags, 'slug')
-          el.categories = _.keyBy(el.categories, 'slug')
-        })
-      })
+      if(!!result && 'data' in result) {
+        let data = result['data'];
 
-      //К пунктам меню привязываем материалы
-      flat.forEach((el) => {
-        let type = el.meta_data.content_type;
-        let slug = el.meta_data.material_slug;
+        //Нормализуем категории и тэги в материалах
+        _.values(data).forEach((el) => {
+          _.values(el).forEach((el) => {
+            el.tags = _.keyBy(el.tags, 'slug')
+            el.categories = _.keyBy(el.categories, 'slug')
+          })
+        });
 
-        if(el.type_id === 2 && type in data && slug in data[type]) {
-          el.material = data[type][slug]
-        }
-      })
+        //К пунктам меню привязываем материалы
+        flat.forEach((el) => {
+          let type = el.meta_data.content_type;
+          let slug = el.meta_data.material_slug;
+
+          if(el.type_id === 2 && type in data && slug in data[type]) {
+            el.material = data[type][slug]
+          }
+        });
+      }
 
       return this.menuData
     },
@@ -175,13 +179,17 @@ export default {
         slugs[item.meta_data.content_type].push(item.meta_data.material_slug)
       })
 
-      return axios
-        .get('/api/content/get-short-by-tax', {
-          params: {'material-slugs': slugs},
-          'paramsSerializer': function(params) {
-            return qs.stringify(params)
-          },
-        })
+      if(temp.length) {
+        return axios
+          .get('/api/content/get-short-by-tax', {
+            params: {'material-slugs': slugs},
+            'paramsSerializer': function(params) {
+              return qs.stringify(params)
+            },
+          });
+      } else {
+        return null;
+      }
     }
   },
   watch: {

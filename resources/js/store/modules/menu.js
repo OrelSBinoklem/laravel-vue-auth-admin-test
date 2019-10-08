@@ -28,7 +28,7 @@ export const mutations = {
 
   [types.SET_ITEMS_RELATED_DATA] (state, payload ) {
     payload.forEach((item) => {
-      state.itemsRelatedData[item.id] = payload.data
+      state.itemsRelatedData[item.id] = item.data
     });
   }
 }

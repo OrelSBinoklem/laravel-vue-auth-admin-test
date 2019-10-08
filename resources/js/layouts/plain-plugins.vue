@@ -17,14 +17,14 @@
     <div class="grid-menu">
       <grid-menu
         :data="gridMenu"
-        @select="onSelectMegaMenu"
       />
     </div>
 
+    <b-button variant="outline-primary" class="btn-open-plugins-megamenu" @click="onOpenPluginsMegamenu"><fa icon="expand"></fa></b-button>
     <div class="plugins-megamenu" v-if="openMegamenu">
       <vue-scroll :ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}">
         <div class="container">
-          <MegaMenu :items="curMegaMenuItems" :card-item="curCardItem" @change-page="onChangePageMegamenu"></MegaMenu>
+          <MegaMenu :items="menuData" :card-item="'CardPlugin'" @change-page="onChangePageMegamenu"></MegaMenu>
         </div>
       </vue-scroll>
       <b-button class="btn-close-megamenu" variant="outline-primary" size="lg" @click="onCloseMegamenu">
@@ -99,18 +99,6 @@
         ]
       },
 
-      relCardItemType: {
-        'jq-plugins': 'CardPlugin',
-        'jq-authors': 'CardPlugin',
-        'jq-code': 'CardPlugin',
-        'wp-plugins': 'CardPlugin',
-        'wp-authors': 'CardPlugin',
-        'wp-code': 'CardPlugin',
-        'vue-plugins': 'CardPlugin',
-        'vue-authors': 'CardPlugin',
-        'vue-code': 'CardPlugin'
-      },
-
       curMegaMenu: null,
       openMegamenu: false,
 
@@ -162,23 +150,6 @@
         return this.$store.getters['interface/priorityCopyTypeCode']
       },
 
-      curMegaMenuItems() {
-        if(this.curMegaMenu !== null) {
-          let subMenu = _.find(this.menuData, {'slug': this.curMegaMenu});
-          return !!subMenu && 'children' in subMenu ? subMenu.children : [];
-        } else {
-          return [];
-        }
-      },
-
-      curCardItem() {
-        if(this.curMegaMenu !== null && this.curMegaMenu in this.relCardItemType) {
-          return this.relCardItemType[this.curMegaMenu];
-        } else {
-          return null;
-        }
-      },
-
       ...mapGetters({
         hashGroups: 'interface/hashGroups',
         navHashes: 'interface/navHashes'
@@ -195,6 +166,10 @@
         this.$store.dispatch('interface/savePriorityCopyTypeCode', this.priorityCopyTypeCode)
       },
 
+      onOpenPluginsMegamenu() {
+        this.openMegamenu = true;
+      },
+
       onOpenHashMenu() {
         this.optHashMenu.columnsSlide = 4;
         this.optHashMenu.modeNoSlider = true;
@@ -205,11 +180,6 @@
           this.optHashMenu.columnsSlide = 2;
           this.optHashMenu.modeNoSlider = false;
         }
-      },
-
-      onSelectMegaMenu(item) {
-        this.curMegaMenu = item;
-        this.openMegamenu = true;
       },
 
       onCloseMegamenu() {
@@ -267,6 +237,12 @@
     width: 100vw;
     background-color: #f7f9fb;
     z-index: 2;
+  }
+
+  .btn-open-plugins-megamenu {
+    position: fixed;
+    top: 10px;
+    left: 320px;
   }
 
   .btn-close-megamenu {
