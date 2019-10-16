@@ -5853,6 +5853,11 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+liquor-tree@^0.2.65:
+  version "0.2.65"
+  resolved "https://registry.yarnpkg.com/liquor-tree/-/liquor-tree-0.2.65.tgz#0bc0ea58ce285f6670c67ac58540952cf39801f5"
+  integrity sha512-pMn0xGqdK7X7MiPnEvMxtTc55iuAe0+wgtwhSPdin48H5agEnxmvNnsDDmMOp3teg6TOt0Z+rVTexFr54T3wiw==
+
 load-json-file@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"

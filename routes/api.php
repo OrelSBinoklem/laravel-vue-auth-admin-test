@@ -74,10 +74,14 @@ Route::group(['middleware' => 'guest:api'], function () {
 
 Route::get('menus/{slug}', 'MenusController@index')->where('slug', '[0-9a-zA-Z\-\_]+');
 
+Route::get('categories', 'CategoryController@getPublic');
+
 Route::group(['prefix' => 'content', 'namespace' => 'Content'], function () {
     Route::get('/get-some-items', 'ContentController@getPublicWhereInSlug');
     Route::get('/get-short-by-tax', 'ContentController@ShortWhereInSlugsByTax');
     //plain-plugins-mega-menu
+    Route::get('/get-all-tax-ppmm', 'ContentController@getMaterialsAllTaxForItemsPPMM');
+    //Route::get('/get-tax-ppmm', 'ContentController@getMaterialsTaxForItemsPPMM');
     Route::get('/get-items-ppmm', 'ContentController@getMaterialsDataForItemsPPMM');
 
     Route::get('js-plugin', 'ContentJSPluginController@index');

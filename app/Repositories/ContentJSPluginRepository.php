@@ -168,7 +168,6 @@ class ContentJSPluginRepository extends BaseContentRepository {
             $name = $file->getClientOriginalName();
             $filePath = $folder . $file->getClientOriginalName();
 
-            debug(substr($name, 0, strlen($name) - (strlen($file->getClientOriginalExtension()) + 1)));
             $this->uploadOne($file, $folder, 'public', substr($name, 0, strlen($name) - (strlen($file->getClientOriginalExtension()) + 1)));
             $meta['plugin_file'] = $filePath;
         } else {

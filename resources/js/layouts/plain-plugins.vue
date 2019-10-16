@@ -14,17 +14,16 @@
       </b-button-group>
     </navbar>
 
-    <div class="grid-menu">
-      <grid-menu
-        :data="gridMenu"
-      />
+    <div class="nav-menu">
+
     </div>
 
     <b-button variant="outline-primary" class="btn-open-plugins-megamenu" @click="onOpenPluginsMegamenu"><fa icon="expand"></fa></b-button>
+    <!--todo доделать сохранение состояния plugins-megamenu и зделать v-if а не v-show-->
     <div class="plugins-megamenu" v-if="openMegamenu">
       <vue-scroll :ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}">
         <div class="container">
-          <MegaMenu :items="menuData" :card-item="'CardPlugin'" @change-page="onChangePageMegamenu"></MegaMenu>
+          <MegaMenu v-if="!!menuData" :items="menuData" :filter="filterPlugins" :card-item="'CardPlugin'" @change-page="onChangePageMegamenu"></MegaMenu>
         </div>
       </vue-scroll>
       <b-button class="btn-close-megamenu" variant="outline-primary" size="lg" @click="onCloseMegamenu">
@@ -63,7 +62,6 @@
 
   //import NavbarFullWidth from "../components/NavbarFullWidth";
   import Navbar from '~/components/Navbar';
-  import GridMenu from '../components/plain-plugins/GridMenu';
   import MegaMenu from '../components/plain-plugins/MegaMenu';
   import SidebarScrollHash from '../components/scroll-hash/SidebarScrollHash';
 
@@ -75,27 +73,37 @@
     components: {
       //NavbarFullWidth,
       Navbar,
-      GridMenu,
       MegaMenu,
       SidebarScrollHash
     },
 
     data: () => ({
-      gridMenu: {
-        cols: [
-          'Плагины', 'Авторские', 'Заготовки'
-        ],
-        rows: [
-          {icon: ['custom', 'jquery'], color: '#0865A7'},
-          {icon: ['fab', 'wordpress'], color: '#00769D'},
-          {icon: ['fab', 'vuejs'], color: '#2EB47E'},
-          {icon: ['fab', 'laravel'], color: '#F34D38'}
-        ],
-        items: [
-          ['jq-plugins', 'jq-authors', 'jq-code'],
-          ['wp-plugins', 'wp-authors', 'wp-code'],
-          ['vue-plugins', 'vue-authors', 'vue-code'],
-          ['laravel-plugins', 'laravel-authors', 'laravel-code'],
+      filterPlugins: {
+        gridMenu: {
+          cols: [
+            {title: 'Плагины', slug: 'plugins'},
+            {title: 'Авторские', slug: 'authors-plugins'},
+            {title: 'Заготовки', slug: 'blanks'},
+          ],
+          rows: [
+            {icon: ['custom', 'jquery'], color: '#0865A7', slug: 'jquery'},
+            {icon: ['fab', 'wordpress'], color: '#00769D', slug: 'wordpress'},
+            {icon: ['fab', 'vuejs'], color: '#2EB47E', slug: 'vue'},
+            {icon: ['fab', 'laravel'], color: '#F34D38', slug: 'laravel'},
+          ],
+          items: [
+            //todo-mark может потом буду использовать функционал
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', ''],
+          ]
+        },
+
+        categoriesMenuSlug: 'web-programming',
+
+        options: [
+          {rootCategory: 'price', defText: '--Стоимость плагина--'}
         ]
       },
 
@@ -192,7 +200,9 @@
     },
 
     watch: {
-
+      openMegamenu(val) {
+        $('body').toggleClass('hidden-scroll', val);
+      }
     },
 
     async beforeMount() {
@@ -218,7 +228,7 @@
     }
   }
 
-  .grid-menu {
+  .nav-menu {
     position: fixed;
     top: 0;
     left: 0;
@@ -236,7 +246,7 @@
     bottom: 0;
     width: 100vw;
     background-color: #f7f9fb;
-    z-index: 2;
+    z-index: 5;
   }
 
   .btn-open-plugins-megamenu {
@@ -272,5 +282,12 @@
 
   .plain-plugins-hash-menu.__expanded {
     width: 720px;
+  }
+</style>
+
+<style lang="scss">
+  /*todo перенести в глобальніе стили*/
+  body.hidden-scroll {
+    overflow: hidden;
   }
 </style>

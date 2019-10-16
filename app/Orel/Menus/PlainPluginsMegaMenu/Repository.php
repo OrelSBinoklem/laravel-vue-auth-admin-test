@@ -55,4 +55,52 @@ trait Repository
             return $result;
         }
     }
+
+    public function get_data_materials_tax_for_ppmm(array $slugs) {
+        $result = [];
+        $slugs_nocache = [];
+
+        $name_model = get_class($this->model);
+
+        foreach ($slugs as $slug) {
+            if(\Cache::has('materials_categories_for_ppmm_' . $name_model . '_' . $slug)) {
+                $result[$slug] = \Cache::get('materials_categories_for_ppmm_' . $name_model . '_' . $slug);
+            } else {
+                $slugs_nocache[] = $slug;
+            }
+        }
+
+        if(count($slugs_nocache)) {
+            $loaded = $this->model->newQuery()
+                ->select(['id', 'slug'])
+                ->whereIn('slug', $slugs_nocache)
+                ->with(['categories:slug', 'tags:slug'])
+                ->get()
+                ->keyBy('slug')
+                ->toArray();
+
+            foreach ($loaded as $slug => &$content) {
+                \Cache::put('materials_categories_for_ppmm_' . $name_model . '_' . $slug, $content, 90);
+            }
+
+            return array_merge($result, $loaded);
+        } else {
+            return $result;
+        }
+    }
+
+    public function get_data_all_materials_tax_for_ppmm() {
+        $name_model = get_class($this->model);
+
+        return \Cache::remember('materials_categories_for_ppmm_' . $name_model, 90, function() {
+            return $this->model->newQuery()
+                ->select(['id', 'slug'])
+                ->with(['categories:slug', 'tags:slug'])
+                ->get()
+                ->keyBy('slug')
+                ->toArray();
+        });
+
+
+    }
 }
