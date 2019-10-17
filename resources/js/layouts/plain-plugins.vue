@@ -103,7 +103,9 @@
         categoriesMenuSlug: 'web-programming',
 
         options: [
-          {rootCategory: 'price', defText: '--Стоимость плагина--'}
+          {rootCategory: 'sets', defText: '--Комплекты--'},
+          {rootCategory: 'price', defText: '--Стоимость плагина--'},
+          {rootCategory: 'rating', defText: '--Лучшее--'},
         ]
       },
 

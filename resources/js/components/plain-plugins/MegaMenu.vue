@@ -7,8 +7,7 @@
           component(v-bind:is="cardItem" :data="item" @neded-materials="addItemStackLoadSpecial" @change-page="onChangePage")
 
       .filter(v-if='!!filter')
-        vue-scroll(:ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}")
-          mega-filter(:data='filter' @change="onChangeFilter")
+        mega-filter(:data='filter' @change="onChangeFilter")
 
 
 </template>
@@ -235,6 +234,7 @@ export default {
     },
 
     onChangeFilter(val) {
+      console.log(val);
       this.setFilterNormalisedData(val);
     },
 

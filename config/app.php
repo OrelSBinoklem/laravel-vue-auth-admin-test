@@ -161,6 +161,7 @@ return [
         Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
         Cog\Laravel\Ban\Providers\BanServiceProvider::class,
         Spatie\Translatable\TranslatableServiceProvider::class,
+        Bestmomo\NiceArtisan\NiceArtisanServiceProvider::class,
 
         /*
          * Application Service Providers...

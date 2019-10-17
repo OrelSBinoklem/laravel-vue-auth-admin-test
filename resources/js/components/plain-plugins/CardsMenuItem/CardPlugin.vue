@@ -224,7 +224,6 @@ export default {
 
       if(this.curNextPreload > 0) {
         let index = _.findIndex(this.data.children, ['id', tab.id]);
-        console.log(index);
         this.$emit('neded-materials', index + 1 < this.data.children.length ? this.data.children.slice(index, index + 1 + this.curNextPreload) : tab);
 
       } else {
@@ -316,7 +315,17 @@ export default {
   },
 
   watch: {
-
+    "data.children": function () {
+      if(!!this.data.children && !!this.data.children.length) {
+        if(this.curTab === null)
+          this.onSelectPlugin(this.data.children[0]);
+        else {
+          let index = _.findIndex(this.data.children, ['id', this.curTab.id]);
+          if(index < 0)
+            this.onSelectPlugin(this.data.children[0]);
+        }
+      }
+    }
   }
 }
 </script>

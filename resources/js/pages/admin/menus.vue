@@ -428,4 +428,8 @@
     margin-top: -45px;
     padding-left: 30px;
   }
+
+  .page-admin-menus .tree-menu-items-edit .tree {
+    overflow: visible;
+  }
 </style>

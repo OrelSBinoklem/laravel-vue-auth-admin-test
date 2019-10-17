@@ -9,7 +9,8 @@
       .filter-mode
 
     .filter-categories
-      categories-tree(:root-category="data.categoriesMenuSlug" @checked-and-intermediate="onChangeCat")
+      vue-scroll(:ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}")
+        categories-tree(:root-category="data.categoriesMenuSlug" @checked-and-intermediate="onChangeCat")
 
     .filter-options
       category-select(v-for="opt in data.options" @select="(val) => {onSelectOption(opt.rootCategory, val)}" :root-category="opt.rootCategory" :default-text="opt.defText" :key="opt.rootCategory")
@@ -42,9 +43,7 @@ export default {
         framework: null,
         code_type: null,
 
-        categories: null,
-
-        price: null
+        categories: null
       }
     }
   },
@@ -65,7 +64,7 @@ export default {
     },
 
     onChangeCat(categories) {
-      this.categories = !!categories ? categories.map(cat => cat.slug) : null;
+      this.selected.categories = !!categories ? categories.map(cat => cat.slug) : null;
       this.$emit('change', this.selected);
     },
 
@@ -82,8 +81,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .mega-filter {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
   .filter-grid-and-mode {
     display: flex;
+    flex: 0 0 auto;
   }
 
   .grid-menu {
@@ -94,6 +100,17 @@ export default {
   .filter-mode {
     /*width: 118px; если надо квадратные кнопки а не прямоугольные*/
     width: 70px;
+    flex: 0 0 auto;
+  }
+
+  .filter-categories {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    overflow: auto;
+  }
+
+  .filter-options {
+    margin-top: auto;
     flex: 0 0 auto;
   }
 </style>
