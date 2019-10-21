@@ -234,7 +234,6 @@ export default {
     },
 
     onChangeFilter(val) {
-      console.log(val);
       this.setFilterNormalisedData(val);
     },
 
@@ -341,11 +340,6 @@ export default {
     .__rail-is-vertical {
       right: auto;
       left: 2px;
-    }
-
-    .mega-filter {
-      padding-left: 10px;
-      padding-right: 10px;
     }
   }
 </style>

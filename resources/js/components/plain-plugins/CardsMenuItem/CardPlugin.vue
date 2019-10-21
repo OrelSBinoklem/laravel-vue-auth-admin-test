@@ -323,6 +323,9 @@ export default {
           let index = _.findIndex(this.data.children, ['id', this.curTab.id]);
           if(index < 0)
             this.onSelectPlugin(this.data.children[0]);
+          else
+            if(this.data.children[0] !== this.curTab)
+              this.onSelectPlugin(this.data.children[0]);
         }
       }
     }
@@ -548,6 +551,7 @@ export default {
     min-height: 100%;
     height: auto;
     overflow: visible;
+    box-shadow: 0 2px 2px -2px rgba(0, 0, 0, 0.5), 2px 0 2px -2px rgba(0, 0, 0, 0.5), -2px 0 2px -2px rgba(0, 0, 0, 0.5);
   }
 
   .tab-content-wrap:hover .tab-content:after {

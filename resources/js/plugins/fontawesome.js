@@ -7,7 +7,7 @@ import {
 import {
   faUser, faLock, faSignOutAlt, faCog, faChartArea, faAngleRight, faBars, faTachometerAlt, faUserPlus, faCalendarAlt, faUserTie, faFileContract,
   faListAlt, faPlus, faCaretDown, faCopy, faFolder, faTag, faChevronRight, faExpand, faTimes, faExclamationTriangle,
-  faDownload, faLink, faGraduationCap, faFileArchive, faGlobe, faEye, faPaperclip, faBroom
+  faDownload, faLink, faGraduationCap, faFileArchive, faGlobe, faEye, faPaperclip, faBroom, faUsers, faUserFriends, faFileCode
 } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -23,7 +23,7 @@ library.add(
 
   faUser, faLock, faSignOutAlt, faCog, faChartArea, faAngleRight, faBars, faTachometerAlt, faUserPlus, faCalendarAlt, faUserTie, faFileContract,
   faListAlt, faPlus, faCaretDown, faCopy, faFolder, faTag, faChevronRight, faExpand, faTimes, faExclamationTriangle,
-  faDownload, faLink, faGraduationCap, faFileArchive, faGlobe, faEye, faPaperclip, faBroom,
+  faDownload, faLink, faGraduationCap, faFileArchive, faGlobe, faEye, faPaperclip, faBroom, faUsers, faUserFriends, faFileCode,
 
   faGithub, faWordpress, faVuejs, faLaravel, faNpm, faYoutube
 )

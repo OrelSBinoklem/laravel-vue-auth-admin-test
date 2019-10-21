@@ -81,22 +81,21 @@
       filterPlugins: {
         gridMenu: {
           cols: [
-            {title: 'Плагины', slug: 'plugins'},
-            {title: 'Авторские', slug: 'authors-plugins'},
-            {title: 'Заготовки', slug: 'blanks'},
+            {title: 'JQuery', icon: ['custom', 'jquery'], color: '#0865A7', slug: 'jquery'},
+            {title: 'WordPress', icon: ['fab', 'wordpress'], color: '#00769D', slug: 'wordpress'},
+            {title: 'Vue', icon: ['fab', 'vuejs'], color: '#2EB47E', slug: 'vue'},
+            {title: 'Laravel', icon: ['fab', 'laravel'], color: '#F34D38', slug: 'laravel'},
           ],
           rows: [
-            {icon: ['custom', 'jquery'], color: '#0865A7', slug: 'jquery'},
-            {icon: ['fab', 'wordpress'], color: '#00769D', slug: 'wordpress'},
-            {icon: ['fab', 'vuejs'], color: '#2EB47E', slug: 'vue'},
-            {icon: ['fab', 'laravel'], color: '#F34D38', slug: 'laravel'},
+            {title: 'Плагины', icon: 'users', color: '#333333', slug: 'plugins'},
+            {title: 'Авторские', icon: 'user-friends', color: '#333333', slug: 'authors-plugins'},
+            {title: 'Заготовки', icon: 'file-code', color: '#333333', slug: 'blanks'},
           ],
           items: [
             //todo-mark может потом буду использовать функционал
-            ['', '', ''],
-            ['', '', ''],
-            ['', '', ''],
-            ['', '', ''],
+            ['', '', '', ''],
+            ['', '', '', ''],
+            ['', '', '', ''],
           ]
         },
 

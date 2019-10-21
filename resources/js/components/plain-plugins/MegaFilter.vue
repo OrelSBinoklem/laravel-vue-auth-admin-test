@@ -5,7 +5,7 @@
 
     .filter-grid-and-mode
       .grid-menu
-        grid-menu(:data="data.gridMenu" @select="onSelectGridMenu")
+        grid-menu(:data="data.gridMenu" @select="onSelectGridMenu" mode="compact")
       .filter-mode
 
     .filter-categories
@@ -13,7 +13,9 @@
         categories-tree(:root-category="data.categoriesMenuSlug" @checked-and-intermediate="onChangeCat")
 
     .filter-options
-      category-select(v-for="opt in data.options" @select="(val) => {onSelectOption(opt.rootCategory, val)}" :root-category="opt.rootCategory" :default-text="opt.defText" :key="opt.rootCategory")
+      .filter-options-shadow-wrap: .filter-options-shadow
+      .filter-options-content
+        category-select(v-for="opt in data.options" @select="(val) => {onSelectOption(opt.rootCategory, val)}" :root-category="opt.rootCategory" :default-text="opt.defText" :key="opt.rootCategory")
 
 
 </template>
@@ -93,8 +95,7 @@ export default {
   }
 
   .grid-menu {
-    flex-grow: 1;
-    flex-basis: 0;
+    flex: 0 0 auto;
   }
 
   .filter-mode {
@@ -110,8 +111,35 @@ export default {
   }
 
   .filter-options {
+    position: relative;
     margin-top: auto;
     flex: 0 0 auto;
+
+    .category-select {
+      margin: 6px;
+    }
+  }
+
+  .filter-options-shadow-wrap {
+    position: absolute;
+    top: -5px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+  }
+
+  .filter-options-shadow {
+    position: absolute;
+    top: 5px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  .filter-options-content {
+    position: relative;
   }
 </style>
 

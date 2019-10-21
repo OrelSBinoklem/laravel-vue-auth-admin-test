@@ -52,17 +52,17 @@ export const actions = {
     commit(types.REFRESH_CATEGORIES, response.data)
   },
 
-  async loadCategoriesPublic ({ commit, state }) {
+  loadCategoriesPublic: _.throttle(async ({ commit }, payload) => {
     if(state.categoriesPublic === null) {
       let response = await axios.get('/api/categories');
       commit(types.REFRESH_CATEGORIES_PUBLIC, response.data);
       commit(types.REFRESH_CATEGORIES_PUBLIC_TREE, appHelper.flatToTree(response.data));
     }
-  },
+  }, 1000),
 
-  async refreshCategoriesPublic ({ commit }, payload) {
+  refreshCategoriesPublic: _.throttle(async ({ commit }, payload) => {
     let response = await axios.get('/api/categories')
     commit(types.REFRESH_CATEGORIES_PUBLIC, response.data);
     commit(types.REFRESH_CATEGORIES_PUBLIC_TREE, appHelper.flatToTree(response.data));
-  }
+  }, 1000),
 }

@@ -2,7 +2,7 @@
 
 
   .category-select(ref="container")
-    b-form-select(:value="selected" @input="onSelect" :options="options" size="sm")
+    b-form-select(:value="selected" @input="onSelect" :options="options" size="sm" :class="{active: !!selected}")
 
 
 </template>
@@ -89,6 +89,10 @@ export default {
     select:focus {
       border-color: #ced4da;
       box-shadow: none;
+    }
+
+    select.active {
+      font-weight: bold;
     }
   }
 </style>

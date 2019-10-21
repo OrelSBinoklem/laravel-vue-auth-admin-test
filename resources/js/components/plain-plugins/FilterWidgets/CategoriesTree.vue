@@ -10,6 +10,7 @@
       @node:checked="onChecked"
       @node:unchecked="onChecked"
       ref="tree"
+      class="tree--small"
     )
 
 
@@ -121,5 +122,10 @@ export default {
 </style>
 
 <style lang="scss">
-
+  .tree-checked {
+    .tree-content {
+      padding-top: 1px;
+      padding-bottom: 1px;
+    }
+  }
 </style>
