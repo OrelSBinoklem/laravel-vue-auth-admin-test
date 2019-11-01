@@ -5,22 +5,25 @@
 
     .filter-grid-and-mode
       .grid-menu
-        grid-menu(:data="data.gridMenu" @select="onSelectGridMenu" mode="compact")
+        grid-menu(:data="data.gridMenu" :select-col="selected.framework" :select-row="selected.code_type" @select="onSelectGridMenu" mode="compact")
       .filter-mode
+        button.btn-clear(type="button" @click="onClear" :disabled="!isFilterSelected" :class="{active: isFilterSelected}").btn.btn-sm.btn-outline-dark: fa(icon='broom')
+        slot(name="t-r-special")
 
     .filter-categories
       vue-scroll(:ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}")
-        categories-tree(:root-category="data.categoriesMenuSlug" @checked-and-intermediate="onChangeCat")
+        categories-tree(:root-category="data.categoriesMenuSlug" :select="selected.categories" @checked="onChangeCat" :expanded="saveSpecialState.categoriesExpanded" @toggle-collapse="onToggleCollapseCat")
 
     .filter-options
       .filter-options-shadow-wrap: .filter-options-shadow
       .filter-options-content
-        category-select(v-for="opt in data.options" @select="(val) => {onSelectOption(opt.rootCategory, val)}" :root-category="opt.rootCategory" :default-text="opt.defText" :key="opt.rootCategory")
+        category-select(v-for="opt in data.options" :select="selected[opt.rootCategory]" @select="(val) => {onSelectOption(opt.rootCategory, val)}" :root-category="opt.rootCategory" :default-text="opt.defText" :key="opt.rootCategory")
 
 
 </template>
 
 <script>
+import Vue from 'vue'
 
 import GridMenu from './FilterWidgets/GridMenu';
 import CategoriesTree from './FilterWidgets/CategoriesTree';
@@ -41,7 +44,22 @@ export default {
 
   data() {
     return {
+      special: {
+        categoriesIntermediate: null
+      },
+
+      saveSpecialState: {
+        categoriesExpanded: null
+      },
+
       selected: {
+        framework: null,
+        code_type: null,
+
+        categories: null
+      },
+
+      filter: {
         framework: null,
         code_type: null,
 
@@ -50,8 +68,21 @@ export default {
     }
   },
 
-  computed: {
+  beforeMount() {
+    this.data.options.forEach((opt) => {
+      this.selected[opt.rootCategory] = null;
+    });
 
+    Vue.nextTick( () => {
+      if('special' in this.filterStore)
+        Vue.set(this, 'special',          this.filterStore.special);
+      if('saveSpecialState' in this.filterStore)
+        Vue.set(this, 'saveSpecialState', this.filterStore.saveSpecialState);
+      if('selected' in this.filterStore)
+        Vue.set(this, 'selected',         this.filterStore.selected);
+      if('filter' in this.filterStore)
+        Vue.set(this, 'filter',           this.filterStore.filter);
+    });
   },
 
   mounted () {
@@ -60,24 +91,81 @@ export default {
 
   methods: {
     onSelectGridMenu(val) {
-      this.selected.framework = val.row === 'all' || val.row === null ? null : this.data.gridMenu.rows[val.row].slug;
-      this.selected.code_type = val.col === 'all' || val.col === null ? null : this.data.gridMenu.cols[val.col].slug;
-      this.$emit('change', this.selected);
+      this.selected.code_type = this.filter.code_type = val.row === 'all' || val.row === null ? null : this.data.gridMenu.rows[val.row].slug;
+      this.selected.framework = this.filter.framework = val.col === 'all' || val.col === null ? null : this.data.gridMenu.cols[val.col].slug;
+
+      this.__saveStateFilters();
+      this.$emit('change', this.filter);
     },
 
-    onChangeCat(categories) {
+    onChangeCat(categories, categoriesIntermediate) {
       this.selected.categories = !!categories ? categories.map(cat => cat.slug) : null;
-      this.$emit('change', this.selected);
+      this.special.categoriesIntermediate = !!categoriesIntermediate ? categoriesIntermediate.map(cat => cat.slug) : null;
+
+      //todo-mark indeterminate нужно для алгоритма фильтра чтобы выбирать и тот код или плагины которые более широкие но включают в себя категории из дочерних относительно той что indeterminate
+      let all = [];
+      if(this.selected.categories !== null)
+        all = [...all, ...this.selected.categories];
+      if(this.special.categoriesIntermediate !== null)
+        all = [...all, ...this.special.categoriesIntermediate];
+
+      this.filter.categories = !!all.length ? all : null;
+
+      this.__saveStateFilters();
+      this.$emit('change', this.filter);
+    },
+
+    onToggleCollapseCat(expanded) {
+      this.saveSpecialState.categoriesExpanded = expanded;
+      this.__saveStateFilters();
     },
 
     onSelectOption(cat, val) {
-      this.selected[cat] = val;
-      this.$emit('change', this.selected);
+      Vue.set(this.selected, cat, val);
+      Vue.set(this.filter, cat, val);
+
+      this.__saveStateFilters();
+      this.$emit('change', this.filter);
+    },
+
+    onClear() {
+      _.keysIn(this.selected).forEach((key) => {this.selected[key] = null});
+      _.keysIn(this.filter).forEach((key) => {this.filter[key] = null});
+
+      this.$emit('change', this.filter);
+    },
+
+    __saveStateFilters() {
+      this.$store.dispatch('interface/saveFilterPlugins', {
+        special:          this.special,
+        saveSpecialState: this.saveSpecialState,
+        selected:         this.selected,
+        filter:           this.filter,
+      });
+    }
+  },
+
+  computed: {
+    isFilterSelected() {
+      return _.valuesIn(this.selected).reduce((accum, val) => {return accum ? accum : val !== null}, false);
+    },
+
+    filterStore() {
+      return this.$store.getters['interface/filterPlugins'];
     }
   },
 
   watch: {
-
+    filterStore(val) {
+      if('special' in this.filterStore)
+        Vue.set(this, 'special',          this.filterStore.special);
+      if('saveSpecialState' in this.filterStore)
+        Vue.set(this, 'saveSpecialState', this.filterStore.saveSpecialState);
+      if('selected' in this.filterStore)
+        Vue.set(this, 'selected',         this.filterStore.selected);
+      if('filter' in this.filterStore)
+        Vue.set(this, 'filter',           this.filterStore.filter);
+    }
   }
 }
 </script>
@@ -99,9 +187,17 @@ export default {
   }
 
   .filter-mode {
-    /*width: 118px; если надо квадратные кнопки а не прямоугольные*/
-    width: 70px;
+    margin: 6px 6px 0 auto;
+    width: 42px;
     flex: 0 0 auto;
+
+    .btn {
+      width: 100%;
+    }
+  }
+
+  .btn-clear {
+    height: 65px;
   }
 
   .filter-categories {

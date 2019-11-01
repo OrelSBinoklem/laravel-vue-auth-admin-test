@@ -1,106 +1,77 @@
 <template lang="pug">
 
 
-  .card-plugin
+  .card-plugin(:class="{__cards: mode === 'cards', __list: mode === 'list'}")
 
-    .name(:title="data.name") {{data.name}}
+    template(v-if="mode === 'cards'")
 
-    .tabs-select-wrap
-      ul.tabs-select-plugin
-        li(v-for='tab in visibleTabs' :class='{active: tab === curTab}')
-          button(@click='onSelectPlugin(tab)')
-            img(v-if="!!tab.icon" :src="'/storage' + tab.icon")
-            .abbreviation(v-else) {{getAbbreviation(tab.name)}}
-        li(v-if='hasMore' :class="{active: isCurTabMore}" ref="more")
-          button(@click="showMore")
-            template(v-if="isCurTabMore")
-              img(v-if="!!curTab.icon" :src="'/storage' + curTab.icon")
-              .abbreviation(v-else) {{getAbbreviation(curTab.name)}}
-            .icon-more: fa(:icon="['far', 'caret-square-down']" size="sm")
-          .tabs-select-more(v-if="openedMoreTabs")
-            .tabs-select-more-item(v-for='tab in moreTabs' :class='{active: tab === curTab}')
-              button(@click='onSelectPlugin(tab)')
-                img(v-if="!!tab.icon" :src="'/storage' + tab.icon")
-          .tabs-name-more(v-if="openedMoreTabs")
-            .tabs-name-more-item(v-for='tab in moreTabs' :class='{active: tab === curTab}')
-              button(@click='onSelectPlugin(tab)')
-                span.full-name {{tab.name}}
+      .name(:title="data.name") {{data.name}}
 
-    .tab-content-wrap(@mouseleave="fixScrollAfterOpenLinkInNewTab" :class="{'first-tab-active': __isFirsTab(curTab), 'last-tab-active': __isLastTab(curTab) || isCurTabMore}")
-      .tab-content(ref="tabContent" v-if="!!data.children && !!data.children.length")
-        .name-content
-          router-link(v-if='curTab.is_router', :to='__getRouterData(curTab)', active-class='active'): span(@click="onChangePage") {{ curTab.name }}
-          a(v-else='', :href='curTab.path' @click="onChangePage") {{ curTab.name }}
-        template(v-if="!!curTab && !!curTab.material")
-          .desc {{curTab.material.description_short}}
-          .more-info
+      .tabs-select-wrap
+        ul.tabs-select-plugin
 
-            //Скачать
-            .more-info-section.more-info-download
-              .more-icon(title="Скачать"): fa(icon="download")
-              .row-btn-group.row(v-if="!!curPluginUrl")
-                .col-12
-                  .btn-group
-                    b-button(variant='outline-primary' size="sm" block :href="curPluginUrl" title="Скачать плагин"): fa(icon="file-archive")
-                    button.btn.btn-sm.btn-primary.dropdown-toggle.dropdown-toggle-split(type='button' @click="showCollapseDownload = !showCollapseDownload" title="Дополнительный код"): span.sr-only
-              b-collapse(v-model="showCollapseDownload")
-                template(v-if="'props' in widgetCopyCode && 'editors' in widgetCopyCode.props")
-                  .row(v-for="(editor, index) in widgetCopyCode.props.editors")
-                    .col-8: h6.heading(:title="editor.heading") {{ editor.heading }}
-                    .col-4.pl-0
-                      b-button(
-                        variant='outline-primary'
-                        size="sm"
-                        block
-                        v-clipboard:copy='getPriorityEditor(editor.variant_or_group, widgetCopyCode.positions["editor" + index].widgets).props.code'
-                        v-clipboard:success="() => onCopy(editor.heading)"
-                        v-clipboard:error="onErrorCopy"
-                      )
-                        | {{getPriorityEditor(editor.variant_or_group, widgetCopyCode.positions["editor" + index].widgets).props.variant}}&nbsp;
-                        fa(:icon="['far', 'copy']")
+          //Табы
+          li(v-for='tab in visibleTabs' :class='{active: tab === curTab}')
+            button(@click='onSelectPlugin(tab)')
+              img(v-if="!!tab.icon" :src="'/storage' + tab.icon")
+              .abbreviation(v-else) {{getAbbreviation(tab.name)}}
 
-            //Ссылки автора
-            .more-info-section.more-info-author-links
-              .more-icon(title="Ссылки на плагин" :class="{'exist': !!curTab.material.meta_data.plugin_site || !!curTab.material.meta_data.plugin_github || !!curTab.material.meta_data.plugin_npm || !!curTab.material.meta_data.plugin_demo}"): fa(icon="link")
-              a.btn.btn-sm.btn-outline-primary(v-if="!!curTab.material.meta_data.plugin_site" :href="curTab.material.meta_data.plugin_site" title="Сайт плагина" target="_blank"): fa(icon="globe")
-              a.btn.btn-sm.btn-outline-primary(v-if="!!curTab.material.meta_data.plugin_github" :href="curTab.material.meta_data.plugin_github" title="GitHub" target="_blank"): fa(:icon="['fab', 'github']")
-              a.btn.btn-sm.btn-outline-primary(v-if="!!curTab.material.meta_data.plugin_npm" :href="curTab.material.meta_data.plugin_npm" title="NPM" target="_blank"): fa(:icon="['fab', 'npm']")
-              a.btn.btn-sm.btn-outline-primary(v-if="!!curTab.material.meta_data.plugin_demo" :href="curTab.material.meta_data.plugin_demo" title="Демо" target="_blank"): fa(icon="eye")
+          //Дополнительные табы
+          li(v-if='hasMore' :class="{active: isCurTabMore}" ref="more")
+            button(@click="showMore")
+              template(v-if="isCurTabMore")
+                img(v-if="!!curTab.icon" :src="'/storage' + curTab.icon")
+                .abbreviation(v-else) {{getAbbreviation(curTab.name)}}
+              .icon-more: fa(:icon="['far', 'caret-square-down']" size="sm")
+            .tabs-select-more(v-if="openedMoreTabs")
+              .tabs-select-more-item(v-for='tab in moreTabs' :class='{active: tab === curTab}')
+                button(@click='onSelectPlugin(tab)')
+                  img(v-if="!!tab.icon" :src="'/storage' + tab.icon")
+            .tabs-name-more(v-if="openedMoreTabs")
+              .tabs-name-more-item(v-for='tab in moreTabs' :class='{active: tab === curTab}')
+                button(@click='onSelectPlugin(tab)')
+                  span.full-name {{tab.name}}
 
-            //Фиксы и улучшения плагина
-            .more-info-section.more-info-fix-extend-plugin
-              .more-icon(title="Фиксы и улучшения плагина"): fa(icon="paperclip")
-              .link-row(v-if="!!curSubItems" v-for="item in curSubItems")
-                router-link(v-if='item.is_router', :to='__getRouterData(item)', active-class='active'): span(@click="onChangePage") {{ item.name }}
-                a(v-else='', :href='item.path' @click="onChangePage") {{ item.name }}
+      .tab-content-wrap(@mouseleave="fixScrollAfterOpenLinkInNewTab" :class="{'first-tab-active': __isFirsTab(curTab), 'last-tab-active': __isLastTab(curTab) || isCurTabMore}")
+        .tab-content(ref="tabContent" v-if="!!data.children && !!data.children.length")
+          .name-content
+            router-link(v-if='curTab.is_router', :to='__getRouterData(curTab)', active-class='active'): span(@click="onChangePage") {{ curTab.name }}
+            a(v-else='', :href='curTab.path' @click="onChangePage") {{ curTab.name }}
+          template(v-if="!!curTab && !!curTab.material")
+            .desc {{curTab.material.description_short}}
 
-            //Обучающий материал
-            .more-info-section.more-info-training-material
-              .more-icon(title="Обучающие материалы"): fa(icon="graduation-cap")
-              b-dropdown(
-                v-if="!!curTab.material.meta_data.teaching && !!curTab.material.meta_data.teaching.length"
-                variant="outline-primary"
-                size="sm"
-                text='Обучающие материалы'
-                )
-                b-dropdown-item(v-for="item in curTab.material.meta_data.teaching" :href="item.link" target="_blank" :key="item.title + '-' + item.link")
-                  span {{item.title}}&nbsp;
-                  span: fa(:icon="getIconFromUrl(item.link)")
+            more-info(:data="curTab" :mode="mode" @change-page="onChangePage")
 
-            //Категории
-            .more-info-section.more-info-cat
-              .more-icon(title="Категории"): fa(icon="folder")
-              b-badge(v-for="cat in curTab.material.categories" variant="primary" :key="'cat:' + cat.id") {{cat.title}}
+        .not-content(v-else) пусто
 
-            //Тэги
-            .more-info-section.more-info-tag
-              .more-icon(title="Тэги"): fa(icon="tag")
-              b-badge(v-for="tag in curTab.material.tags" variant="primary" :key="'tag:' + tag.id") {{tag.title}}
+        .loader(v-if="showLoader"): b-spinner(type="grow")
 
-      .not-content(v-else) пусто
+    template(v-if="mode === 'list'")
+      .list
+        template(v-if="!!data.children && !!data.children.length")
+          .list-plugin(v-for="tab in allTabs")
+            .row
+              .col-6
+                .list-icon-name
+                  span.list-name-link
+                    router-link(v-if='tab.is_router', :to='__getRouterData(tab)', active-class='active')
+                      span.list-name-link-wrap-ineer(@click="onChangePage")
+                        span.list-icon(v-if="!!tab.icon")
+                          img(:src="'/storage' + tab.icon")
+                        span.list-name(:class="{'ml-0': !tab.icon}") {{ tab.name }}
+                    a(v-else='', :href='tab.path')
+                      span.list-name-link-wrap-ineer(@click="onChangePage")
+                        span.list-icon(v-if="!!tab.icon")
+                          img(:src="'/storage' + tab.icon")
+                        span.list-name(:class="{'ml-0': !tab.icon}") {{ tab.name }}
+                template(v-if="!!tab.material")
+                  .list-desc {{tab.material.description_short}}
+              .col-6
+                template(v-if="!!tab.material")
+                  more-info(:data="tab" :mode="mode" @change-page="onChangePage")
+            .loader(v-if="!tab.material"): b-spinner(type="grow")
 
-      .loader(v-if="showLoader")
-        b-spinner(type="grow")
+        .not-content(v-else) пусто
 
 
 </template>
@@ -110,15 +81,18 @@
 import $ from 'jquery'
 import _ from 'lodash'
 
+import MoreInfo from "./CardPlugin/MoreInfo";
+
 export default {
   name: 'CardPlugin',
 
   components: {
-
+    MoreInfo
   },
 
   props: {
     data: {type: Object, required: true},
+    mode: {validator: function (value) {return ['cards', 'list'].indexOf(value) !== -1}, required: true},
     maxTabsLinkRow: {type: Number, default: 5},
     startPreload: {type: Number, default: 2},
     curNextPreload: {type: Number, default: 1},
@@ -127,36 +101,34 @@ export default {
   data() {
     return {
       curTab: null,
-      openedMoreTabs: false,
-
-      showCollapseDownload: false
+      openedMoreTabs: false
     }
   },
 
   beforeMount() {
-    if(!!this.data.children && !!this.data.children.length) {
-
-      this.curTab = this.data.children[0];
-
-      this.$emit('neded-materials', this.data.children.length > 1 ? this.data.children.slice(0, this.startPreload) : this.data.children[0]);
-
-    }
+    this.__initCurTabAndLoadSpecialData();
 
     document.body.addEventListener('click', this.onClickOutsidePosition);
-  },
-
-  beforeDestroy() {
-    document.body.removeEventListener('click', this.onClickOutsidePosition);
   },
 
   mounted () {
 
   },
 
+  beforeDestroy() {
+    document.body.removeEventListener('click', this.onClickOutsidePosition);
+  },
+
   computed: {
     indexLastTab() {
       //todo-mark связано с шириной табов в css
       return this.maxTabsLinkRow - 1;
+    },
+
+    allTabs() {
+      if(!!this.data.children && !!this.data.children.length)
+        return this.data.children;
+      return [];
     },
 
     visibleTabs() {
@@ -192,27 +164,6 @@ export default {
       return false;
     },
 
-    widgetCopyCode() {
-      if(_.hasIn(this, 'curTab.material.meta_data.positions.use_code.widgets[0]'))
-        return this.curTab.material.meta_data.positions.use_code.widgets[0];
-      else
-        return [];
-    },
-
-    curPluginUrl() {
-      if(_.hasIn(this, 'curTab.material.meta_data.plugin_file') && !!this.curTab.material.meta_data.plugin_file)
-        return '/storage' + this.curTab.material.meta_data.plugin_file;
-      else
-        return null;
-    },
-
-    curSubItems() {
-      if(_.hasIn(this, 'curTab.children') && !!this.curTab.children.length)
-        return this.curTab.children;
-      else
-        return null;
-    },
-
     showLoader() {
       return !!this.data.children && !!this.data.children.length && (!this.curTab || !this.curTab.material);
     }
@@ -242,45 +193,14 @@ export default {
       this.openedMoreTabs = !this.openedMoreTabs;
     },
 
-    getPriorityEditor(variant_or_group, editors) {
-      let priority = this.$store.getters['interface/priorityCopyTypeCode']
-      if(variant_or_group in priority) {
-        let concreteType = priority[variant_or_group]
-        let result = _.find(editors, ['props.variant', concreteType]);
-        return result ? result : editors[0]
-      } else {
-        return editors[0]
-      }
-    },
-
     onClickOutsidePosition(e) {
       if(!($(e.target).closest($(this.$refs.more)).length)) {
         this.openedMoreTabs = false;
       }
     },
 
-    onCopy(heading) {
-      this.$eventHub.$emit('open-modal', {
-        type: 'success',
-        title: heading,
-        message: 'Скопировано!'
-      });
-    },
-
-    onErrorCopy() {
-      this.$eventHub.$emit('open-modal', {
-        type: 'error',
-        title: null,
-        message: 'Error Copy!'
-      });
-    },
-
     getAbbreviation(str) {
       return appHelper.getAbbreviation(str, 4);
-    },
-
-    getIconFromUrl(url) {
-      return appHelper.getFaIconServiceFromUrl(url);
     },
 
     fixScrollAfterOpenLinkInNewTab() {
@@ -311,23 +231,68 @@ export default {
 
     __getRouterData(item) {
       return {...item.router};
+    },
+
+    __initCurTabAndLoadSpecialData() {
+      if(!!this.data.children && !!this.data.children.length) {
+
+        if(this.mode === 'cards') {
+          this.curTab = this.data.children[0];
+
+          this.$emit('neded-materials', this.data.children.length > 1 ? this.data.children.slice(0, this.startPreload) : this.data.children[0]);
+        }
+
+        if(this.mode === 'list') {
+          this.curTab = null;
+
+          this.$emit('neded-materials', this.data.children.slice());
+        }
+
+      }
     }
   },
 
   watch: {
-    "data.children": function () {
-      if(!!this.data.children && !!this.data.children.length) {
+    data: function () {
+      if(!!this.data.children && !!this.data.children.length && this.mode === 'list') {
+        this.$emit('neded-materials', this.data.children.slice());
+      }
+    },
+
+    "data.children": function (_new, old) {
+      if(!!_new && !!_new.length) {
         if(this.curTab === null)
-          this.onSelectPlugin(this.data.children[0]);
+          this.onSelectPlugin(_new[0]);
         else {
-          let index = _.findIndex(this.data.children, ['id', this.curTab.id]);
+          let index = _.findIndex(_new, ['id', this.curTab.id]);
           if(index < 0)
-            this.onSelectPlugin(this.data.children[0]);
+            this.onSelectPlugin(_new[0]);
           else
-            if(this.data.children[0] !== this.curTab)
-              this.onSelectPlugin(this.data.children[0]);
+            if(!!old && !!old.length) {
+              if(old.length !== _new.length)
+                this.onSelectPlugin(_new[0]);
+              else {
+                let change = false;
+                for(let i in _new)
+                  if(_new[i] !== old[i])
+                    change = true;
+                if(change && _new[0] !== this.curTab)
+                  this.onSelectPlugin(_new[0]);
+              }
+            }
+            else
+              if(_new[0] !== this.curTab)
+                this.onSelectPlugin(_new[0]);
+        }
+
+        if(this.mode === 'list') {
+          this.$emit('neded-materials', this.data.children.slice());
         }
       }
+    },
+
+    mode() {
+      this.__initCurTabAndLoadSpecialData();
     }
   }
 }
@@ -586,66 +551,6 @@ export default {
     margin-bottom: 15px;
   }
 
-  .more-info-section {
-    .more-icon {
-      margin-right: 5px;
-      margin-bottom: 5px;
-      position: relative;
-      display: inline-block;
-      z-index: 1;
-    }
-  }
-
-  .more-info-section:nth-child(n + 2) {
-    margin-top: 5px;
-  }
-
-  .more-info-download {
-    .row {
-      padding-top: 2px;
-      padding-bottom: 2px;
-    }
-
-    .heading {
-      margin-top: 6px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      font-size: 14px;
-    }
-
-    .row-btn-group {
-      margin-top: -31px;
-      text-align: right;
-    }
-  }
-
-  .more-info-author-links {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-
-    .exist.more-icon {
-      margin-top: 11px;
-    }
-
-    .btn {
-      margin: 0.25rem;
-      width: 34px;
-    }
-  }
-
-  .more-info-cat,
-  .more-info-tag {
-    .badge {
-      margin: 0 3px 5px;
-    }
-
-    .badge:first-child {
-      margin-left: 25px;
-    }
-  }
-
   .loader {
     position: absolute;
     top: 0;
@@ -657,6 +562,77 @@ export default {
     align-items: center;
     background-color: rgba(255, 255, 255, 0.5);
     z-index: 1;
+  },
+
+  .list {
+    font-size: 14px;
+    line-height: 1.2;
+
+    .not-content {
+      height: 120px;
+      border-top: none;
+      font-size: 36px;
+    }
+  }
+
+  .list-plugin {
+    position: relative;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 15px;
+    background: #ffffff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  }
+
+  .list-icon {
+    margin: 0;
+    border: none;
+    outline: none;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    background-color: transparent;
+
+    img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 70%;
+      max-height: 70%;
+      height: auto;
+      width: auto;
+    }
+  }
+
+  .__list .list-icon {
+    display: inline-flex;
+    width: 35px;
+    height: 35px;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+
+  .list-name {
+    margin-left: 5px;
+    font-size: 16px;
+  }
+
+  .list-name-link {
+    font-weight: bold;
+
+    .list-name-link-wrap-ineer {
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+    }
   }
 </style>
 

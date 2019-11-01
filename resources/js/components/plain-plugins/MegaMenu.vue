@@ -1,13 +1,34 @@
 <template lang="pug">
 
 
-  .megamenu
-      .row
+  .megamenu(ref="container")
+      .row(v-if="mode === 'cards'")
         .item-wrap(v-for="item in menuDataFiltered").col-3
-          component(v-bind:is="cardItem" :data="item" @neded-materials="addItemStackLoadSpecial" @change-page="onChangePage")
+          component(v-bind:is="cardItem" :data="item" :mode="mode" @neded-materials="addItemStackLoadSpecial" @change-page="onChangePage")
+      .row(v-if="mode === 'list'")
+        .col-3.list-group-sidebar(:id="uniqIdForAffix")
+          my-affix(
+            class="list-scroll-fix"
+            :scroll-container-selector="scrollContainerSelector"
+            :relative-element-selector="'#' + uniqIdForAffix"
+            :offset="{top: 0, bottom: 15}"
+            :scroll-affix="true"
+          )
+            .list-group(:style="{width: listGroupWidth}")
+              template(v-for="item in menuDataFiltered")
+                button(type='button' @click="onChangeListCategory(item.slug)" :class="{active: curListCategory === item.slug}").list-group-item.list-group-item-action.d-flex.justify-content-between.align-items-center
+                  | {{item.name}}
+                  span(v-if="!!item.children && !!item.children.length" class="badge badge-primary badge-pill") {{item.children.length}}
+        .col-9
+          template(v-if="!!curList")
+            component(v-bind:is="cardItem" :data="curList" :mode="mode" @neded-materials="addItemStackLoadSpecial" @change-page="onChangePage")
 
       .filter(v-if='!!filter')
         mega-filter(:data='filter' @change="onChangeFilter")
+          template(slot="t-r-special")
+            .btns-mode.btn-group-vertical
+              button(type='button' :class="{active: mode === 'cards'}" @click="onChangeMode('cards')").btn.btn-outline-primary: fa(icon='th')
+              button(type='button' :class="{active: mode === 'list'}" @click="onChangeMode('list')").btn.btn-outline-primary: fa(icon='th-list')
 
 
 </template>
@@ -16,12 +37,16 @@
 
 const qs = require('qs');
 import Vue from 'vue';
+import $ from 'jquery';
+import _ from 'lodash';
 import axios from 'axios';
 
 import {menuHelpers} from '../menu-items/menu-helpers';
 
 import MegaFilter from "./MegaFilter";
 import CardPlugin from "./CardsMenuItem/CardPlugin";
+//todo вернуть нормальный affix когда его пофиксят https://github.com/eddiemf/vue-affix/issues/52
+import MyAffix from "./MyAffix";
 
 export default {
   name: 'MegaMenu',
@@ -30,28 +55,45 @@ export default {
 
   components: {
     MegaFilter,
-    CardPlugin
+    CardPlugin,
+    MyAffix
   },
 
   props: {
     filter: {type: Object},
     items: {type: Array, required: true},
-    cardItem: {type: [String, null], required: true}
+    cardItem: {type: String, required: true},
+    scrollContainerSelector: {type: String, default: null},
+
+    uniqIdForAffix: {type: String, required: true},
   },
 
   data() {
     return {
       menuData: [],
-      curMenuData: [],
       stackLoadSpecial: [],
       filterNormalised: {
         slugs: {},
         groups: []
-      }
+      },
+
+      listGroupWidth: 'auto'
     }
   },
 
   computed: {
+    /**
+     * Режим отображения плагинов - карточками или списком
+     *  @returns {String}
+     */
+    mode() {
+      return this.$store.getters['interface/cardsOrListPlugins'];
+    },
+
+    curListCategory() {
+      return this.$store.getters['interface/curListCategory'];
+    },
+
     menuDataFiltered() {
       this.menuData.forEach((cat) => {
         if('originalChildren' in cat && !!cat.originalChildren.length) {
@@ -63,7 +105,20 @@ export default {
         }
       });
       return this.menuData;
+    },
+
+    curList() {
+      if(!!this.curListCategory) {
+        let list = _.find(this.menuDataFiltered, {slug: this.curListCategory});
+        return !!list ? list : null;
+      }
+      else
+        return null;
     }
+  },
+
+  beforeMount() {
+    this.__changeToFirstExistItemsListCat();
   },
 
   async mounted () {
@@ -75,9 +130,29 @@ export default {
       this.stackLoadSpecial = [];
       await this.getFullMenuDataBySlug(clone);
     }, 1000);
+
+    this.transferWidthSidebarAffixThrottle = _.throttle(() => {
+      this.__transferWidthSidebarAffix();
+    }, 500);
+
+    window.addEventListener('resize', this.transferWidthSidebarAffixThrottle);
+
+    this.transferWidthSidebarAffixThrottle();
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('resize', this.transferWidthSidebarAffixThrottle);
   },
 
   methods: {
+    onChangeMode(mode) {
+      this.$store.dispatch('interface/saveCardsOrListPlugins', mode);
+    },
+
+    onChangeListCategory(slug) {
+      this.$store.dispatch('interface/saveCurListCategory', slug);
+    },
+
     onChangePage() {
       this.$emit('change-page');
     },
@@ -195,13 +270,9 @@ export default {
 
       let result;
       if(temp.length) {
-        result = await axios
-          .get('/api/content/get-all-tax-ppmm', {
-            params: {'material-slugs': slugs},
-            'paramsSerializer': function(params) {
-              return qs.stringify(params)
-            },
-          })
+        await this.$store.dispatch('db/loadTaxPublicPPMM', slugs);
+        let data = this.$store.getters['db/taxPublicPPMM'];
+          result = {data};
       } else {
         result = null;
       }
@@ -213,8 +284,10 @@ export default {
         //Нормализуем категории и тэги в материалах
         _.values(data).forEach((el) => {
           _.values(el).forEach((el) => {
-            el.tags = _.keyBy(el.tags, 'slug')
-            el.categories = _.keyBy(el.categories, 'slug')
+            if(Array.isArray(el.tags))
+              el.tags = _.keyBy(el.tags, 'slug')
+            if(Array.isArray(el.categories))
+              el.categories = _.keyBy(el.categories, 'slug')
           })
         });
 
@@ -296,6 +369,23 @@ export default {
           item.originalChildren = item.children.slice();
         }
       });
+    },
+
+    __changeToFirstExistItemsListCat() {
+      if(this.mode === "list" && !this.curListCategory && _.hasIn(this, 'menuDataFiltered[0].slug')) {
+        for(let i in this.menuDataFiltered) {
+          if(!!this.menuDataFiltered[i].children && this.menuDataFiltered[i].children.length) {
+            this.$store.dispatch('interface/saveCurListCategory', this.menuDataFiltered[i].slug);
+            break;
+          }
+          if(i === this.menuDataFiltered.length - 1)
+            this.$store.dispatch('interface/saveCurListCategory', this.menuDataFiltered[0].slug);
+        }
+      }
+    },
+
+    __transferWidthSidebarAffix() {
+      this.listGroupWidth =  this.mode === "list" ? $('.list-group-sidebar', this.$refs.container).width() + 'px' : 'auto';
     }
   },
 
@@ -305,6 +395,21 @@ export default {
         this.__setOriginalChildren(val);
         this.menuData = val;
       }
+    },
+
+    menuDataFiltered() {
+      this.__changeToFirstExistItemsListCat();
+    },
+
+    mode(mode) {
+      if(this.mode === "cards")
+        this.$store.dispatch('interface/saveCurListCategory', null);
+      else
+        this.__changeToFirstExistItemsListCat();
+
+      this.$nextTick(function() {
+        this.transferWidthSidebarAffixThrottle();
+      });
     }
   }
 }
@@ -324,6 +429,15 @@ export default {
     z-index: 3;
   }
 
+  .list-group-sidebar {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .list-scroll-fix {
+
+  }
+
   .filter {
     position: fixed;
     top: 0;
@@ -332,6 +446,10 @@ export default {
     width: 320px;
     background-color: #fff;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  }
+
+  .btns-mode {
+    margin-top: 6px;
   }
 </style>
 

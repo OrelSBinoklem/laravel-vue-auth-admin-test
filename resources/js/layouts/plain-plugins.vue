@@ -23,7 +23,15 @@
     <div class="plugins-megamenu" v-if="openMegamenu">
       <vue-scroll :ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}">
         <div class="container">
-          <MegaMenu v-if="!!menuData" :items="menuData" :filter="filterPlugins" :card-item="'CardPlugin'" @change-page="onChangePageMegamenu"></MegaMenu>
+          <MegaMenu
+            v-if="!!menuData"
+            :items="menuData"
+            :filter="filterPlugins"
+            :card-item="'CardPlugin'"
+            @change-page="onChangePageMegamenu"
+            scroll-container-selector=".plugins-megamenu .__vuescroll .__panel"
+            uniq-id-for-affix="list-plugins"
+          ></MegaMenu>
         </div>
       </vue-scroll>
       <b-button class="btn-close-megamenu" variant="outline-primary" size="lg" @click="onCloseMegamenu">

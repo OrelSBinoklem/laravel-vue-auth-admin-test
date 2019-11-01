@@ -2,11 +2,15 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import * as types from '../mutation-types'
 
+const qs = require('qs');
+
 // state
 export const state = {
   categories: null,
   categoriesPublic: null,
-  categoriesPublicTree: null
+  categoriesPublicTree: null,
+
+  taxPublicPPMM: null
 }
 
 // getters
@@ -20,7 +24,9 @@ export const getters = {
     } else {
       return state.categoriesPublic;
     }
-  }
+  },
+
+  taxPublicPPMM: state => state.taxPublicPPMM,
 }
 
 // mutations
@@ -35,6 +41,10 @@ export const mutations = {
 
   [types.REFRESH_CATEGORIES_PUBLIC_TREE] (state, payload) {
     state.categoriesPublicTree = payload
+  },
+
+  [types.LOAD_TAX_PUBLIC_PPMM] (state, payload) {
+    state.taxPublicPPMM = payload
   },
 }
 
@@ -64,5 +74,32 @@ export const actions = {
     let response = await axios.get('/api/categories')
     commit(types.REFRESH_CATEGORIES_PUBLIC, response.data);
     commit(types.REFRESH_CATEGORIES_PUBLIC_TREE, appHelper.flatToTree(response.data));
+  }, 1000),
+
+  loadTaxPublicPPMM: _.throttle(async ({ commit, state }, payload) => {
+    let nedeedLoad = false;
+    if(state.taxPublicPPMM === null) {
+      nedeedLoad = true;
+    } else {
+      let existsTypesMaterials = true;
+      for(let type in payload)
+        if( !(type in state.taxPublicPPMM) ) {
+          existsTypesMaterials = false;
+          break;
+        }
+      if(!existsTypesMaterials)
+        nedeedLoad = true;
+    }
+
+    if(nedeedLoad) {
+      let response = await axios
+        .get('/api/content/get-all-tax-ppmm', {
+          params: {'material-slugs': payload},
+          'paramsSerializer': function(params) {
+            return qs.stringify(params)
+          },
+        });
+      commit(types.LOAD_TAX_PUBLIC_PPMM, response.data);
+    }
   }, 1000),
 }

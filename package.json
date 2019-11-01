@@ -34,6 +34,7 @@
     "validatorjs": "^3.15.1",
     "vform": "^1.0.0",
     "vue": "^2.5.16",
+    "vue-affix": "^0.5.2",
     "vue-clipboard2": "^0.3.0",
     "vue-ctk-date-time-picker": "^1.4.2",
     "vue-draggable-nested-tree": "^2.2.8",

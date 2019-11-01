@@ -21,6 +21,8 @@ export default {
   },
 
   props: {
+    select: {type: String, default: null},
+
     rootCategory: {type: String, default: null},
     defaultText: {type: String, default: 'Выберите опцию'}
   },
@@ -75,6 +77,11 @@ export default {
   watch: {
     defaultText(val) {
       this.defaultOption.text = val;
+    },
+
+    select() {
+      if(this.selected !== this.select)
+        this.selected = this.select;
     }
   }
 }

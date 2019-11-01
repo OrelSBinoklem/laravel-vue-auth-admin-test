@@ -55,7 +55,7 @@
         template(v-for="(row, i) in data.items")
           .button-wrap(
             v-for="(item, j) in row"
-            :class="{'end-row': i === data.items.length - 1, 'end-col': j === row.length - 1, 'hover-row': (curBtnHover.row === i || curBtnHover.row === 'all') && curBtnHover.col > j, 'hover-col': (curBtnHover.col === j || curBtnHover.col === 'all') && curBtnHover.row > i, 'hover': (curBtnHover.row === i || curBtnHover.row === 'all') && (curBtnHover.col === j || curBtnHover.col === 'all'), 'active': (btnActive.row === i || btnActive.row === 'all') && (btnActive.col === j || btnActive.col === 'all')}"
+            :class="{'end-row': i === data.items.length - 1, 'end-col': j === row.length - 1, 'hover-row': (curBtnHover.row === i || curBtnHover.row === 'all') && (curBtnHover.col > j || curBtnHover.col === 'all'), 'hover-col': (curBtnHover.col === j || curBtnHover.col === 'all') && (curBtnHover.row > i || curBtnHover.row === 'all'), 'hover': (curBtnHover.row === i || curBtnHover.row === 'all') && (curBtnHover.col === j || curBtnHover.col === 'all'), 'active': (btnActive.row === i || btnActive.row === 'all') && (btnActive.col === j || btnActive.col === 'all')}"
           )
             button(@mouseenter="onBtnHover(i, j)" @click="onBtnClick(i, j)")
               span.button-circle
@@ -67,6 +67,7 @@
 <script>
 
 import $ from 'jquery';
+import _ from 'lodash';
 
 export default {
   name: 'GridMenu',
@@ -77,6 +78,8 @@ export default {
 
   props: {
     data: {type: Object, required: true},
+    selectCol: {type: String},
+    selectRow: {type: String},
     //options
     headerFreeSpaceShift: {type: Number, default: 12},
     headerColGapLines:    {type: Number, default: 6},
@@ -97,7 +100,9 @@ export default {
   },
 
   computed: {
-
+    selectChange() {
+      return (typeof this.selectCol) + ':' + (typeof this.selectRow) + this.selectCol + ':' + this.selectRow;
+    }
   },
 
   methods: {
@@ -136,8 +141,8 @@ export default {
 
     /**
      * Запись строки и колонки наведённой кнопки
-     * @param {Number} i - строка
-     * @param {Number} j - колонка
+     * @param {Number|null} i - строка
+     * @param {Number|null} j - колонка
      */
     onBtnHover(i, j) {
       this.curBtnHover.row = i;
@@ -155,6 +160,27 @@ export default {
       this.$emit('select', this.btnActive);
     },
 
+    /**
+     * Установыть выбор по слагам
+     * @param {String|null} slugCol
+     * @param {String|null} slugRow
+     * @private
+     */
+    __setSelectBySlugs(slugCol, slugRow) {
+      let iCol = !!slugCol ? _.findIndex(this.data.cols, { 'slug': slugCol }) : null;
+      let iRow = !!slugRow ? _.findIndex(this.data.rows, { 'slug': slugRow }) : null;
+      iCol = iCol === -1 ? null : iCol;
+      iRow = iRow === -1 ? null : iRow;
+      iCol = typeof iCol != "number" && typeof iRow == "number" ? 'all' : iCol;
+      iRow = typeof iRow != "number" && typeof iCol == "number" ? 'all' : iRow;
+
+      if(this.btnActive.col !== iCol)
+        this.btnActive.col = iCol;
+
+      if(this.btnActive.row !== iRow)
+        this.btnActive.row = iRow;
+    },
+
     onClearAll() {
       this.btnActive.row = null;
       this.btnActive.col = null;
@@ -163,7 +189,9 @@ export default {
   },
 
   watch: {
-
+    'selectChange': function () {
+      this.__setSelectBySlugs(this.selectCol, this.selectRow);
+    }
   }
 }
 </script>
