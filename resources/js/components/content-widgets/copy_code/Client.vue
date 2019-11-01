@@ -1,5 +1,6 @@
 <template lang="pug">
   div(v-if="__countPositions(positions)" class="copy-code")
+
     //type-row
     .type-row(v-if="type_visible === 'row'")
       .row.type-row__head: .col.d-flex.align-items-stretch(v-for="(editor, index) in editors"): .row.justify-content-between.align-items-end.type-row__head-row-inner-col
@@ -16,6 +17,7 @@
             :variant="getPriorityEditor(editor.variant_or_group, positions[\"editor\" + index].widgets).props.variant"
             :min_lines="linesTypeRow" :max_lines="linesTypeRow"
             :code="getPriorityEditor(editor.variant_or_group, positions[\"editor\" + index].widgets).props.code")
+
     //type-vert-tabs
     .type-vert-tabs(v-if="type_visible === 'vertical_tabs'")
       .row
@@ -37,6 +39,7 @@
             :variant="getPriorityEditor(editors[currentTabIndex].variant_or_group, positions[\"editor\" + currentTabIndex].widgets).props.variant"
             :min_lines="linesTypeVertTabs" :max_lines="linesTypeVertTabs"
             :code="getPriorityEditor(editors[currentTabIndex].variant_or_group, positions[\"editor\" + currentTabIndex].widgets).props.code")
+
     //type-casual
     .type-casual(v-if="type_visible === 'casual'")
       .row(v-for="(editor, index) in editors")

@@ -36,6 +36,66 @@ class TaxonomyRepository extends VueTableRepository {
         }
     }
 
+    public function getPublic() {
+        //Зачем грузить дочерние нескрытые если родительский скрыт? (решаем так - если нету родителя указанного пункта то удаляем его... (но есть несколько уровней вложенности что тогда?!))
+        $categories = $this->model
+            ->newQuery()
+            ->where('published', 1)
+            ->get();
+
+        //$this->touchGetters($categories);
+
+        //удаляем дочерние имеющие скрытого родителя
+        $items_array = [];
+        $categories->each(function ($item, $key) use (&$items_array) {
+            $items_array[$item->id] = [
+                'id' => $item->id,
+                'parent_id' => $item->parent_id
+            ];
+        });
+
+        $filtered_items = [];
+
+        function buildTree(array &$filtered_items, array &$elements, $parentId = null) {
+            //todo алгоритм неочень эффективный - может использовать объекты?
+            //todo может просто несколько раз удалить элементы неимеющие родителя (в зависимости от уровня вложенности) пока таковые незакончаться
+            $branch = array();
+
+            foreach ($elements as $element) {
+                if ($element['parent_id'] == $parentId) {
+                    $children = buildTree($filtered_items, $elements, $element['id']);
+                    if ($children) {
+                        $element['children'] = $children;
+                    }
+                    $filtered_items[$element['id']] = TRUE;
+                    $branch[$element['id']] = $element;
+                    //хоть и метод неоптимален но строчка ниже улучшает алгоритм
+                    unset($elements[$element['id']]);
+                }
+            }
+            return $branch;
+        }
+
+        buildTree($filtered_items, $items_array);
+
+        $categories = $categories->filter(function ($item, $key) use ($filtered_items) {
+            return isset($filtered_items[$item->id]);
+        });
+
+        //Нормализация ключей массива для конвертера в json чтоб он массивы в объекты не превращал
+        $normalized_keys_array_items = [];
+        foreach($categories->toArray() as $k=>$v)
+        {
+            $normalized_keys_array_items[] = $v;
+        }
+
+        return response()->json(
+            $normalized_keys_array_items
+        )
+            ->header('Access-Control-Allow-Origin', '*')
+            ->header('Access-Control-Allow-Methods', 'GET');
+    }
+
     public function getTableData() {
         $data = parent::getTableData();
 
@@ -121,6 +181,10 @@ class TaxonomyRepository extends VueTableRepository {
             $sortedNewLocation[] = $item;
         });
 
+        if($cat->count() != count($sortedNewLocation)) {
+            return ['error' => 'Список элементов несоответствует базе данных'];
+        }
+
         $index = 0;
         $success = TRUE;
         $not_recursion_error = TRUE;
@@ -154,7 +218,7 @@ class TaxonomyRepository extends VueTableRepository {
         }
 
         $nested = FALSE;
-        if(!$this->is_cat) {
+        if($this->is_cat) {
             if($request->has('new_parent')) {
                 $tax->newQuery()->where('parent_id', $tax->id)->get()
                     ->map(function ($item, $key) use ($request) {

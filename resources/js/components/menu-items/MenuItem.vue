@@ -206,7 +206,6 @@
       },
 
       async onUpdateItem () {
-        console.log(this.form);
         await this.form.submit('post', '/api/admin/menus/' + (this.menuId) + '/items/' + this.data.id, {
           transformRequest: [function (data, headers) {
             return objectToFormData(data);

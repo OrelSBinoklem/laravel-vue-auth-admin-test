@@ -49,7 +49,6 @@
 
     methods: {
       __loadItem (slug) {
-        console.log('__loadItem', slug);
         axios
           .get('/api/content/js-plugin', {params: {slug}})
           .then(response => {

@@ -105,12 +105,115 @@
               <div class="col-8" v-else><b>Выберите категории</b></div>
             </div>
           </div>
-          <div class="col-6">
+          <div class="col-6 mb-3">
             <!-- Тэги -->
             <div class="row tax" @click="onSelectTags">
               <div class="col-4 text-md-right">Тэги</div>
               <div class="col-8" v-if="form.tags_ids.length" v-html="__arrJoinQuotes(__findByIds(tags, form.tags_ids))"></div>
               <div class="col-8" v-else><b>Выберите тэги</b></div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <h3>Метаданные</h3>
+          </div>
+
+          <div class="col-12">
+            <!-- Мета поле загрузки файла для плагина -->
+            <div class="row">
+              <div class="col-2 text-md-right">Файл плагина</div>
+              <div class="col-md-4">
+                <b-form-file v-model="form.meta_fields.plugin_file_data" :state="form.errors.has('meta_fields.plugin_file_data') ? false : !!form.meta_fields.plugin_file_data ? true : null" lang="ru" @change="onFilePluginChange" name="meta_fields_plugin_file_data" placeholder="Выберите файл или перетащите..." drop-placeholder="Давай бросай..." />
+                <div class="form-control d-none" :class="{ 'is-invalid': form.errors.has('meta_fields.plugin_file_data') }"></div>
+                <has-error :form="form" field="meta_fields.plugin_file_data"></has-error>
+              </div>
+              <div class="col-6">
+                <div class="plugin-file-path" v-if="!!form.meta_fields.plugin_file">
+                  <a :href="'/storage' + form.meta_fields.plugin_file" target="_blank" @click.prevent="downloadFile('/storage' + form.meta_fields.plugin_file)">
+                    <span>{{'/storage' + form.meta_fields.plugin_file}}</span>
+                    <fa icon="file-archive" />
+                  </a>
+                  <b-button class="btn-icon-delete" v-if="!!form.meta_fields.plugin_file || !!form.meta_fields.plugin_file_data" variant="outline-danger" @click="onDeleteFilePlugin">
+                    <fa icon="times"></fa>
+                  </b-button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <h4>Ссылки на плагин</h4>
+          </div>
+
+          <div class="col-6">
+            <!-- Сайт плагина -->
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label text-md-right">Сайт плагина</label>
+              <div class="col-md-8">
+                <input v-model="form.meta_fields.plugin_site" :class="{ 'is-invalid': form.errors.has('meta_fields.plugin_site') }" class="form-control" type="text" name="plugin_site">
+                <has-error :form="form" field="meta_fields.plugin_site"/>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <!-- GitHub -->
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label text-md-right">GitHub</label>
+              <div class="col-md-8">
+                <input v-model="form.meta_fields.plugin_github" :class="{ 'is-invalid': form.errors.has('meta_fields.plugin_github') }" class="form-control" type="text" name="plugin_github">
+                <has-error :form="form" field="meta_fields.plugin_github"/>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <!-- NPM -->
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label text-md-right">NPM</label>
+              <div class="col-md-8">
+                <input v-model="form.meta_fields.plugin_npm" :class="{ 'is-invalid': form.errors.has('meta_fields.plugin_npm') }" class="form-control" type="text" name="plugin_npm">
+                <has-error :form="form" field="meta_fields.plugin_npm"/>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <!-- Demo -->
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label text-md-right">Демо</label>
+              <div class="col-md-8">
+                <input v-model="form.meta_fields.plugin_demo" :class="{ 'is-invalid': form.errors.has('meta_fields.plugin_demo') }" class="form-control" type="text" name="plugin_demo">
+                <has-error :form="form" field="meta_fields.plugin_demo"/>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <!-- Обучающий материал -->
+            <div class="form-group row">
+              <h4 class="col-12">Обучающий материал</h4>
+              <div class="col-12">
+                <div :class="{ 'is-invalid': form.errors.has('meta_fields.teaching') }" class="form-control d-none"></div>
+                <has-error :form="form" field="meta_fields.teaching"/>
+              </div>
+              <div v-for="(alert, index) in form.meta_fields.teaching" class="col-md-12 mb-2">
+                <div :class="{ 'is-invalid': form.errors.has(`meta_fields.teaching.${index}`) }" class="form-control d-none"></div>
+                <has-error :form="form" :field="`meta_fields.teaching.${index}`"/>
+                <div class="row">
+                  <div  class="col-md-6">
+                    <input v-model="form.meta_fields.teaching[index].title" :class="{ 'is-invalid': form.errors.has(`meta_fields.teaching.${index}.title`) }" class="form-control" type="text" :name="'teaching-title' + index">
+                    <has-error :form="form" :field="`meta_fields.teaching.${index}.title`"/>
+                  </div>
+                  <div  class="col-md-6">
+                    <input v-model="form.meta_fields.teaching[index].link" :class="{ 'is-invalid': form.errors.has(`meta_fields.teaching.${index}.link`) }" class="form-control" type="text" :name="'teaching-link' + index">
+                    <has-error :form="form" :field="`meta_fields.teaching.${index}.link`"/>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 mt-2">
+                <div @click="onAddTeaching" class="btn btn-primary">Добавить ссылку</div>
+              </div>
             </div>
           </div>
 
@@ -233,10 +336,47 @@
   import Vue from 'vue'
   import Form from 'vform'
   import axios from 'axios'
+  //import objectToFormData from 'object-to-formdata'
   import moment from 'moment'
   import { mapGetters } from 'vuex'
 
   import {mixinCreateAndEdit} from '../mixinCreateAndEdit'
+
+  function objectToFormData(obj, rootName, ignoreList) {
+    var formData = new FormData();
+
+    function appendFormData(data, root) {
+      root = root || '';
+      if (data instanceof File) {
+        formData.append(root, data);
+      } else if (Array.isArray(data)) {
+        if(!!data.length) {
+          for (var i = 0; i < data.length; i++) {
+            appendFormData(data[i], root + '[' + i + ']');
+          }
+        }
+      } else if (typeof data === 'object' && data) {
+        for (var key in data) {
+          if (data.hasOwnProperty(key)) {
+            if (root === '') {
+              appendFormData(data[key], key);
+            } else {
+              appendFormData(data[key], root + '[' + key + ']');
+            }
+          }
+        }
+      } else {
+        //if (data !== null && typeof data !== 'undefined') {
+        if (typeof data !== 'undefined') {
+          formData.append(root, data);
+        }
+      }
+    }
+
+    appendFormData(obj, rootName);
+
+    return formData;
+  }
 
   export default {
     name: "ContentCreateAndEdit",
@@ -272,11 +412,19 @@
         meta_keyword: '',
         published: false,
 
-        editors: [],
-
-        alerts: [],
         categories_ids: [],
         tags_ids: [],
+
+        meta_fields: {
+          plugin_file: '',
+          plugin_file_data: null,
+          plugin_site: null,
+          plugin_github: null,
+          plugin_npm: null,
+          plugin_demo: null,
+          teaching: [],
+        },
+
         positions: {
           'alerts_scroll_test': {
             data: {
@@ -355,30 +503,34 @@
       createdAtLabel (value) {
         return moment(value).format("DD-MM-YYYY HH:mm")
       },
+
       async addOrUpdatePlugin () {
         if(this.edit) {
-          await this.form.put('/api/admin/content/js-plugin/' + this.data.id)
+          await this.form.submit('post', '/api/admin/content/js-plugin/' + this.data.id, {
+            transformRequest: [function (data, headers) {
+              return objectToFormData(data)
+            }],
+            onUploadProgress: e => {
+              // Do whatever you want with the progress event
+              // console.log(e)
+            }
+          });
+
           this.$emit('updated', {
             slug: 'js-plugin',
             id: this.data.id
           })
         } else {
-          await this.form.post('/api/admin/content/js-plugin')
+          await this.form.submit('post', '/api/admin/content/js-plugin', {
+            transformRequest: [function (data, headers) {
+              return objectToFormData(data)
+            }],
+            onUploadProgress: e => {
+              // Do whatever you want with the progress event
+              // console.log(e)
+            }
+          });
         }
-      },
-
-      onAddAlert () {
-        this.form.alerts.push({
-          title: '',
-          text: ''
-        })
-      },
-
-      onAddEditor () {
-        this.form.editors.push({
-          slug: '',
-          text: ''
-        })
       },
 
       onSelectCategories () {
@@ -387,6 +539,34 @@
 
       onSelectTags () {
         this.$root.$emit('bv::show::modal','modal-select-tags')
+      },
+
+      onFilePluginChange(e) {
+        this.form.icon_data = e.target.files[0];
+      },
+
+      onDeleteFilePlugin() {
+        this.form.meta_fields.plugin_file = '';
+        this.form.meta_fields.plugin_file_data = null;
+      },
+
+      downloadFile (url) {
+        axios.get(url, { responseType: 'blob' })
+          .then(({ data }) => {
+            const blob = new Blob([data], { type: 'application/zip' })
+            let link = document.createElement('a')
+            link.href = window.URL.createObjectURL(blob)
+            link.download = url.substring(url.lastIndexOf('/')+1)
+            link.click()
+          }).catch(error => console.error(error))
+      },
+
+      onAddTeaching () {
+        this.form.meta_fields.teaching.push({
+          title: '',
+          link: ''
+        });
+        console.log(this.form.meta_fields.teaching);
       },
 
       __setDataForm(data) {
@@ -405,12 +585,22 @@
           this.form.meta_keyword = this.data.meta_keyword
           this.form.published = !!this.data.published
 
-          this.form.editors = this.data.meta_data.editors ? this.data.meta_data.editors : []
-
-          this.form.alerts = this.data.meta_data.alerts ? this.data.meta_data.alerts : []
           this.form.categories_ids = this.__getIdsFromArr(data.categories)
           this.form.tags_ids = this.__getIdsFromArr(data.tags)
 
+          let meta_fields = [
+            'plugin_file',
+
+            'plugin_site',
+            'plugin_github',
+            'plugin_npm',
+            'plugin_demo',
+
+            'teaching',
+          ];
+          for(let val of meta_fields)
+            if(_.hasIn(this, 'data.meta_data.' + val))
+              this.form.meta_fields[val] = this.data.meta_data[val];
 
           for(let key in this.form.positions) {
             if('positions' in this.data.meta_data && key in this.data.meta_data.positions && 'widgets' in this.data.meta_data.positions[key]) {
@@ -436,4 +626,12 @@
 <style lang="sass" scoped>
   .tax
     cursor: pointer
+
+  .btn-file-delete
+    display: none
+    position: absolute
+    top: 0
+    right: 0
+  .icon-img-card:hover .btn-file-delete
+    display: block
 </style>

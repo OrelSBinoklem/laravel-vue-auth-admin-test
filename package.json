@@ -24,6 +24,7 @@
     "glyphicons-only-bootstrap": "^1.0.1",
     "jquery": "^3.3.1",
     "js-cookie": "^2.2.0",
+    "liquor-tree": "^0.2.65",
     "lodash": "^4.17.11",
     "moment": "^2.23.0",
     "object-to-formdata": "^2.1.2",
@@ -33,6 +34,7 @@
     "validatorjs": "^3.15.1",
     "vform": "^1.0.0",
     "vue": "^2.5.16",
+    "vue-affix": "^0.5.2",
     "vue-clipboard2": "^0.3.0",
     "vue-ctk-date-time-picker": "^1.4.2",
     "vue-draggable-nested-tree": "^2.2.8",
@@ -48,7 +50,8 @@
     "vuetable-2": "^1.7.5",
     "vuex": "^3.0.1",
     "vuex-router-sync": "^5.0.0",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.1.2",
+    "xregexp": "^4.2.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-eslint": "^3.0.0-beta.9",

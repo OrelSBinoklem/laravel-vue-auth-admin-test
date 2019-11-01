@@ -7,6 +7,8 @@ import App from '~/components/App'
 import '~/plugins'
 import '~/components'
 
+import '~/components/helper'
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

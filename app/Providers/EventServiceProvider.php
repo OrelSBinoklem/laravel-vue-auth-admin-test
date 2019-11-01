@@ -12,7 +12,11 @@ use App\Events\MenuItemSaved;
 use App\Events\MenuItemDeleted;
 use App\Events\MenuSaved;
 use App\Events\MenuDeleted;
+use App\Events\ContentJSPluginSaved;
+use App\Events\ContentJSPluginDeleted;
+
 use App\Listeners\ClearMenuClientCache;
+use App\Listeners\ClearMaterialForPPMMCache;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -22,24 +26,14 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        Registered::class => [
-            SendEmailVerificationNotification::class,
-        ],
-        ChangeEmail::class => [
-            SendEmailVerificationNotification::class,
-        ],
-        MenuItemSaved::class => [
-            ClearMenuClientCache::class,
-        ],
-        MenuItemDeleted::class => [
-            ClearMenuClientCache::class,
-        ],
-        MenuSaved::class => [
-            ClearMenuClientCache::class,
-        ],
-        MenuDeleted::class => [
-            ClearMenuClientCache::class,
-        ],
+        Registered::class =>             [SendEmailVerificationNotification::class,],
+        ChangeEmail::class =>            [SendEmailVerificationNotification::class,],
+        MenuItemSaved::class =>          [ClearMenuClientCache::class,],
+        MenuItemDeleted::class =>        [ClearMenuClientCache::class,],
+        MenuSaved::class =>              [ClearMenuClientCache::class,],
+        MenuDeleted::class =>            [ClearMenuClientCache::class,],
+        ContentJSPluginSaved::class =>   [ClearMaterialForPPMMCache::class,],
+        ContentJSPluginDeleted::class => [ClearMaterialForPPMMCache::class,],
     ];
 
     /**

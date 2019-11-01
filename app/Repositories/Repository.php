@@ -40,7 +40,7 @@ abstract class Repository {
             ->header('Access-Control-Allow-Methods', 'GET');
 	}
 
-	public function getAll($with) {
+	public function getAll($with = false) {
 	    if($with) {
             $models = $this->model->with($with)->get();
         } else {

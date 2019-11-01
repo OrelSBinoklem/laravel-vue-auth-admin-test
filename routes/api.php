@@ -55,7 +55,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::group(['prefix' => 'content'], function () {
             Route::get('js-plugin/get-table', 'ContentJSPluginController@getTableData');
             Route::get('js-plugin/get-one', 'ContentJSPluginController@getOne');
-            Route::resource('js-plugin', 'ContentJSPluginController', ['only' => ['store', 'update', 'destroy']]);
+            //todo-mark был put но php непотдерживает сохранение файлов этим методом а хаком https://gist.github.com/Stunext/9171b7a8f3633b0b601a0feb8088dca1 нестал пользоваться
+            Route::post('js-plugin/{id}', ['uses' => 'ContentJSPluginController@update', 'as' => 'js-plugin.update']);
+            Route::resource('js-plugin', 'ContentJSPluginController', ['only' => ['store', 'destroy']]);
         });
     });
 });
@@ -72,10 +74,14 @@ Route::group(['middleware' => 'guest:api'], function () {
 
 Route::get('menus/{slug}', 'MenusController@index')->where('slug', '[0-9a-zA-Z\-\_]+');
 
+Route::get('categories', 'CategoryController@getPublic');
+
 Route::group(['prefix' => 'content', 'namespace' => 'Content'], function () {
     Route::get('/get-some-items', 'ContentController@getPublicWhereInSlug');
     Route::get('/get-short-by-tax', 'ContentController@ShortWhereInSlugsByTax');
     //plain-plugins-mega-menu
+    Route::get('/get-all-tax-ppmm', 'ContentController@getMaterialsAllTaxForItemsPPMM');
+    //Route::get('/get-tax-ppmm', 'ContentController@getMaterialsTaxForItemsPPMM');
     Route::get('/get-items-ppmm', 'ContentController@getMaterialsDataForItemsPPMM');
 
     Route::get('js-plugin', 'ContentJSPluginController@index');

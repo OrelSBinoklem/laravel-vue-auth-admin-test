@@ -151,6 +151,7 @@ class MenusRepository extends VueTableRepository
 
         function buildTree(array &$filtered_items, array &$elements, $parentId = null) {
             //todo алгоритм неочень эффективный - может использовать объекты?
+            //todo может просто несколько раз удалить элементы неимеющие родителя (в зависимости от уровня вложенности) пока таковые незакончаться
             $branch = array();
 
             foreach ($elements as $element) {

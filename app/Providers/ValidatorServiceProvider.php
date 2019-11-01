@@ -54,7 +54,7 @@ class ValidatorServiceProvider extends ServiceProvider {
         $this->app['validator']->extend('position_widgets_count', function ($attribute, $value, $parameters)
         {
             foreach ($value['rules'] as $key => $pos_rule) {
-                if(!$this->__checkOnePosRuleCountsWidgets($pos_rule, $value['widgets'])) {
+                if(!$this->__checkOnePosRuleCountsWidgets($pos_rule, isset($value['widgets']) ? $value['widgets'] : [])) {
                     return false;
                 }
             }
@@ -127,7 +127,6 @@ class ValidatorServiceProvider extends ServiceProvider {
             }
 
             foreach ($widgets as $key => $widget) {
-                debug($widget, $rules_not);
                 if(!Validator::make($widget, $rules)->fails() && (!count($rules_not) || Validator::make($widget, $rules_not)->fails())) {
                     $count++;
                 }

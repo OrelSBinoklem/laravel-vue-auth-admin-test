@@ -14,17 +14,24 @@
       </b-button-group>
     </navbar>
 
-    <div class="grid-menu">
-      <grid-menu
-        :data="gridMenu"
-        @select="onSelectMegaMenu"
-      />
+    <div class="nav-menu">
+
     </div>
 
+    <b-button variant="outline-primary" class="btn-open-plugins-megamenu" @click="onOpenPluginsMegamenu"><fa icon="expand"></fa></b-button>
+    <!--todo доделать сохранение состояния plugins-megamenu и зделать v-if а не v-show-->
     <div class="plugins-megamenu" v-if="openMegamenu">
       <vue-scroll :ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}">
         <div class="container">
-          <MegaMenu :items="curMegaMenuItems" @change-page="onChangePageMegamenu"></MegaMenu>
+          <MegaMenu
+            v-if="!!menuData"
+            :items="menuData"
+            :filter="filterPlugins"
+            :card-item="'CardPlugin'"
+            @change-page="onChangePageMegamenu"
+            scroll-container-selector=".plugins-megamenu .__vuescroll .__panel"
+            uniq-id-for-affix="list-plugins"
+          ></MegaMenu>
         </div>
       </vue-scroll>
       <b-button class="btn-close-megamenu" variant="outline-primary" size="lg" @click="onCloseMegamenu">
@@ -63,7 +70,6 @@
 
   //import NavbarFullWidth from "../components/NavbarFullWidth";
   import Navbar from '~/components/Navbar';
-  import GridMenu from '../components/plain-plugins/GridMenu';
   import MegaMenu from '../components/plain-plugins/MegaMenu';
   import SidebarScrollHash from '../components/scroll-hash/SidebarScrollHash';
 
@@ -75,27 +81,38 @@
     components: {
       //NavbarFullWidth,
       Navbar,
-      GridMenu,
       MegaMenu,
       SidebarScrollHash
     },
 
     data: () => ({
-      gridMenu: {
-        cols: [
-          'Плагины', 'Авторские', 'Заготовки'
-        ],
-        rows: [
-          {icon: ['custom', 'jquery'], color: '#0865A7'},
-          {icon: ['fab', 'wordpress'], color: '#00769D'},
-          {icon: ['fab', 'vuejs'], color: '#2EB47E'},
-          {icon: ['fab', 'laravel'], color: '#F34D38'}
-        ],
-        items: [
-          ['jq-plugins', 'jq-authors', 'jq-code'],
-          ['wp-plugins', 'wp-authors', 'wp-code'],
-          ['vue-plugins', 'vue-authors', 'vue-code'],
-          ['laravel-plugins', 'laravel-authors', 'laravel-code'],
+      filterPlugins: {
+        gridMenu: {
+          cols: [
+            {title: 'JQuery', icon: ['custom', 'jquery'], color: '#0865A7', slug: 'jquery'},
+            {title: 'WordPress', icon: ['fab', 'wordpress'], color: '#00769D', slug: 'wordpress'},
+            {title: 'Vue', icon: ['fab', 'vuejs'], color: '#2EB47E', slug: 'vue'},
+            {title: 'Laravel', icon: ['fab', 'laravel'], color: '#F34D38', slug: 'laravel'},
+          ],
+          rows: [
+            {title: 'Плагины', icon: 'users', color: '#333333', slug: 'plugins'},
+            {title: 'Авторские', icon: 'user-friends', color: '#333333', slug: 'authors-plugins'},
+            {title: 'Заготовки', icon: 'file-code', color: '#333333', slug: 'blanks'},
+          ],
+          items: [
+            //todo-mark может потом буду использовать функционал
+            ['', '', '', ''],
+            ['', '', '', ''],
+            ['', '', '', ''],
+          ]
+        },
+
+        categoriesMenuSlug: 'web-programming',
+
+        options: [
+          {rootCategory: 'sets', defText: '--Комплекты--'},
+          {rootCategory: 'price', defText: '--Стоимость плагина--'},
+          {rootCategory: 'rating', defText: '--Лучшее--'},
         ]
       },
 
@@ -150,15 +167,6 @@
         return this.$store.getters['interface/priorityCopyTypeCode']
       },
 
-      curMegaMenuItems() {
-        if(this.curMegaMenu !== null) {
-          let subMenu = _.find(this.menuData, {'slug': this.curMegaMenu});
-          return !!subMenu && 'children' in subMenu ? subMenu.children : [];
-        } else {
-          return [];
-        }
-      },
-
       ...mapGetters({
         hashGroups: 'interface/hashGroups',
         navHashes: 'interface/navHashes'
@@ -175,6 +183,10 @@
         this.$store.dispatch('interface/savePriorityCopyTypeCode', this.priorityCopyTypeCode)
       },
 
+      onOpenPluginsMegamenu() {
+        this.openMegamenu = true;
+      },
+
       onOpenHashMenu() {
         this.optHashMenu.columnsSlide = 4;
         this.optHashMenu.modeNoSlider = true;
@@ -187,11 +199,6 @@
         }
       },
 
-      onSelectMegaMenu(item) {
-        this.curMegaMenu = item;
-        this.openMegamenu = true;
-      },
-
       onCloseMegamenu() {
         this.openMegamenu = false;
       },
@@ -202,7 +209,9 @@
     },
 
     watch: {
-
+      openMegamenu(val) {
+        $('body').toggleClass('hidden-scroll', val);
+      }
     },
 
     async beforeMount() {
@@ -228,7 +237,7 @@
     }
   }
 
-  .grid-menu {
+  .nav-menu {
     position: fixed;
     top: 0;
     left: 0;
@@ -245,8 +254,14 @@
     left: 0;
     bottom: 0;
     width: 100vw;
-    background-color: #fff;
-    z-index: 2;
+    background-color: #f7f9fb;
+    z-index: 5;
+  }
+
+  .btn-open-plugins-megamenu {
+    position: fixed;
+    top: 10px;
+    left: 320px;
   }
 
   .btn-close-megamenu {
@@ -276,5 +291,12 @@
 
   .plain-plugins-hash-menu.__expanded {
     width: 720px;
+  }
+</style>
+
+<style lang="scss">
+  /*todo перенести в глобальніе стили*/
+  body.hidden-scroll {
+    overflow: hidden;
   }
 </style>
