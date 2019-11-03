@@ -15,11 +15,10 @@
     </navbar>
 
     <div class="nav-menu">
-
+      <bs-sidebar-menu-nested-drop v-if="!!menuData" :menu="menuData"></bs-sidebar-menu-nested-drop>
     </div>
 
     <b-button variant="outline-primary" class="btn-open-plugins-megamenu" @click="onOpenPluginsMegamenu"><fa icon="expand"></fa></b-button>
-    <!--todo доделать сохранение состояния plugins-megamenu и зделать v-if а не v-show-->
     <div class="plugins-megamenu" v-if="openMegamenu">
       <vue-scroll :ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}">
         <div class="container">
@@ -29,6 +28,7 @@
             :filter="filterPlugins"
             :card-item="'CardPlugin'"
             @change-page="onChangePageMegamenu"
+
             scroll-container-selector=".plugins-megamenu .__vuescroll .__panel"
             uniq-id-for-affix="list-plugins"
           ></MegaMenu>
@@ -72,6 +72,7 @@
   import Navbar from '~/components/Navbar';
   import MegaMenu from '../components/plain-plugins/MegaMenu';
   import SidebarScrollHash from '../components/scroll-hash/SidebarScrollHash';
+  import BsSidebarMenuNestedDrop from '../components/bs-sidebar-menu-nested-drop/BsSidebarMenuNestedDrop';
 
   export default {
     name: 'PlainPluginsLayout',
@@ -82,7 +83,8 @@
       //NavbarFullWidth,
       Navbar,
       MegaMenu,
-      SidebarScrollHash
+      SidebarScrollHash,
+      BsSidebarMenuNestedDrop
     },
 
     data: () => ({
@@ -245,7 +247,7 @@
     width: 320px;
     background-color: #fff;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-    z-index: 1;
+    z-index: 5;
   }
 
   .plugins-megamenu {

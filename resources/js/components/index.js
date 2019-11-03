@@ -7,6 +7,7 @@ import { HasError, AlertError, AlertSuccess } from 'vform'
 
 import AdminPosition from './content-widgets/AdminPosition'
 import AdminWidget from './content-widgets/AdminWidget'
+import BsSidebarMenuNestedDropSubItem from './bs-sidebar-menu-nested-drop/SubItem'
 
 // Components that are registered globaly.
 [
@@ -18,7 +19,8 @@ import AdminWidget from './content-widgets/AdminWidget'
   AlertError,
   AlertSuccess,
   AdminPosition,
-  AdminWidget
+  AdminWidget,
+  BsSidebarMenuNestedDropSubItem
 ].forEach(Component => {
   Vue.component(Component.name, Component)
 })
