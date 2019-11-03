@@ -82,6 +82,8 @@ export default {
         Vue.set(this, 'selected',         this.filterStore.selected);
       if('filter' in this.filterStore)
         Vue.set(this, 'filter',           this.filterStore.filter);
+
+      this.$emit('restored-filter', this.filter);
     });
   },
 

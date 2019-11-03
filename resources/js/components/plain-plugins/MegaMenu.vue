@@ -24,7 +24,7 @@
             component(v-bind:is="cardItem" :data="curList" :mode="mode" @neded-materials="addItemStackLoadSpecial" @change-page="onChangePage")
 
       .filter(v-if='!!filter')
-        mega-filter(:data='filter' @change="onChangeFilter")
+        mega-filter(:data='filter' @change="onChangeFilter" @restored-filter="onChangeFilter")
           template(slot="t-r-special")
             .btns-mode.btn-group-vertical
               button(type='button' :class="{active: mode === 'cards'}" @click="onChangeMode('cards')").btn.btn-outline-primary: fa(icon='th')
@@ -365,7 +365,7 @@ export default {
 
     __setOriginalChildren(items) {
       items.forEach((item) => {
-        if('children' in item && !!item.children.length){
+        if('children' in item && !!item.children.length && !('originalChildren' in item)){
           item.originalChildren = item.children.slice();
         }
       });
