@@ -10,6 +10,7 @@ export const state = {
   navHashes: [],
   //todo лучше сохранять на долго потому что пользователь может работать с несколькими технологиями но куки маленькие может локал сторадж
   filterPlugins: {},
+  filterMenuNavPlugins: Cookies.getJSON('interface.filterMenuNavPlugins') || null,
   cardsOrListPlugins: 'cards',
   curListCategory: null,
 }
@@ -22,6 +23,7 @@ export const getters = {
   navHashes: (state) => {return state.navHashes},
 
   filterPlugins: (state) => {return state.filterPlugins},
+  filterMenuNavPlugins: (state) => {return state.filterMenuNavPlugins},
   cardsOrListPlugins: (state) => {return state.cardsOrListPlugins},
   curListCategory: (state) => {return state.curListCategory},
 }
@@ -48,6 +50,11 @@ export const mutations = {
 
   [types.SET_FILTER_PLUGINS] (state, filterPlugins) {
     state.filterPlugins = filterPlugins;
+  },
+
+  [types.SET_FILTER_MENU_NAV_PLUGINS] (state, cat) {
+    state.filterMenuNavPlugins = cat;
+    Cookies.set('interface.filterMenuNavPlugins', cat, { expires: 7 })
   },
 
   [types.SET_CARDS_OR_LIST_PLUGINS] (state, cardsOrListPlugins) {
@@ -79,6 +86,10 @@ export const actions = {
 
   saveFilterPlugins ({ commit, dispatch }, payload) {
     commit(types.SET_FILTER_PLUGINS, payload)
+  },
+
+  saveFilterMenuNavPlugins ({ commit, dispatch }, payload) {
+    commit(types.SET_FILTER_MENU_NAV_PLUGINS, payload)
   },
 
   saveCardsOrListPlugins ({ commit, dispatch }, payload) {

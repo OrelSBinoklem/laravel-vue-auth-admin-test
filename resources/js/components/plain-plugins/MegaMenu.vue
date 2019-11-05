@@ -122,8 +122,9 @@ export default {
   },
 
   async mounted () {
-    this.__setOriginalChildren(this.items)
-    this.menuData = await this.getAllCategories(this.items);
+    this.__setOriginalChildren(this.items);
+
+    this.menuData = this.items;
 
     this.LoadSpecialThrottle = _.throttle(async () => {
       let clone = this.stackLoadSpecial.slice();
@@ -246,64 +247,6 @@ export default {
       } else {
         return null;
       }
-    },
-
-    async getAllCategories(items) {
-      //Добавляем ссылку на parent в виде свойства parent
-      this.__setParent(items);
-
-      //Делаем данные плоскими
-      let flat = this.__treeToFlat(items);
-
-      //++++++++++++++++++++++
-      let slugs = {};
-      let temp = flat.slice();
-      _.remove(temp, function(item) {
-        return item.type_id !== 2 || 'material' in item;
-      });
-
-      temp.forEach((item) => {
-        if(!(item.meta_data.content_type in slugs)) {
-          slugs[item.meta_data.content_type] = true;
-        }
-      });
-
-      let result;
-      if(temp.length) {
-        await this.$store.dispatch('db/loadTaxPublicPPMM', slugs);
-        let data = this.$store.getters['db/taxPublicPPMM'];
-          result = {data};
-      } else {
-        result = null;
-      }
-
-      //++++++++++++++++++
-      if(!!result && 'data' in result) {
-        let data = result['data'];
-
-        //Нормализуем категории и тэги в материалах
-        _.values(data).forEach((el) => {
-          _.values(el).forEach((el) => {
-            if(Array.isArray(el.tags))
-              el.tags = _.keyBy(el.tags, 'slug')
-            if(Array.isArray(el.categories))
-              el.categories = _.keyBy(el.categories, 'slug')
-          })
-        });
-
-        //К пунктам меню привязываем категории и тэги
-        flat.forEach((el) => {
-          let type = el.meta_data.content_type;
-          let slug = el.meta_data.material_slug;
-
-          if(el.type_id === 2 && type in data && slug in data[type]) {
-            Vue.set(el, 'categories', data[type][slug].categories);
-            Vue.set(el, 'tags', data[type][slug].tags);
-          }
-        });
-      }
-
-      return items;
     },
 
     onChangeFilter(val) {

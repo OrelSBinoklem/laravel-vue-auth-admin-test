@@ -10,6 +10,7 @@
           active-class='active'
           @mouseenter.native="(e) => {onHover(e, item)}"
           @mouseleave.native="onBloor"
+          @click.native="onChangePage"
         ).dropdown-item.d-flex.justify-content-between.align-items-center
           | {{item.name}}
           span.arrow-sub(v-if="!!item.children && !!item.children.length")
@@ -18,6 +19,7 @@
           :href='item.path'
           @mouseenter="(e) => {onHover(e, item)}"
           @mouseleave="onBloor"
+          @click="onChangePage"
         ).dropdown-item.d-flex.justify-content-between.align-items-center
           | {{item.name}}
           span.arrow-sub(v-if="!!item.children && !!item.children.length")
@@ -29,6 +31,7 @@
     )
       BsSidebarMenuNestedDropSubItem(
         :items="active.children"
+        @change-page="onChangePage"
       )
 
 

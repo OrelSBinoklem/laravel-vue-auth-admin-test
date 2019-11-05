@@ -21,6 +21,7 @@
     )
       BsSidebarMenuNestedDropSubItem(
         :items="active.children"
+        @change-page="onChangePage"
       )
 
 
@@ -63,7 +64,14 @@ export default {
   methods: {
     onScroll() {
       this.topHoverItem = this.__getTopPositionItemByScroll(this.domActive);
-    }
+    },
+
+    onChangePage() {
+      this.domActive = null;
+      this.active = null;
+
+      this.$emit('change-page');
+    },
   },
 
   watch: {

@@ -65,9 +65,13 @@ export const mixin = {
       }
     },
 
+    onChangePage() {
+      this.$emit('change-page');
+    },
+
     /**
      * Получение отступа сверху элемента с учетом скролла
-     * @param {Object} domItem - слуг элемента
+     * @param {Object} domItem - элемент
      * @private
      */
     __getTopPositionItemByScroll(domItem) {
@@ -76,9 +80,9 @@ export const mixin = {
   },
 
   computed: {
-      topSubItem() {
-          return this.isSub ? this.topHoverItem - parseInt($('.dropdown-menu', this.$refs.container).css('padding-top')) : this.topHoverItem;
-      },
+    topSubItem() {
+      return this.isSub ? this.topHoverItem - parseInt($('.dropdown-menu', this.$refs.container).css('padding-top')) : this.topHoverItem;
+    },
 
     calculateTopSubItem() {
       if (!!this.active && !!this.active.children && !!this.active.children.length) {
@@ -101,7 +105,7 @@ export const mixin = {
       }
 
       return 0;
-    }
+    },
   },
 
   watch: {},
