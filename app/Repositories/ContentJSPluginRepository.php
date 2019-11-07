@@ -79,6 +79,10 @@ class ContentJSPluginRepository extends BaseContentRepository {
 
         $data['published'] = $data['published'] ? 1 : 0;
 
+        //todo-crutch
+        $data['meta_fields']['plugin_file_data'] = $data['meta_fields']['plugin_file_data'] === "null" ? null : $data['meta_fields']['plugin_file_data'];
+        $data['meta_fields']['plugin_file'] = $data['meta_fields']['plugin_file'] === "null" ? null : $data['meta_fields']['plugin_file'];
+
         $this->validatorCreate($data)->validate();
 
         $new = new ContentJSPlugin;
@@ -98,7 +102,7 @@ class ContentJSPluginRepository extends BaseContentRepository {
         ]);
 
         $meta = [];
-        if ($request->has('meta_fields.plugin_file_data') && $request->file('meta_fields.plugin_file_data') !== null) {
+        if ($request->has('meta_fields.plugin_file_data') && $data['meta_fields']['plugin_file_data'] !== null) {
             $file = $request->file('meta_fields.plugin_file_data');
             $name = $file->getClientOriginalName();
             $folder = '/uploads/js-plugins/';
@@ -140,9 +144,10 @@ class ContentJSPluginRepository extends BaseContentRepository {
 
         $data = $request->all();
 
-        debug($data);
-
         $data['published'] = $data['published'] ? 1 : 0;
+        //todo-crutch
+        $data['meta_fields']['plugin_file_data'] = $data['meta_fields']['plugin_file_data'] === "null" ? null : $data['meta_fields']['plugin_file_data'];
+        $data['meta_fields']['plugin_file'] = $data['meta_fields']['plugin_file'] === "null" ? null : $data['meta_fields']['plugin_file'];
 
         $this->validatorUpdate($data, $plugin)->validate();
 
@@ -163,7 +168,7 @@ class ContentJSPluginRepository extends BaseContentRepository {
         $meta = [];
         $iconPath = null;
         $folder = '/uploads/js-plugins/';
-        if ($request->has('meta_fields.plugin_file_data') && $request->file('meta_fields.plugin_file_data') !== null) {
+        if ($request->has('meta_fields.plugin_file_data') && $data['meta_fields']['plugin_file_data'] !== null) {
             $file = $request->file('meta_fields.plugin_file_data');
             $name = $file->getClientOriginalName();
             $filePath = $folder . $file->getClientOriginalName();
@@ -171,9 +176,11 @@ class ContentJSPluginRepository extends BaseContentRepository {
             $this->uploadOne($file, $folder, 'public', substr($name, 0, strlen($name) - (strlen($file->getClientOriginalExtension()) + 1)));
             $meta['plugin_file'] = $filePath;
         } else {
-            if(!$request->has('plugin_file') || !$request->input('plugin_file') && $plugin->plugin_file !== null) {
+            if(!$request->has('meta_fields.plugin_file') || !$data['meta_fields']['plugin_file'] && $plugin->plugin_file !== null) {
                 Storage::disk('public')->delete($plugin->plugin_file);
                 $meta['plugin_file'] = null;
+            } else {
+                $meta['plugin_file'] = $data['meta_fields']['plugin_file'];
             }
         }
 
