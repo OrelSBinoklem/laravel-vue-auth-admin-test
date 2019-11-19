@@ -8,8 +8,7 @@ export const state = {
   priorityCopyTypeCode: Cookies.getJSON('interface.priorityCopyTypeCode') || {},
   hashGroups: {},
   navHashes: [],
-  //todo лучше сохранять на долго потому что пользователь может работать с несколькими технологиями но куки маленькие может локал сторадж
-  filterPlugins: {},
+  filterPlugins: Cookies.getJSON('interface.filterPlugins') || {},
   filterMenuNavPlugins: Cookies.getJSON('interface.filterMenuNavPlugins') || null,
   cardsOrListPlugins: 'cards',
   curListCategory: null,
@@ -50,6 +49,7 @@ export const mutations = {
 
   [types.SET_FILTER_PLUGINS] (state, filterPlugins) {
     state.filterPlugins = filterPlugins;
+    Cookies.set('interface.filterPlugins', filterPlugins, { expires: 7 })
   },
 
   [types.SET_FILTER_MENU_NAV_PLUGINS] (state, cat) {

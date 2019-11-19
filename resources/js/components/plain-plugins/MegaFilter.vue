@@ -70,7 +70,8 @@ export default {
 
   beforeMount() {
     this.data.options.forEach((opt) => {
-      this.selected[opt.rootCategory] = null;
+      Vue.set(this.selected, opt.rootCategory, null);
+      Vue.set(this.filter, opt.rootCategory, null);
     });
 
     Vue.nextTick( () => {
@@ -149,6 +150,7 @@ export default {
 
   computed: {
     isFilterSelected() {
+      console.log(this.filter)
       return _.valuesIn(this.selected).reduce((accum, val) => {return accum ? accum : val !== null}, false);
     },
 
