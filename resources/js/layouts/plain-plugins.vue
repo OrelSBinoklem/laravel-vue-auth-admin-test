@@ -116,7 +116,7 @@
       filterPlugins: {
         gridMenu: {
           cols: [
-            {title: 'JQuery', icon: ['custom', 'jquery'], color: '#0865A7', slug: 'jquery'},
+            {title: 'JQuery и ванилла', icon: ['custom', 'jquery'], color: '#0865A7', slug: 'jquery'},
             {title: 'WordPress', icon: ['fab', 'wordpress'], color: '#00769D', slug: 'wordpress'},
             {title: 'Vue', icon: ['fab', 'vuejs'], color: '#2EB47E', slug: 'vue'},
             {title: 'Laravel', icon: ['fab', 'laravel'], color: '#F34D38', slug: 'laravel'},
@@ -134,7 +134,7 @@
           ]
         },
 
-        categoriesMenuSlug: 'web-programming',
+        //categoriesMenuSlug: 'web-programming',
 
         options: [
           {rootCategory: 'sets', defText: '--Комплекты--'},
