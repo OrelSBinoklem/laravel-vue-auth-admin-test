@@ -4,17 +4,17 @@
   .mega-filter
 
     .filter-grid-and-mode
-      .grid-menu
+      .grid-menu(v-if="!!data.gridMenu")
         grid-menu(:data="data.gridMenu" :select-col="selected.framework" :select-row="selected.code_type" @select="onSelectGridMenu" mode="compact")
       .filter-mode
         button.btn-clear(type="button" @click="onClear" :disabled="!isFilterSelected" :class="{active: isFilterSelected}").btn.btn-sm.btn-outline-dark: fa(icon='broom')
         slot(name="t-r-special")
 
-    .filter-categories
+    .filter-categories(v-if="!!data.categoriesMenuSlug")
       vue-scroll(:ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}")
         categories-tree(:root-category="data.categoriesMenuSlug" :select="selected.categories" @checked="onChangeCat" :expanded="saveSpecialState.categoriesExpanded" @toggle-collapse="onToggleCollapseCat")
 
-    .filter-options
+    .filter-options(v-if="!!data.options")
       .filter-options-shadow-wrap: .filter-options-shadow
       .filter-options-content
         category-select(v-for="opt in data.options" :select="selected[opt.rootCategory]" @select="(val) => {onSelectOption(opt.rootCategory, val)}" :root-category="opt.rootCategory" :default-text="opt.defText" :key="opt.rootCategory")
@@ -70,7 +70,8 @@ export default {
 
   beforeMount() {
     this.data.options.forEach((opt) => {
-      this.selected[opt.rootCategory] = null;
+      Vue.set(this.selected, opt.rootCategory, null);
+      Vue.set(this.filter, opt.rootCategory, null);
     });
 
     Vue.nextTick( () => {
@@ -82,6 +83,8 @@ export default {
         Vue.set(this, 'selected',         this.filterStore.selected);
       if('filter' in this.filterStore)
         Vue.set(this, 'filter',           this.filterStore.filter);
+
+      this.$emit('restored-filter', this.filter);
     });
   },
 
@@ -147,6 +150,7 @@ export default {
 
   computed: {
     isFilterSelected() {
+      console.log(this.filter)
       return _.valuesIn(this.selected).reduce((accum, val) => {return accum ? accum : val !== null}, false);
     },
 
@@ -208,7 +212,7 @@ export default {
 
   .filter-options {
     position: relative;
-    margin-top: auto;
+    margin-top: 30px;
     flex: 0 0 auto;
 
     .category-select {
@@ -221,7 +225,7 @@ export default {
     top: -5px;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: -5px;
     overflow: hidden;
   }
 
@@ -230,7 +234,7 @@ export default {
     top: 5px;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 5px;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
   }
 

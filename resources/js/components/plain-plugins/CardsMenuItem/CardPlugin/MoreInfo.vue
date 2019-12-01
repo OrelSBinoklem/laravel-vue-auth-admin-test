@@ -12,6 +12,32 @@
             .btn-group
               b-button(variant='outline-primary' size="sm" block :href="curPluginUrl" title="Скачать плагин"): fa(icon="file-archive")
               button.btn.btn-sm.btn-primary.dropdown-toggle.dropdown-toggle-split(type='button' @click="showCollapseDownload = !showCollapseDownload" title="Дополнительный код"): span.sr-only
+        template(v-if="mode === 'cards'")
+          b-collapse(v-model="showCollapseDownload")
+            template(v-if="'props' in widgetCopyCode && 'editors' in widgetCopyCode.props")
+              .row(v-for="(editor, index) in widgetCopyCode.props.editors")
+                .col-8: h6.heading(:title="editor.heading") {{ editor.heading }}
+                .col-4.pl-0
+                  b-button(
+                    variant='outline-primary'
+                    size="sm"
+                    block
+                    v-clipboard:copy='getPriorityEditor(editor.variant_or_group, widgetCopyCode.positions["editor" + index].widgets).props.code'
+                    v-clipboard:success="() => onCopy(editor.heading)"
+                    v-clipboard:error="onErrorCopy"
+                  )
+                    | {{getPriorityEditor(editor.variant_or_group, widgetCopyCode.positions["editor" + index].widgets).props.variant}}&nbsp;
+                    fa(:icon="['far', 'copy']")
+
+      //Ссылки автора
+      .more-info-section.more-info-author-links
+        .more-icon(title="Ссылки на плагин" :class="{'exist': !!data.material.meta_data.plugin_site || !!data.material.meta_data.plugin_github || !!data.material.meta_data.plugin_npm || !!data.material.meta_data.plugin_demo}"): fa(icon="link")
+        a.btn.btn-sm.btn-outline-primary(v-if="!!data.material.meta_data.plugin_site" :href="data.material.meta_data.plugin_site" title="Сайт плагина" target="_blank"): fa(icon="globe")
+        a.btn.btn-sm.btn-outline-primary(v-if="!!data.material.meta_data.plugin_github" :href="data.material.meta_data.plugin_github" title="GitHub" target="_blank"): fa(:icon="['fab', 'github']")
+        a.btn.btn-sm.btn-outline-primary(v-if="!!data.material.meta_data.plugin_npm" :href="data.material.meta_data.plugin_npm" title="NPM" target="_blank"): fa(:icon="['fab', 'npm']")
+        a.btn.btn-sm.btn-outline-primary(v-if="!!data.material.meta_data.plugin_demo" :href="data.material.meta_data.plugin_demo" title="Демо" target="_blank"): fa(icon="eye")
+
+      .more-info-download-list-editors(v-if="mode === 'list'")
         b-collapse(v-model="showCollapseDownload")
           template(v-if="'props' in widgetCopyCode && 'editors' in widgetCopyCode.props")
             .row(v-for="(editor, index) in widgetCopyCode.props.editors")
@@ -27,14 +53,6 @@
                 )
                   | {{getPriorityEditor(editor.variant_or_group, widgetCopyCode.positions["editor" + index].widgets).props.variant}}&nbsp;
                   fa(:icon="['far', 'copy']")
-
-      //Ссылки автора
-      .more-info-section.more-info-author-links
-        .more-icon(title="Ссылки на плагин" :class="{'exist': !!data.material.meta_data.plugin_site || !!data.material.meta_data.plugin_github || !!data.material.meta_data.plugin_npm || !!data.material.meta_data.plugin_demo}"): fa(icon="link")
-        a.btn.btn-sm.btn-outline-primary(v-if="!!data.material.meta_data.plugin_site" :href="data.material.meta_data.plugin_site" title="Сайт плагина" target="_blank"): fa(icon="globe")
-        a.btn.btn-sm.btn-outline-primary(v-if="!!data.material.meta_data.plugin_github" :href="data.material.meta_data.plugin_github" title="GitHub" target="_blank"): fa(:icon="['fab', 'github']")
-        a.btn.btn-sm.btn-outline-primary(v-if="!!data.material.meta_data.plugin_npm" :href="data.material.meta_data.plugin_npm" title="NPM" target="_blank"): fa(:icon="['fab', 'npm']")
-        a.btn.btn-sm.btn-outline-primary(v-if="!!data.material.meta_data.plugin_demo" :href="data.material.meta_data.plugin_demo" title="Демо" target="_blank"): fa(icon="eye")
 
     //Фиксы и улучшения плагина
     .more-info-section.more-info-fix-extend-plugin
@@ -195,6 +213,7 @@ export default {
     .more-info-section-download-and-author-links {
       margin: 0 -15px;
       display: flex;
+      flex-wrap: wrap;
     }
   }
 
@@ -221,12 +240,30 @@ export default {
   .__list {
     .more-info-download {
       padding: 0 15px;
-      width: 120px;
+      width: 150px;
       flex: 0 0 auto;
 
       .more-icon {
         margin-top: 8px;
       }
+    }
+  }
+
+  .more-info-download-list-editors {
+    padding: 0 15px;
+    width: 100%;
+
+    .row {
+      padding-top: 2px;
+      padding-bottom: 2px;
+    }
+
+    .heading {
+      margin-top: 6px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      font-size: 14px;
     }
   }
 
