@@ -1,5 +1,6 @@
 const path = require('path');
 const mix = require('laravel-mix');
+var webpack = require('webpack');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 mix.config.vue.esModule = true
@@ -51,7 +52,12 @@ if (mix.inProduction()) {
 
 mix.webpackConfig({
     plugins: [
-        new BundleAnalyzerPlugin()
+        new BundleAnalyzerPlugin(),
+
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery', 'window.jQuery': 'jquery'
+        })
     ],
     resolve: {
         extensions: ['.js', '.json', '.vue'],

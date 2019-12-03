@@ -77,6 +77,10 @@
             :data="data.meta_data.positions.use_code"
           ></ClientPositionWidget>
 
+          <ClientPositionWidget
+            :data="data.meta_data.positions.content"
+          ></ClientPositionWidget>
+
         </div>
       </div>
     </div>

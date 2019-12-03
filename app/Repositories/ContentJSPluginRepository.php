@@ -319,6 +319,15 @@ class ContentJSPluginRepository extends BaseContentRepository {
                         ]
                     ]
                 ]
+            ],
+            'content' => [
+                'rules' => [
+                    [
+                        'name' => [
+                            'regex:/^.+$/im'
+                        ]
+                    ]
+                ]
             ]
         ];
     }

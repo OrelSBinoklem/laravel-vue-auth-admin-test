@@ -19,6 +19,9 @@ import {
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
+//todo дублирование Fortawesome
+import df from '@fortawesome/fontawesome-free/css/all.min.css'
+
 library.add(
   faEdit, faTrashAlt, faSave, faPlusSquare, faMinusSquare, faWindowClose, faClone, farCopy, faCaretSquareDown,
 

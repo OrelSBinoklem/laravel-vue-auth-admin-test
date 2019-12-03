@@ -18,5 +18,9 @@ export const types = [
   {
     name: 'Копирование кода',
     slug: 'copy_code'
+  },
+  {
+    name: 'Markdown',
+    slug: 'markdown'
   }
 ]

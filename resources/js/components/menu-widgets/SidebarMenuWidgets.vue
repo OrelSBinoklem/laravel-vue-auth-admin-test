@@ -30,6 +30,7 @@
   import MenuCasualHtml from "../content-widgets/casual_html/Menu";
   import MenuCodeEditor from "../content-widgets/code_editor/Menu";
   import MenuCopyCode from "../content-widgets/copy_code/Menu";
+  import MenuMarkdown from "../content-widgets/markdown/Menu";
 
   export default {
     name: "MenuWidgets",
@@ -39,7 +40,8 @@
       MenuCallout,
       MenuCasualHtml,
       MenuCodeEditor,
-      MenuCopyCode
+      MenuCopyCode,
+      MenuMarkdown
     },
 
     props: {

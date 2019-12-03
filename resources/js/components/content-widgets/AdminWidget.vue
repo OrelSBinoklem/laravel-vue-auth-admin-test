@@ -21,6 +21,7 @@
   import casual_html from './casual_html/Admin'
   import code_editor from './code_editor/Admin'
   import copy_code from './copy_code/Admin'
+  import markdown from './markdown/Admin'
 
   export default {
     name: "AdminWidget",
@@ -30,7 +31,8 @@
       callout,
       casual_html,
       code_editor,
-      copy_code
+      copy_code,
+      markdown
     },
 
     props: {
