@@ -14,6 +14,7 @@
   import casual_html from './casual_html/Client'
   import code_editor from './code_editor/Client'
   import copy_code from './copy_code/Client'
+  import markdown from './markdown/Client'
 
   export default {
     name: "ClientPositionWidget",
@@ -23,7 +24,8 @@
       callout,
       casual_html,
       code_editor,
-      copy_code
+      copy_code,
+      markdown
     },
 
     props: {

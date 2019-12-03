@@ -7,6 +7,7 @@ use App\Orel\Content\Widgets\Callout as WidgetCallout;
 use App\Orel\Content\Widgets\CasualHtml as WidgetCasualHtml;
 use App\Orel\Content\Widgets\CodeEditor as WidgetCodeEditor;
 use App\Orel\Content\Widgets\CopyCode as WidgetCopyCode;
+use App\Orel\Content\Widgets\Markdown as WidgetMarkdown;
 
 use App\Orel\Menus\PlainPluginsMegaMenu\Repository as PPMMRepository;
 
@@ -25,6 +26,7 @@ class BaseContentRepository extends VueTableRepository {
         $this->widgets_rules['casual_html'] = new WidgetCasualHtml();
         $this->widgets_rules['code_editor'] = new WidgetCodeEditor();
         $this->widgets_rules['copy_code'] = new WidgetCopyCode();
+        $this->widgets_rules['markdown'] = new WidgetMarkdown();
     }
 
     public function getPublicWhereInSlugs(array $slugs) {

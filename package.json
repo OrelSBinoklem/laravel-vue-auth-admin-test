@@ -11,6 +11,7 @@
     "lint": "vue-cli-service lint resources/js"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.11.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.8",
     "@fortawesome/free-brands-svg-icons": "^5.5.0",
     "@fortawesome/free-regular-svg-icons": "^5.7.2",
@@ -31,6 +32,7 @@
     "popper.js": "^1.14.3",
     "pug": "^2.0.3",
     "sweetalert2": "^7.19.3",
+    "v-markdown-editor": "^1.1.9",
     "validatorjs": "^3.15.1",
     "vform": "^1.0.0",
     "vue": "^2.5.16",

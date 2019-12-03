@@ -12,6 +12,7 @@ use App\Orel\Content\Widgets\Callout as WidgetCallout;
 use App\Orel\Content\Widgets\CasualHtml as WidgetCasualHtml;
 use App\Orel\Content\Widgets\CodeEditor as WidgetCodeEditor;
 use App\Orel\Content\Widgets\CopyCode as WidgetCopyCode;
+use App\Orel\Content\Widgets\Markdown as WidgetMarkdown;
 
 class ValidatorServiceProvider extends ServiceProvider {
 
@@ -22,7 +23,8 @@ class ValidatorServiceProvider extends ServiceProvider {
         WidgetCallout $widgetCallout,
         WidgetCasualHtml $widgetCasualHtml,
         WidgetCodeEditor $widgetCodeEditor,
-        WidgetCopyCode $widgetCopyCode
+        WidgetCopyCode $widgetCopyCode,
+        WidgetMarkdown $widgetMarkdown
     )
     {
         $this->widgets_rules['alert'] = $widgetAlert;
@@ -30,6 +32,7 @@ class ValidatorServiceProvider extends ServiceProvider {
         $this->widgets_rules['casual_html'] = $widgetCasualHtml;
         $this->widgets_rules['code_editor'] = $widgetCodeEditor;
         $this->widgets_rules['copy_code'] = $widgetCopyCode;
+        $this->widgets_rules['markdown'] = $widgetMarkdown;
 
         $this->app['validator']->extend('arr_uniq_field', function ($attribute, $value, $parameters)
         {

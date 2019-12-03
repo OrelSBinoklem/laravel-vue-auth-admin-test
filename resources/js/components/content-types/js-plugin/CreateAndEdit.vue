@@ -276,6 +276,21 @@
               </div>
             </div>
           </div>
+
+          <div class="col-12">
+            <!-- Простой контент -->
+            <div class="form-group row">
+              <h4 class="col-md-12">Простой контент</h4>
+              <div class="col-12">
+                <AdminPosition
+                  :edit="edit"
+                  :form="form"
+                  :data="form.positions.content"
+                  prefixDataForm="positions.content"
+                ></AdminPosition>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="form-group row">
@@ -487,7 +502,31 @@
               }
             ],
             widgets: []
-          }
+          },
+
+          'content': {
+            data: {
+              name: 'Простой контент'
+            },
+            rules: [
+              {
+                name: 'regex:/^.+$/mi',
+                props: {
+
+                }
+                //count: 2,
+                /*not: {
+                  props: {
+                    'variant': ['regex:/^(light|dark)$/im']
+                  }
+                }*/
+              },
+              /*{
+                name: 'regex:/^button$/imu'
+              }*/
+            ],
+            widgets: []
+          },
         }
       })
     }),
