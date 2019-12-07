@@ -463,6 +463,12 @@
     }
   }
 
+  .nav-menu-content {
+    flex-grow: 1;
+    flex-basis: 0;
+    min-height: 0;
+  }
+
   .plugins-megamenu {
     position: fixed;
     top: 0;
