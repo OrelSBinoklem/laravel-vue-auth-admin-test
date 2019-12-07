@@ -62,8 +62,7 @@
       </b-button>
     </div>
 
-    <b-button variant="outline-primary" class="btn-open-hash-menu" @click="onOpenHashMenu"><fa icon="expand"></fa></b-button>
-    <div class="plain-plugins-hash-menu" :class="{__expanded: optHashMenu.modeNoSlider}">
+    <div class="plain-plugins-hash-menu">
       <sidebar-scroll-hash
         :current-hash="currentHash"
         :current-hash-scrolled="currentHashScrolled"
@@ -181,7 +180,7 @@
       currentHash: '',
       optHashMenu: {
         columnsSlide: 1,
-        modeNoSlider: false
+        modeNoSlider: true
       }
     }),
 
@@ -240,18 +239,6 @@
 
       onOpenPluginsMegamenu() {
         this.openMegamenu = true;
-      },
-
-      onOpenHashMenu() {
-        this.optHashMenu.columnsSlide = 2;
-        this.optHashMenu.modeNoSlider = true;
-      },
-
-      onClickOutsidePosition(e) {
-        if (!($(e.target).closest('.plain-plugins-hash-menu, .btn-open-hash-menu').length)) {
-          this.optHashMenu.columnsSlide = 1;
-          this.optHashMenu.modeNoSlider = false;
-        }
       },
 
       onCloseMegamenu() {
@@ -336,8 +323,6 @@
     },
 
     async beforeMount() {
-      document.body.addEventListener('click', this.onClickOutsidePosition);
-
       if(this.$route.hash.substr(1) !== this.currentHash) {
         this.currentHashScrolled = this.currentHash = this.$route.hash.substr(1);
       }
@@ -354,10 +339,6 @@
         }
         return result;
       });
-    },
-
-    beforeDestroy() {
-      document.body.removeEventListener('click', this.onClickOutsidePosition);
     }
   }
 </script>
@@ -493,12 +474,6 @@
     font-size: 2.5rem;
   }
 
-  .btn-open-hash-menu {
-    position: fixed;
-    top: 10px;
-    right: 320px;
-  }
-
   .plain-plugins-hash-menu {
     position: fixed;
     top: 0;
@@ -508,10 +483,6 @@
     background-color: #fff;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     z-index: 1;
-  }
-
-  .plain-plugins-hash-menu.__expanded {
-    width: 720px;
   }
 </style>
 
