@@ -1,5 +1,6 @@
 <template lang="pug">
-  vue-markdown {{code}}
+  .markdown
+    vue-markdown {{code}}
 </template>
 
 <script>
@@ -45,6 +46,8 @@
   }
 </script>
 
-<style>
-
+<style scoped lang="scss">
+  .markdown {
+    margin: 15px 0;
+  }
 </style>

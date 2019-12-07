@@ -61,23 +61,23 @@
 
         <div>
 
-          <ClientPositionWidget
+          <ClientPositionWidget v-if="!!data.meta_data.positions.alerts_scroll_test"
             :data="data.meta_data.positions.alerts_scroll_test"
           ></ClientPositionWidget>
 
-          <ClientPositionWidget
+          <ClientPositionWidget v-if="!!data.meta_data.positions.description"
             :data="data.meta_data.positions.description"
           ></ClientPositionWidget>
 
-          <ClientPositionWidget
+          <ClientPositionWidget v-if="!!data.meta_data.positions.tut_alerts"
             :data="data.meta_data.positions.tut_alerts"
           ></ClientPositionWidget>
 
-          <ClientPositionWidget
+          <ClientPositionWidget v-if="!!data.meta_data.positions.use_code"
             :data="data.meta_data.positions.use_code"
           ></ClientPositionWidget>
 
-          <ClientPositionWidget
+          <ClientPositionWidget v-if="!!data.meta_data.positions.content"
             :data="data.meta_data.positions.content"
           ></ClientPositionWidget>
 
