@@ -1,7 +1,7 @@
 <template>
   <div class="plain-plugins-layout">
     <!--<navbar-full-width/>-->
-    <navbar>
+    <navbar :show-user="false">
       <b-button-group class="ml-auto">
         <b-form-select
                 v-for="type in typesPriorityCopyTypeCode"

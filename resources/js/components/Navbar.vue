@@ -19,7 +19,7 @@
 
         <slot/>
 
-        <ul class="navbar-nav ml-auto">
+        <ul v-if="showUser" class="navbar-nav ml-auto">
           <!-- Authenticated -->
           <li v-if="user" class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-dark"
@@ -66,6 +66,10 @@ import LocaleDropdown from './LocaleDropdown'
 export default {
   components: {
     LocaleDropdown
+  },
+
+  props: {
+    showUser: {type: Boolean, default: true},
   },
 
   data: () => ({

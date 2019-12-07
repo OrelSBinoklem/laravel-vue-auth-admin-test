@@ -150,7 +150,6 @@ export default {
 
   computed: {
     isFilterSelected() {
-      console.log(this.filter)
       return _.valuesIn(this.selected).reduce((accum, val) => {return accum ? accum : val !== null}, false);
     },
 
