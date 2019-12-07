@@ -10,6 +10,7 @@ export const mixin = {
       isHoverCascade: false,
 
       topHoverItem: 0,
+      subItemShowed: false,
       topSubItemOpacity: 1
     }
   },
@@ -35,9 +36,12 @@ export const mixin = {
 
       //для временного скрытия элемента перед точным расчётом позиции (надо спарсить высоту элемента чтоб посчитать позиция но при отображеннии элемента он может находиться в неправильной позиции поэтому на 1 тик его скрываем)
       this.topSubItemOpacity = 0;
+      this.subItemShowed = false;
       Vue.nextTick(() => {
         this.topHoverItem = this.__getTopPositionItemByScroll(this.domActive);
         this.topSubItemOpacity = 1;
+        //todo-mark чтоб рефрешился метод topSubItemOffsetWindow
+        this.subItemShowed = true;
       });
     },
 
@@ -75,7 +79,16 @@ export const mixin = {
      * @private
      */
     __getTopPositionItemByScroll(domItem) {
-      return this.isSub ? $(domItem).position().top : $(domItem).position().top - $('.__vuescroll .__native', this.$refs.container).scrollTop();
+      return $(domItem).position().top - $(this.$refs.container).find(' > .__vuescroll > .__native').scrollTop();
+    },
+
+    /**
+     * Получение максимальной высоты суб-меню
+     * @returns {*|jQuery}
+     * @private
+     */
+    __maxHeightItem() {
+      return $(window).height()
     }
   },
 
@@ -93,7 +106,7 @@ export const mixin = {
     },
 
     topSubItemOffsetWindow() {
-      if (!!this.active && !!this.active.children && !!this.active.children.length) {
+      if (this.subItemShowed && !!this.active && !!this.active.children && !!this.active.children.length) {
         let $sub = $('.contain-sub-item', this.$refs.container);
         //метод offset учитывает position fixed и увеличиваеться при прокрутке
         let top = this.topSubItem + $(this.$refs.container).offset().top;
@@ -105,7 +118,7 @@ export const mixin = {
       }
 
       return 0;
-    },
+    }
   },
 
   watch: {},

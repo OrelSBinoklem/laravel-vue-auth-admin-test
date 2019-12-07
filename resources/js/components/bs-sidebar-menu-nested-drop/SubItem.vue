@@ -2,30 +2,31 @@
 
 
   .sub-item(ref="container").clearfix
-    .dropdown-menu.show
-      template(v-for="item in items")
-        router-link(
-          v-if='item.is_router',
-          :to='__getRouterData(item)',
-          active-class='active'
-          @mouseenter.native="(e) => {onHover(e, item)}"
-          @mouseleave.native="onBloor"
-          @click.native="onChangePage"
-        ).dropdown-item.d-flex.justify-content-between.align-items-center
-          | {{item.name}}
-          span.arrow-sub(v-if="!!item.children && !!item.children.length")
-        a(
-          v-else='',
-          :href='item.path'
-          @mouseenter="(e) => {onHover(e, item)}"
-          @mouseleave="onBloor"
-          @click="onChangePage"
-        ).dropdown-item.d-flex.justify-content-between.align-items-center
-          | {{item.name}}
-          span.arrow-sub(v-if="!!item.children && !!item.children.length")
+    vue-scroll(:ops="{bar: {background: '#4285f4'}, scrollPanel: {scrollingX: false}}" @handle-scroll="onScroll")
+      .dropdown-menu.show
+        template(v-for="item in items")
+          router-link(
+            v-if='item.is_router',
+            :to='__getRouterData(item)',
+            active-class='active'
+            @mouseenter.native="(e) => {onHover(e, item)}"
+            @mouseleave.native="onBloor"
+            @click.native="onChangePage"
+          ).dropdown-item.d-flex.justify-content-between.align-items-center
+            | {{item.name}}
+            span.arrow-sub(v-if="!!item.children && !!item.children.length")
+          a(
+            v-else='',
+            :href='item.path'
+            @mouseenter="(e) => {onHover(e, item)}"
+            @mouseleave="onBloor"
+            @click="onChangePage"
+          ).dropdown-item.d-flex.justify-content-between.align-items-center
+            | {{item.name}}
+            span.arrow-sub(v-if="!!item.children && !!item.children.length")
     .contain-sub-item(
       v-if="!!active && !!active.children && !!active.children.length"
-      :style="{top: calculateTopSubItem + 'px', opacity: topSubItemOpacity}"
+      :style="{top: calculateTopSubItem + 'px', opacity: topSubItemOpacity, maxHeight: __maxHeightItem() + 'px'}"
       @mouseenter="onHoverSub"
       @mouseleave="onBloorSub"
     )
@@ -59,6 +60,10 @@ export default {
   },
 
   methods: {
+    onScroll() {
+      this.topHoverItem = this.__getTopPositionItemByScroll(this.domActive);
+    },
+
     __getRouterData(item) {
       return {...item.router};
     },
@@ -71,9 +76,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .sub-item {
+    max-height: inherit;
+  }
+
   .dropdown-menu {
     position: static;
     margin-top: -1px;
+    float: none;
   }
 
   .dropdown-item {

@@ -15,7 +15,7 @@
             span(v-if="!!item.children && !!item.children.length" class="badge badge-primary badge-pill") {{item.children.length}}
     .contain-sub-item(
       v-if="!!active && !!active.children && !!active.children.length"
-      :style="{top: calculateTopSubItem + 'px', opacity: topSubItemOpacity}"
+      :style="{top: calculateTopSubItem + 'px', opacity: topSubItemOpacity, maxHeight: __maxHeightItem() + 'px'}"
       @mouseenter="onHoverSub"
       @mouseleave="onBloorSub"
     )
@@ -102,6 +102,13 @@ export default {
     .sub-item {
       .contain-sub-item {
         left: calc(100% - 2px);
+      }
+    }
+
+    .__vuescroll {
+      max-height: inherit;
+      .__panel {
+        max-height: inherit;
       }
     }
   }
