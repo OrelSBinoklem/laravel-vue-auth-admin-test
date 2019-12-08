@@ -1,4 +1,3 @@
-const Welcome = () => import('~/pages/welcome').then(m => m.default || m)
 const Login = () => import('~/pages/auth/login').then(m => m.default || m)
 const Register = () => import('~/pages/auth/register').then(m => m.default || m)
 const EmailSend = () => import('~/pages/auth/email/send').then(m => m.default || m)
@@ -22,7 +21,7 @@ const AdminTaxonomy = () => import('~/pages/admin/taxonomy').then(m => m.default
 const ContentJsPlugin = () => import('~/pages/content/js-plugin').then(m => m.default || m)
 
 export default [
-  { path: '/', name: 'welcome', component: Welcome },
+  { path: '/', name: 'home', component: Home },
 
   { path: '/login', name: 'login', component: Login },
   { path: '/register', name: 'register', component: Register },
@@ -31,7 +30,6 @@ export default [
   { path: '/password/reset', name: 'password.request', component: PasswordEmail },
   { path: '/password/reset/:token', name: 'password.reset', component: PasswordReset },
 
-  { path: '/home', name: 'home', component: Home },
   { path: '/settings',
     component: Settings,
     children: [
