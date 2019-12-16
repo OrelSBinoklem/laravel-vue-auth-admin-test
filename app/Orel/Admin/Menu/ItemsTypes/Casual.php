@@ -9,7 +9,7 @@ use App\MenuItems;
 
 class Casual extends AdminMenuItemType {
     public function validatorCreateItem(array $data) {
-        $data['is_router'] = $data['is_router'] ? 1 : 0;
+        $data['is_router'] = $data['is_router'] && $data['is_router'] == 'true' ? 1 : 0;
         $rules = [];
 
         $rules['is_router'] = 'required|integer|between:0,1';
@@ -24,7 +24,7 @@ class Casual extends AdminMenuItemType {
     }
 
     public function validatorUpdateItem(array $data) {
-        $data['is_router'] = $data['is_router'] ? 1 : 0;
+        $data['is_router'] = $data['is_router'] && $data['is_router'] == 'true' ? 1 : 0;
         $rules = [];
 
         $rules['is_router'] = 'required|integer|between:0,1';
@@ -40,7 +40,7 @@ class Casual extends AdminMenuItemType {
 
     public function setMetaFields(MenuItems $model, array $data) {
         $model->setMeta([
-            'is_router' => $data['is_router'] ? 1 : 0,
+            'is_router' => $data['is_router'] && $data['is_router'] == 'true' ? 1 : 0,
             'path' => $data['path'],
         ]);
     }
@@ -56,9 +56,9 @@ class Casual extends AdminMenuItemType {
             'parent_id' => $model->parent_id,
             'type_id' => $model->type_id,
             'meta_data' => $model->getMeta()->toArray(),
-            'is_router' => $model->getMeta('is_router', 1) ? TRUE : FALSE
+            'is_router' => $model->getMeta('is_router') ? TRUE : FALSE
         ];
-        if($model->getMeta('is_router', 1)) {
+        if($model->getMeta('is_router')) {
             $data['router'] = ['name' => $model->getMeta('path')];
         } else {
             $data['path'] = $model->getMeta('path');
