@@ -18,6 +18,8 @@ const AdminMenus = () => import('~/pages/admin/menus').then(m => m.default || m)
 const AdminContent = () => import('~/pages/admin/content').then(m => m.default || m)
 const AdminTaxonomy = () => import('~/pages/admin/taxonomy').then(m => m.default || m)
 
+const PresentationWebProgrammingMaterials = () => import('~/pages/presentation/web-programming-materials').then(m => m.default || m)
+
 const ContentJsPlugin = () => import('~/pages/content/js-plugin').then(m => m.default || m)
 
 export default [
@@ -48,6 +50,9 @@ export default [
   { path: '/admin/content/:type', name: 'admin.content.type', component: AdminContent },
   { path: '/admin/content/:type/create', name: 'admin.content.create', component: AdminContent },
   { path: '/admin/content/:type/update/:id', name: 'admin.content.update', component: AdminContent },
+
+  //Presentation pages
+  { path: '/presentation/web-programming-materials', name: 'presentation.web-programming-materials', component: PresentationWebProgrammingMaterials },
 
   { path: '/content/js-plugin/:slug', name: 'content.js-plugin', component: ContentJsPlugin },
   { path: '/content/:type_slug/:slug', name: 'content', component: NotFound },

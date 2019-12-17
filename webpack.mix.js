@@ -56,7 +56,8 @@ mix.webpackConfig({
 
         new webpack.ProvidePlugin({
             $: 'jquery',
-            jQuery: 'jquery', 'window.jQuery': 'jquery'
+            jQuery: 'jquery', 'window.jQuery': 'jquery',
+            introJs: ['intro.js']
         })
     ],
     resolve: {

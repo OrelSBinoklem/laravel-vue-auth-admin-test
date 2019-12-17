@@ -15,7 +15,7 @@ class Casual extends AdminMenuItemType {
         $rules['is_router'] = 'required|integer|between:0,1';
 
         if((boolean) $data['is_router']) {
-            $rules['path'] = 'alpha_dash';
+            $rules['path'] = 'regex:/(^[a-zA-Z\d\-\_\.]+$)/u';
         } else {
             $rules['path'] = 'url';
         }
@@ -30,7 +30,7 @@ class Casual extends AdminMenuItemType {
         $rules['is_router'] = 'required|integer|between:0,1';
 
         if((boolean) $data['is_router']) {
-            $rules['path'] = 'alpha_dash';
+            $rules['path'] = 'regex:/(^[a-zA-Z\d\-\_\.]+$)/u';
         } else {
             $rules['path'] = 'url';
         }

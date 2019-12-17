@@ -16541,3 +16541,7 @@ body.swal2-no-backdrop .swal2-shown.swal2-bottom-right {
   color: #5bc0de;
 }
 
+.v-tour .v-step {
+  z-index: 20;
+}
+

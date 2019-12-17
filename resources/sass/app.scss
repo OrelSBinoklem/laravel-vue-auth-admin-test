@@ -60,3 +60,8 @@
 .bs-callout-info h4 {
   color: #5bc0de;
 }
+
+//todo-fix vue-tour
+.v-tour .v-step {
+  z-index: 20;
+}
