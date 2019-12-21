@@ -539,7 +539,6 @@
 
   .nav-menu-filter:hover {
     .nav-menu-one-col-icon {
-      border: 1px solid #999;
       opacity: 1;
       filter: none;
     }

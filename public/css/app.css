@@ -16508,7 +16508,7 @@ body.swal2-no-backdrop .swal2-shown.swal2-bottom-right {
   border-radius: 3px;
 }
 
-.bs-callout p {
+.bs-callout > *:last-child {
   margin-bottom: 0;
 }
 

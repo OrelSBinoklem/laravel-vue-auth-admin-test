@@ -114,6 +114,11 @@ export default {
     box-shadow: 0 0 20px 10px rgba(0, 0, 0, 1);
   }
 
+  .item-general-education {
+    top: calc(25% - 20px);
+    left: calc(50% - 60px);
+  }
+
   .item-web-programming {
     top: 0;
     left: 0;
@@ -138,7 +143,7 @@ export default {
   }
 
   .item-ai-and-robots {
-    left: calc(50% - 40px);
+    left: calc(50% - 60px);
     bottom: 0;
     opacity: 0.5;
   }
@@ -152,6 +157,10 @@ export default {
     transform-style: preserve-3d;
     transform-origin: 50% 50% -60px;
     transition: transform 0.3s;
+  }
+
+  .item-general-education.hover .item-cube {
+    transform: rotateY(90deg);
   }
 
   .item-web-programming.hover .item-cube {
@@ -206,6 +215,10 @@ export default {
 
   .sub-menu-visualezed span.hover {
     background: #eee;
+  }
+
+  .item-general-education .sub-menu-visualezed {
+    transform: rotateY(-90deg);
   }
 
   .item-web-programming .sub-menu-visualezed {

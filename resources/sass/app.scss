@@ -35,7 +35,7 @@
   border-left-width: 5px;
   border-radius: 3px;
 }
-.bs-callout p {
+.bs-callout > *:last-child {
   margin-bottom: 0;
 }
 .bs-callout-danger {
