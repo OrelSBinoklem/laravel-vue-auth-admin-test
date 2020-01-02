@@ -101,7 +101,6 @@ export default {
     },
 
     onStop (i) {
-      console.log(i)
       this.$emit('stop', i);
     },
 

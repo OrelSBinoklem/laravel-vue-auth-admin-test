@@ -412,19 +412,20 @@ class MenusRepository extends VueTableRepository
             'slug' => 'required|alpha_dash|max:255|unique:menu_items,slug',
             'publish' => 'required|integer|between:0,1',
             'type_id' => 'required|integer|between:1,100',
-            'icon_data' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:64|dimensions:max_width=500,max_height=500',
+            'icon_data' => 'nullable|mimetypes:image/png,image/jpeg,image/gif,image/svg|max:64|dimensions:max_width=500,max_height=500',
             'class' => 'nullable|alpha_dash|max:255'
         ]);
     }
 
     protected function validatorUpdateItem(array $data, MenuItems $item)
     {
+        debug($data);
         return Validator::make($data, [
             'name' => 'required|string|max:255',
             //'slug' => 'required|alpha_dash|max:255|unique:menu_items,slug,' . $item->id,
             'publish' => 'required|integer|between:0,1',
             'type_id' => 'required|integer|between:1,100',
-            'icon_data' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:64|dimensions:max_width=500,max_height=500',
+            'icon_data' => 'nullable|mimetypes:image/png,image/jpeg,image/gif,image/svg|max:64|dimensions:max_width=500,max_height=500',
             'class' => 'nullable|alpha_dash|max:255'
         ]);
     }

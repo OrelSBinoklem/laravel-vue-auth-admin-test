@@ -55,6 +55,7 @@ export default [
   //Presentation pages
   { path: '/presentation/general-education-training', name: 'presentation.general-education-training', component: PresentationGeneralEducationTraining },
   { path: '/presentation/web-programming-materials', name: 'presentation.web-programming-materials', component: PresentationWebProgrammingMaterials },
+  { path: '/presentation/web-programming-materials', name: 'presentation.jquery', component: PresentationWebProgrammingMaterials },
 
   { path: '/content/js-plugin/:slug', name: 'content.js-plugin', component: ContentJsPlugin },
   { path: '/content/:type_slug/:slug', name: 'content', component: NotFound },

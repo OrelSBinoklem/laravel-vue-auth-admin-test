@@ -10,6 +10,7 @@ export const state = {
   navHashes: [],
   filterPlugins: Cookies.getJSON('interface.filterPlugins') || {},
   filterMenuNavPlugins: Cookies.getJSON('interface.filterMenuNavPlugins') || null,
+  filterCatsMenuNavPlugins: Cookies.getJSON('interface.filterCatsMenuNavPlugins') || null,
   cardsOrListPlugins: 'cards',
   curListCategory: null,
 }
@@ -23,6 +24,7 @@ export const getters = {
 
   filterPlugins: (state) => {return state.filterPlugins},
   filterMenuNavPlugins: (state) => {return state.filterMenuNavPlugins},
+  filterCatsMenuNavPlugins: (state) => {return state.filterCatsMenuNavPlugins},
   cardsOrListPlugins: (state) => {return state.cardsOrListPlugins},
   curListCategory: (state) => {return state.curListCategory},
 }
@@ -55,6 +57,11 @@ export const mutations = {
   [types.SET_FILTER_MENU_NAV_PLUGINS] (state, cat) {
     state.filterMenuNavPlugins = cat;
     Cookies.set('interface.filterMenuNavPlugins', cat, { expires: 7 })
+  },
+
+  [types.SET_FILTER_CATS_MENU_NAV_PLUGINS] (state, cat) {
+    state.filterCatsMenuNavPlugins = cat;
+    Cookies.set('interface.filterCatsMenuNavPlugins', cat, { expires: 7 })
   },
 
   [types.SET_CARDS_OR_LIST_PLUGINS] (state, cardsOrListPlugins) {
@@ -90,6 +97,10 @@ export const actions = {
 
   saveFilterMenuNavPlugins ({ commit, dispatch }, payload) {
     commit(types.SET_FILTER_MENU_NAV_PLUGINS, payload)
+  },
+
+  saveFilterCatsMenuNavPlugins ({ commit, dispatch }, payload) {
+    commit(types.SET_FILTER_CATS_MENU_NAV_PLUGINS, payload)
   },
 
   saveCardsOrListPlugins ({ commit, dispatch }, payload) {

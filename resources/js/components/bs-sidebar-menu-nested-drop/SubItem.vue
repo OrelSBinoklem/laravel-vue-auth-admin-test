@@ -6,21 +6,11 @@
       .dropdown-menu.show
         template(v-for="item in items")
           router-link(
-            v-if='item.is_router',
-            :to='__getRouterData(item)',
+            :to='item.is_router ? __getRouterData(item) : {path: item.path}',
             active-class='active'
             @mouseenter.native="(e) => {onHover(e, item)}"
             @mouseleave.native="onBloor"
             @click.native="onChangePage"
-          ).dropdown-item.d-flex.justify-content-between.align-items-center
-            | {{item.name}}
-            span.arrow-sub(v-if="!!item.children && !!item.children.length")
-          a(
-            v-else='',
-            :href='item.path'
-            @mouseenter="(e) => {onHover(e, item)}"
-            @mouseleave="onBloor"
-            @click="onChangePage"
           ).dropdown-item.d-flex.justify-content-between.align-items-center
             | {{item.name}}
             span.arrow-sub(v-if="!!item.children && !!item.children.length")
