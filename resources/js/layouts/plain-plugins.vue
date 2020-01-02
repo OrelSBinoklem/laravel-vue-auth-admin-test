@@ -11,6 +11,14 @@
                 :key="type.nameProp"
         ></b-form-select>
       </b-button-group>
+      <!--todo-hot зделать выпадашку с турами и пункт сбросить все туры показать оповещение чтоб перезагрузил браузер-->
+      <b-dropdown class="ml-2" variant="outline-secondary">
+        <template slot="button-content">
+          <fa icon="eye"></fa> Туры
+        </template>
+        <b-dropdown-item @click.prevent="onShowTour('select-plugins-cat')">Левое меню с модулями</b-dropdown-item>
+        <b-dropdown-item @click.prevent="onResetTours"><fa icon="broom"></fa> Показывать все подсказки заново</b-dropdown-item>
+      </b-dropdown>
     </navbar>
 
     <div class="section-nav-menu">
@@ -196,7 +204,8 @@
         curFilter: 'interface/filterMenuNavPlugins',
         curFilterCats: 'interface/filterCatsMenuNavPlugins',
         hashGroups: 'interface/hashGroups',
-        navHashes: 'interface/navHashes'
+        navHashes: 'interface/navHashes',
+        showTour: 'interface/showTour'
       }),
     },
 
@@ -284,6 +293,23 @@
 
         return items;
       },
+
+      onShowTour (slug) {
+        switch (slug) {
+          case 'select-plugins-cat':
+            this.$tours['myTour'].start()
+            break
+        }
+      },
+
+      onResetTours () {
+        this.$store.dispatch('interface/saveShowTour', {slug: 'select-plugins-cat', show: true});
+        this.$eventHub.$emit('open-modal', {
+          type: 'info',
+          title: null,
+          message: "Перезагрузите страницу!"
+        });
+      }
     },
 
     watch: {
@@ -312,9 +338,11 @@
     },
 
     mounted: function () {
-      setTimeout(() => {
-        this.$tours['myTour'].start()
-      }, 2000)
+      if(this.showTour('select-plugins-cat') !== false)
+        setTimeout(() => {
+            this.$tours['myTour'].start()
+            this.$store.dispatch('interface/saveShowTour', {slug: 'select-plugins-cat', show: false});
+        }, 2000)
     },
 
     beforeDestroy() {

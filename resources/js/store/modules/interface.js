@@ -13,6 +13,7 @@ export const state = {
   filterCatsMenuNavPlugins: Cookies.getJSON('interface.filterCatsMenuNavPlugins') || null,
   cardsOrListPlugins: 'cards',
   curListCategory: null,
+  showTour: Cookies.getJSON('interface.showTour') || {},
 }
 
 // getters
@@ -27,6 +28,7 @@ export const getters = {
   filterCatsMenuNavPlugins: (state) => {return state.filterCatsMenuNavPlugins},
   cardsOrListPlugins: (state) => {return state.cardsOrListPlugins},
   curListCategory: (state) => {return state.curListCategory},
+  showTour: (state) => (slug) => {return state.showTour[slug]},
 }
 
 // mutations
@@ -71,6 +73,11 @@ export const mutations = {
   [types.SET_CUR_LIST_CATEGORY_PLUGINS] (state, curListCategory) {
     state.curListCategory = curListCategory;
   },
+
+  [types.SET_SHOW_VTOUR] (state, payload) {
+    state.showTour[payload.slug] = payload.show;
+    Cookies.set('interface.showTour', state.showTour, { expires: 7 })
+  },
 }
 
 // actions
@@ -109,5 +116,9 @@ export const actions = {
 
   saveCurListCategory ({ commit, dispatch }, payload) {
     commit(types.SET_CUR_LIST_CATEGORY_PLUGINS, payload)
+  },
+
+  saveShowTour ({ commit, dispatch }, payload) {
+    commit(types.SET_SHOW_VTOUR, payload)
   },
 }
