@@ -40,11 +40,11 @@ if (mix.inProduction()) {
         'vue-router',
         'sweetalert2',
         'vuex-router-sync',
-        '@fortawesome/fontawesome',
+        /*'@fortawesome/fontawesome',*/
         '@fortawesome/vue-fontawesome',
         'vuetable-2',
-        'glyphicons-only-bootstrap',
-        'snotify',
+        /*'glyphicons-only-bootstrap',*/
+        /*'snotify',*/
         'vue-ctk-date-time-picker',
         'vue-draggable-nested-tree'
     ])
