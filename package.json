@@ -27,7 +27,7 @@
     "lodash": "^4.17.11",
     "moment": "^2.23.0",
     "popper.js": "^1.14.3",
-    "pug": "^2.0.3",
+    "pug": "^3.0.1",
     "sweetalert2": "^7.19.3",
     "validatorjs": "^3.15.1",
     "vform": "^1.0.0",
